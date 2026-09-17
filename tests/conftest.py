@@ -18,7 +18,5 @@ if TYPE_CHECKING:
     from pytest import Config, Item
 
 
-def pytest_asyncio_loop_factories(
-    config: Config, item: Item
-) -> Mapping[str, object] | None:
+def pytest_asyncio_loop_factories(config: Config, item: Item) -> Mapping[str, object] | None:
     return {"virtual_time": VirtualTimeLoop}

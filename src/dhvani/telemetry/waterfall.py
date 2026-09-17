@@ -6,7 +6,7 @@ from dhvani.telemetry.span import TurnTrace
 
 _LABEL = "  {stage:<8} {name:<9}"
 _LABEL_WIDTH = len(_LABEL.format(stage="", name=""))
-_N_TICKS = 4
+_N_TICKS = 3
 
 
 def render(trace: TurnTrace, width: int = 72) -> str:
@@ -41,9 +41,10 @@ def render(trace: TurnTrace, width: int = 72) -> str:
 
     ruler = [" "] * bar_chars
     for i in range(_N_TICKS + 1):
-        tick_col = min(round(i / _N_TICKS * bar_chars), bar_chars - 1)
         tick_ms = span_ns / 1_000_000 * i / _N_TICKS
-        for j, ch in enumerate(f"{tick_ms:.0f}ms"):
+        label = f"{tick_ms:.0f}ms"
+        tick_col = min(round(i / _N_TICKS * bar_chars), max(bar_chars - len(label), 0))
+        for j, ch in enumerate(label):
             if tick_col + j < bar_chars:
                 ruler[tick_col + j] = ch
     lines.append(" " * _LABEL_WIDTH + "".join(ruler))

@@ -17,7 +17,11 @@ from dhvani.clock import Clock
 from dhvani.telemetry.span import FIRST_LLM_TOKEN, TurnTrace
 from dhvani.types import LLMDelta, Message, Stage
 
-DEFAULT_MODEL = "llama-3.3-70b-versatile"
+DEFAULT_MODEL = "openai/gpt-oss-20b"
+"""Verified available and working against the account's actual key (Groq's
+model lineup changes over time -- llama-3.3-70b-versatile, an earlier
+choice here, has since been retired). Picked for speed: a smaller model
+matters more than raw capability for a sub-800ms conversational agent."""
 
 
 class GroqLLM:

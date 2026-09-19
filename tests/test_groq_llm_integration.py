@@ -10,13 +10,17 @@ import os
 import pytest
 
 from dhvani.clock import RealClock
+from dhvani.config import load_dotenv
 from dhvani.providers.groq_llm import GroqLLM
 from dhvani.telemetry.span import FIRST_LLM_TOKEN, TurnTrace
 from dhvani.types import Message, Stage
 
+load_dotenv()  # picks up GROQ_API_KEY from a local .env, same as dhvani.live
+
 pytestmark = [
     pytest.mark.integration,
     pytest.mark.asyncio,
+    pytest.mark.real_time_loop,  # real network I/O -- see tests/conftest.py
     pytest.mark.skipif(not os.environ.get("GROQ_API_KEY"), reason="GROQ_API_KEY not set"),
 ]
 

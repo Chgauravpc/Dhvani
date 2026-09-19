@@ -323,3 +323,16 @@ Windows machine (`uv add` — all had prebuilt wheels, no compilation needed):
   `addopts` to `-m 'not integration'`, so `uv run pytest` stays network/model
   free by default; integration tests opt in with
   `uv run pytest -m integration`.
+- Groq's own `VirtualTimeLoop`-based test fixture problem repeated for real
+  network I/O generally (see section 4's ground rules on new dependencies):
+  a real `httpx`/aiohttp connection under `VirtualTimeLoop` can spuriously
+  hit connector timeouts, the same failure mode first found in the
+  signaling test. Tests doing genuine socket I/O need
+  `pytest.mark.real_time_loop` (`tests/conftest.py`).
+- Once a real `GROQ_API_KEY` was available, `llama-3.3-70b-versatile` (this
+  doc's original placeholder-by-implication) turned out to no longer be
+  served on this account -- Groq's free-tier model lineup changes over
+  time. Checked the account's actual `models.list()` and switched
+  `GroqLLM`'s default to `openai/gpt-oss-20b`, chosen for speed (a smaller
+  model matters more than raw capability for a sub-800ms target). Verified
+  with a real round trip, not just a successful auth check.

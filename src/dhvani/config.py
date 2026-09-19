@@ -1,10 +1,18 @@
-"""Runtime settings and latency budgets. No config file format in Phase 0."""
+"""Runtime settings and latency budgets.
+
+Phase 0 had no config file format; Phase 1 adds exactly one, `.env`, for a
+single purpose: keeping `GROQ_API_KEY` out of the shell history and out of
+version control on a local dev machine. `load_dotenv` is deliberately
+minimal (not a general .env parser) -- this project has no other use for
+one.
+"""
 
 from __future__ import annotations
 
 import os
 from collections.abc import Mapping
 from dataclasses import dataclass, field
+from pathlib import Path
 
 from dhvani.telemetry.span import TurnTrace
 from dhvani.types import Stage
@@ -74,3 +82,22 @@ class Settings:
         ttfa_target_ms = float(source.get("DHVANI_TTFA_TARGET_MS", _DEFAULT_TTFA_TARGET_MS))
         log_level = source.get("DHVANI_LOG_LEVEL", _DEFAULT_LOG_LEVEL)
         return cls(ttfa_target_ms=ttfa_target_ms, log_level=log_level)
+
+
+def load_dotenv(path: Path = Path(".env")) -> None:
+    """Load `KEY=VALUE` lines from `path` into `os.environ`.
+
+    Never overrides a variable already set in the real environment. Silent
+    no-op if `path` doesn't exist -- callers (e.g. `dhvani.live`) still work
+    fine with the key exported directly instead of via a file.
+    """
+    if not path.exists():
+        return
+    for raw_line in path.read_text().splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        os.environ.setdefault(key, value)

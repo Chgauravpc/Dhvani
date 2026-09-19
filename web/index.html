@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dhvani</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 32rem; margin: 3rem auto; padding: 0 1rem; }
+  button { font-size: 1rem; padding: 0.5rem 1.5rem; }
+  #status { color: #444; margin: 1rem 0; }
+</style>
+</head>
+<body>
+<h1>Dhvani</h1>
+<p id="status">Click "Start" and allow microphone access.</p>
+<button id="start">Start</button>
+<audio id="remoteAudio" autoplay></audio>
+
+<script>
+const statusEl = document.getElementById("status");
+const startBtn = document.getElementById("start");
+const remoteAudio = document.getElementById("remoteAudio");
+
+async function waitForIceGatheringComplete(pc) {
+  if (pc.iceGatheringState === "complete") return;
+  await new Promise((resolve) => {
+    function check() {
+      if (pc.iceGatheringState === "complete") {
+        pc.removeEventListener("icegatheringstatechange", check);
+        resolve();
+      }
+    }
+    pc.addEventListener("icegatheringstatechange", check);
+  });
+}
+
+async function start() {
+  startBtn.disabled = true;
+  statusEl.textContent = "Requesting microphone access...";
+
+  const pc = new RTCPeerConnection();
+  pc.addEventListener("track", (event) => {
+    remoteAudio.srcObject = event.streams[0];
+  });
+
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+  stream.getTracks().forEach((track) => pc.addTrack(track, stream));
+
+  const offer = await pc.createOffer();
+  await pc.setLocalDescription(offer);
+  await waitForIceGatheringComplete(pc);
+
+  statusEl.textContent = "Connecting...";
+  const response = await fetch("/offer", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      sdp: pc.localDescription.sdp,
+      type: pc.localDescription.type,
+    }),
+  });
+  if (!response.ok) {
+    throw new Error(`signaling failed: ${response.status}`);
+  }
+  const answer = await response.json();
+  await pc.setRemoteDescription(answer);
+
+  statusEl.textContent = "Connected -- speak, and the agent will respond. " +
+    "You can interrupt it mid-sentence.";
+}
+
+startBtn.addEventListener("click", () => {
+  start().catch((err) => {
+    statusEl.textContent = "Error: " + err.message;
+    startBtn.disabled = false;
+  });
+});
+</script>
+</body>
+</html>

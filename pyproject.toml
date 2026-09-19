@@ -34,6 +34,7 @@ asyncio_mode = "strict"
 testpaths = ["tests"]
 markers = [
     "integration: requires a real model download and/or network access (API key); skipped by default",
+    "real_time_loop: needs the platform's real event loop, not VirtualTimeLoop (genuine socket I/O)",
 ]
 addopts = "-m 'not integration'"
 

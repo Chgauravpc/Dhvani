@@ -5,7 +5,7 @@ import asyncio
 import pytest
 
 from dhvani.clock import FakeClock
-from dhvani.telemetry.span import FIRST_AUDIO_OUT, USER_SPEECH_END, TurnTrace
+from dhvani.telemetry.span import FIRST_AUDIO_OUT, USER_SPEECH_END, Mark, Span, TurnTrace
 from dhvani.types import Stage
 
 pytestmark = pytest.mark.asyncio
@@ -92,3 +92,28 @@ async def test_ttfa_is_none_without_first_audio_out() -> None:
     trace.mark(USER_SPEECH_END)
 
     assert trace.ttfa_ms is None
+
+
+async def test_critical_path_includes_spans_still_open_at_first_audio_out() -> None:
+    """Regression test for an overlapped trace: STT ends at 80ms, then LLM
+    and TTS run concurrently from 80ms to 780ms, with FIRST_AUDIO_OUT at
+    380ms (mid-way through both). All three are genuinely on the path to
+    first audio -- LLM and TTS being still open past 380ms must not exclude
+    them just because they haven't closed yet.
+    """
+    clock = FakeClock()
+    trace = TurnTrace(clock, turn_id="t1")
+    trace.spans = [
+        Span(stage=Stage.STT, name="mock-stt", start_ns=0, end_ns=80_000_000),
+        Span(stage=Stage.LLM, name="mock-llm", start_ns=80_000_000, end_ns=780_000_000),
+        Span(stage=Stage.TTS, name="mock-tts", start_ns=80_000_000, end_ns=780_000_000),
+    ]
+    trace.marks = [Mark(name=FIRST_AUDIO_OUT, at_ns=380_000_000)]
+
+    path = trace.critical_path()
+
+    assert {(s.stage, s.name) for s in path} == {
+        (Stage.STT, "mock-stt"),
+        (Stage.LLM, "mock-llm"),
+        (Stage.TTS, "mock-tts"),
+    }

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import AsyncIterator, Mapping, Sequence
+from contextlib import AsyncExitStack
 from dataclasses import dataclass
 
 from dhvani.clock import Clock
@@ -160,10 +161,16 @@ class MockTTS:
         n_samples = round(self.sample_rate * self._chunk_ms / 1000)
         pcm = b"\x00\x00" * n_samples
 
-        async with trace.aspan(Stage.TTS, self.name):
+        async with AsyncExitStack() as stack:
             emitted = 0
             seq = 0
             async for _ in text:
+                if emitted == 0:
+                    # Deferred until the first item actually arrives: `text`
+                    # is fed live by an upstream producer (e.g. the LLM), so
+                    # opening the span at generator-creation time would count
+                    # time spent waiting on that producer as TTS work.
+                    await stack.enter_async_context(trace.aspan(Stage.TTS, self.name))
                 delay_ms = self._timing.ttfb_ms if emitted == 0 else self._timing.per_unit_ms
                 await self._clock.sleep(delay_ms / 1000)
                 emitted += 1

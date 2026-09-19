@@ -126,41 +126,59 @@ class TurnTrace:
         return (max(ends) - self.t0_ns) / 1_000_000
 
     def critical_path(self) -> list[Span]:
-        """Spans on the longest dependency chain from t0 to first audio.
+        """Spans on the path from t0 to first audio.
 
-        Greedily walks backward from the FIRST_AUDIO_OUT mark (or, absent
-        that mark, the latest span end), at each step picking the
-        latest-ending closed span that finished at or before the current
-        cursor, then continuing from that span's start. Only closed spans
-        participate.
+        Walks backward from the FIRST_AUDIO_OUT mark (or, absent that mark,
+        the latest span end). At each step, every span *active* at the
+        current cursor instant -- its interval covers that instant, whether
+        or not it has closed yet -- is on the path; the cursor then jumps to
+        the earliest start among them, and the process repeats until it
+        reaches t0.
+
+        This deliberately includes spans that are still open at (or close
+        after) the target instant: in the overlapped runner, TTS is still
+        synthesizing later sentences well after FIRST_AUDIO_OUT, and that
+        later time is still genuinely spent on the path to it. An earlier
+        version of this method only ever selected spans that had *already
+        closed* by the cursor, which silently excluded every concurrently
+        running span from an overlapped trace -- exactly the traces this
+        project exists to produce.
+
+        If a genuine idle gap exists (nothing was active at some point on
+        the way back to t0), the walk stops there rather than guessing at a
+        causal link across it.
         """
-        closed: list[tuple[int, int, Span]] = [
-            (s.start_ns, s.end_ns, s) for s in self.spans if s.end_ns is not None
-        ]
-        if not closed:
+        if not self.spans:
             return []
 
         audio_mark = next((m for m in self.marks if m.name == FIRST_AUDIO_OUT), None)
-        target_ns = audio_mark.at_ns if audio_mark is not None else max(end for _, end, _ in closed)
+        if audio_mark is not None:
+            target_ns = audio_mark.at_ns
+        else:
+            ends = [s.end_ns for s in self.spans if s.end_ns is not None]
+            if not ends:
+                return []
+            target_ns = max(ends)
 
-        path: list[Span] = []
+        def active_at(span: Span, instant_ns: int) -> bool:
+            end_ns = span.end_ns if span.end_ns is not None else instant_ns
+            return span.start_ns <= instant_ns <= end_ns
+
+        selected: dict[int, Span] = {}
         cursor_ns = target_ns
-        remaining = closed
-        while remaining:
-            candidates = [c for c in remaining if c[1] <= cursor_ns]
-            if not candidates:
+        while cursor_ns > self.t0_ns:
+            active = [s for s in self.spans if active_at(s, cursor_ns)]
+            new = [s for s in active if id(s) not in selected]
+            if not new:
                 break
-            current = max(candidates, key=lambda c: c[1])
-            if current[1] <= self.t0_ns:
+            for s in new:
+                selected[id(s)] = s
+            next_cursor_ns = min(s.start_ns for s in active)
+            if next_cursor_ns >= cursor_ns:
                 break
-            path.append(current[2])
-            remaining = [c for c in remaining if c[2] is not current[2]]
-            cursor_ns = current[0]
-            if cursor_ns <= self.t0_ns:
-                break
+            cursor_ns = next_cursor_ns
 
-        path.reverse()
-        return path
+        return sorted(selected.values(), key=lambda s: s.start_ns)
 
     def stage_total_ms(self, stage: Stage) -> float:
         """Wall-clock time covered by spans of this stage.

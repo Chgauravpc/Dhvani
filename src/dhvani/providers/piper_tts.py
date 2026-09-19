@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import asyncio
 from collections.abc import AsyncIterator
+from contextlib import AsyncExitStack
 from pathlib import Path
 
 from huggingface_hub import hf_hub_download
@@ -68,10 +69,18 @@ class PiperTTS:
     async def stream(
         self, text: AsyncIterator[str], *, trace: TurnTrace
     ) -> AsyncIterator[AudioChunk]:
-        async with trace.aspan(Stage.TTS, self.name):
+        async with AsyncExitStack() as stack:
             seq = 0
             first_chunk = True
+            span_opened = False
             async for sentence in text:
+                if not span_opened:
+                    # Deferred until the first sentence actually arrives:
+                    # `text` is fed live by the LLM, so opening the span at
+                    # generator-creation time would count time spent waiting
+                    # on the LLM as TTS work.
+                    await stack.enter_async_context(trace.aspan(Stage.TTS, self.name))
+                    span_opened = True
                 piper_chunks: list[PiperAudioChunk] = await asyncio.to_thread(
                     self._synthesize, sentence
                 )

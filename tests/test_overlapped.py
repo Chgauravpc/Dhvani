@@ -57,7 +57,16 @@ async def test_overlapped_ttfa_beats_sequential_for_a_multi_sentence_reply() -> 
 
     assert seq_result.trace.ttfa_ms is not None
     assert ovl_result.trace.ttfa_ms is not None
-    assert ovl_result.trace.ttfa_ms < seq_result.trace.ttfa_ms
+    # FakeClock makes these exact and reproducible: sequential is ~956.0ms,
+    # overlapped ~419.2ms, a ~536.8ms improvement. Assert a floor comfortably
+    # below that (not just "any improvement"), so a regression that
+    # collapses the overlap benefit to a few ms -- e.g. reintroducing an
+    # accidental full-response wait before TTS starts -- fails loudly
+    # instead of squeaking through on a 1ns margin.
+    improvement_ms = seq_result.trace.ttfa_ms - ovl_result.trace.ttfa_ms
+    assert improvement_ms >= 400.0, (
+        f"expected overlap to save >= 400ms, saved only {improvement_ms:.1f}ms"
+    )
     # Same provider timings, same content -- only the overlap should differ.
     assert ovl_result.response_text == seq_result.response_text == response
 
@@ -83,7 +92,13 @@ async def test_overlapped_trace_has_all_reserved_marks_in_order() -> None:
 
 async def test_barge_in_cancels_llm_and_tts_and_closes_their_spans() -> None:
     clock = FakeClock()
-    stt, llm, tts = _providers(clock, "A long reply that keeps going for a while now.")
+    # Short, separately-punctuated sentences so the first one is ready (and
+    # TTS has started synthesizing) well before the trigger below fires --
+    # a single late period (e.g. one long sentence) would mean TTS is still
+    # waiting on its very first sentence at that point, and (since the span
+    # now opens only once real work starts, not at generator creation --
+    # see PiperTTS/MockTTS) there would be no TTS span yet to cancel.
+    stt, llm, tts = _providers(clock, "One. Two. Three. Four. Five.")
     runner = OverlappedRunner(stt, llm, tts, clock, LatencyBudget())
     barge_in = asyncio.Event()
 

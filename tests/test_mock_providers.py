@@ -73,6 +73,27 @@ async def test_mock_tts_emits_silence_chunks() -> None:
     assert [c.seq for c in chunks] == [0, 1]
 
 
+async def test_mock_tts_span_excludes_time_spent_waiting_for_input() -> None:
+    """The TTS span must reflect only real synthesis work, not time spent
+    blocked waiting for an upstream producer (the LLM) to hand it a
+    sentence -- otherwise a slow LLM misleadingly reads as slow TTS.
+    """
+    clock = FakeClock()
+    trace = TurnTrace(clock, turn_id="t1")
+    tts = MockTTS(timing=MockTiming(ttfb_ms=50.0, per_unit_ms=20.0), clock=clock)
+
+    async def slow_upstream() -> AsyncIterator[str]:
+        await clock.sleep(0.4)  # the LLM is "still thinking"
+        yield "hello"
+
+    async for _ in tts.stream(slow_upstream(), trace=trace):
+        pass
+
+    tts_span = trace.spans[0]
+    assert tts_span.start_ns == 400_000_000  # opened on first input, not at t=0
+    assert tts_span.duration_ms == pytest.approx(50.0)  # just the ttfb, no wait
+
+
 async def test_mock_provider_cancellation_closes_span_and_reraises() -> None:
     clock = FakeClock()
     trace = TurnTrace(clock, turn_id="t1")

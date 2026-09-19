@@ -1,8 +1,12 @@
-# Phase 1 — Working Agent (planning draft)
+# Phase 1 — Working Agent
 
-**Status:** draft — for review and editing before implementation begins
+**Status:** implemented — see the git log for build order and the bugs
+found and fixed along the way; sections 9-10 record the decisions and
+corrections made during implementation
 **Depends on:** Phase 0 (instrumentation spine, committed)
 **Blocks:** Phase 2 (F1 + F2)
+**Not yet done:** live browser + microphone verification (needs the user's
+own machine — see README.md's "Running the live demo")
 
 ---
 

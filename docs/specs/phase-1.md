@@ -336,3 +336,71 @@ Windows machine (`uv add` — all had prebuilt wheels, no compilation needed):
   `GroqLLM`'s default to `openai/gpt-oss-20b`, chosen for speed (a smaller
   model matters more than raw capability for a sub-800ms target). Verified
   with a real round trip, not just a successful auth check.
+
+## 11. Live verification (a real browser, automated)
+
+Section 7 called live milestone verification manual, since this environment
+has no microphone or GUI browser. Went further than that anyway: drove a
+real system Chrome (via Playwright, `channel="chrome"`) against the actual
+running `dhvani.live` server, using Chrome's
+`--use-fake-device-for-media-stream` /
+`--use-file-for-fake-audio-capture=<wav>` flags to feed a real Piper-
+synthesized Hindi question as the "microphone." This exercises the real
+browser's WebRTC/JS stack against the real server for the first time --
+stronger than the Python-only loopback in section 7's original plan, though
+still not a substitute for a human actually listening and talking to it.
+
+**Result: the full chain verified working**, confirmed at each hop:
+Chrome's own `media-source` stats showed real non-silent captured audio
+(`audioLevel` ~0.45-0.7) reaching the outbound sender; server logs showed
+Silero correctly firing `SPEECH_STARTED`/`SPEECH_ENDED`, faster-whisper
+transcribing real Hindi speech, and a real `POST
+api.groq.com/.../chat/completions` returning `200 OK`; the server then
+pushed real Piper-synthesized audio into the outbound track; and Chrome's
+own `inbound-rtp` stats on the *receiving* end showed that audio actually
+arriving (`audioLevel` climbing again, `totalAudioEnergy` rising from 0 to
+4.16) -- independent confirmation from the browser's native WebRTC layer,
+not just a custom analyser script (which had its own headless-Chrome-
+specific bug and read zero throughout; a red herring, not a product issue).
+
+Three real bugs surfaced only by actually running this, none of which any
+unit or mock-based test could have caught:
+
+1. **Providers were constructed per WebRTC connection, inside the async
+   signaling handler.** `WhisperSTT`/`PiperTTS` construction downloads and
+   loads models -- seconds to tens of seconds of blocking work. Doing it
+   per connection both re-downloaded/re-loaded on every reconnect and
+   blocked the aiohttp event loop during the SDP handshake itself, causing
+   the first automated browser check to time out waiting for "Connected"
+   before ever reaching a real bug. Fixed by loading all models once in
+   `main()`, before `web.run_app`, and sharing the resulting
+   `OverlappedRunner` across connections; only the per-connection
+   `Endpointer` stays per-connection, since Silero VAD carries recurrent
+   state across calls.
+2. **A crashed `ConversationSession` failed silently.** `live.py` handed
+   `session.run(...)` to `asyncio.ensure_future()` with nothing awaiting or
+   inspecting the resulting task, so any exception would only ever surface
+   at garbage-collection time (via asyncio's default handler) -- possibly
+   never, if the process exits first. Added a `done_callback` that logs any
+   exception immediately. (No exception was in fact hiding here once the
+   real bug, below, was found -- but this was a real gap in observability
+   regardless, found while trying to see why nothing was happening.)
+3. **`openai/gpt-oss-20b` is a reasoning model** that streams its chain-of-
+   thought as separate `reasoning`-channel deltas before any `content`
+   delta -- confirmed directly: an unconfigured call produced 34 reasoning
+   deltas and multiple real seconds before the first content token, which
+   defeats a sub-800ms target outright, and in one browser run was slow
+   enough that a new SPEECH_STARTED (the test file's next loop iteration)
+   barged in before any content ever arrived, so `PiperTTS` never received
+   a sentence at all. Setting `reasoning_effort="low"` (a documented Groq
+   parameter; `"none"` is rejected by this model) cut that to 4 reasoning
+   deltas and ~0.7s to first content in a direct test, with the same
+   correct answer -- now `GroqLLM`'s default.
+
+Also added `DHVANI_WHISPER_MODEL` as an environment override (default stays
+`"small"` for real transcription quality): this sandboxed environment could
+not download the ~460MB `small` model at all -- every attempt produced a
+0-byte `.incomplete` file, apparently a network restriction on large binary
+transfers specific to this environment -- while the ~75MB `tiny` model
+downloaded fine. The override let verification proceed on `tiny` without
+weakening the shipped default.

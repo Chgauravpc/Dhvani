@@ -22,18 +22,23 @@ uv run python -m dhvani.demo  # mock-provider waterfall + percentile report
 
 ## Running the live demo
 
-Requires a free [Groq API key](https://console.groq.com):
+Requires a free [Groq API key](https://console.groq.com). Either export it
+or put it in a local `.env` file (`GROQ_API_KEY=...`, kept out of git by
+`.gitignore`):
 
 ```
-export GROQ_API_KEY=...       # PowerShell: $env:GROQ_API_KEY = "..."
 uv run python -m dhvani.live
 ```
 
 Then open <http://localhost:8080/> in a browser, grant microphone access,
 and talk. faster-whisper's model and the pinned Piper Hindi voice download
-on first run.
+on first run — set `DHVANI_WHISPER_MODEL=tiny` for a faster/smaller model on
+a constrained connection; the real default is `small`.
 
-This is the one part of the project that needs manual verification (a real
-browser and microphone) — everything it assembles (the overlapped runner,
-barge-in, the WebRTC audio path) is otherwise verified against mocks or a
-Python-only WebRTC loopback; see `docs/specs/phase-1.md` section 7.
+The full chain (real browser → WebRTC → Silero VAD → faster-whisper → Groq
+→ Piper → audio back to the browser) has been verified end-to-end with an
+automated real Chrome session and a synthesized microphone input — see
+`docs/specs/phase-1.md` section 11 for exactly what that confirmed and the
+three real bugs it found. What that can't replace is a human actually
+listening and talking to it, including judging response quality and
+barge-in feel — that's still on you.

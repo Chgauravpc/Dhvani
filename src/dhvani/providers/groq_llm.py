@@ -23,6 +23,17 @@ model lineup changes over time -- llama-3.3-70b-versatile, an earlier
 choice here, has since been retired). Picked for speed: a smaller model
 matters more than raw capability for a sub-800ms conversational agent."""
 
+DEFAULT_REASONING_EFFORT = "low"
+"""gpt-oss models stream their chain-of-thought as separate `reasoning`-
+channel deltas before any `content` delta -- verified directly: a plain
+call with no `reasoning_effort` set produced 34 reasoning deltas and took
+several real seconds before the first content token, which defeats a
+sub-800ms target outright. `reasoning_effort="low"` cut that to 4 reasoning
+deltas and ~0.7s to first content in the same test, with the same correct
+answer. `"none"` is rejected by this model (400: must be low/medium/high).
+Pass `reasoning_effort=None` to omit the parameter entirely for a model
+that doesn't accept it."""
+
 
 class GroqLLM:
     """Streams a Groq chat completion, mapping deltas to `LLMDelta`.
@@ -39,9 +50,11 @@ class GroqLLM:
         clock: Clock,
         model: str = DEFAULT_MODEL,
         api_key: str | None = None,
+        reasoning_effort: str | None = DEFAULT_REASONING_EFFORT,
     ) -> None:
         self._client = AsyncGroq(api_key=api_key or os.environ.get("GROQ_API_KEY"))
         self._model = model
+        self._reasoning_effort = reasoning_effort
         self._clock = clock
 
     async def stream(
@@ -57,6 +70,7 @@ class GroqLLM:
                 messages=payload,  # type: ignore[arg-type]
                 model=self._model,
                 stream=True,
+                reasoning_effort=self._reasoning_effort,  # type: ignore[arg-type]
             )
             assert isinstance(response, AsyncStream)
             groq_stream: AsyncStream[ChatCompletionChunk] = response

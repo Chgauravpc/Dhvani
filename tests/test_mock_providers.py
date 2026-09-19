@@ -49,8 +49,10 @@ async def test_mock_llm_tool_calls_before_final() -> None:
 
     deltas = [d async for d in llm.stream([Message(role="user", content="hi")], trace=trace)]
 
-    assert deltas[0].text == "hi"
+    # Whitespace-preserving: concatenating text deltas reproduces "hi there".
+    assert deltas[0].text == "hi "
     assert deltas[1].text == "there"
+    assert "".join(d.text for d in deltas[:2]) == "hi there"
     assert deltas[2].tool_call == call
     assert deltas[3].is_final
 

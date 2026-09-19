@@ -53,11 +53,14 @@ class SequentialRunner:
                 final_transcript = transcript.text
 
         messages = [Message(role="user", content=final_transcript)]
-        response_tokens: list[str] = []
+        response_parts: list[str] = []
         async for delta in self._llm.stream(messages, trace=trace):
             if delta.text:
-                response_tokens.append(delta.text)
-        response_text = " ".join(response_tokens)
+                response_parts.append(delta.text)
+        # Concatenated directly, matching a real streaming LLMProvider: each
+        # delta already carries its own whitespace, the same invariant
+        # OverlappedRunner relies on.
+        response_text = "".join(response_parts)
 
         async def full_response() -> AsyncIterator[str]:
             yield response_text

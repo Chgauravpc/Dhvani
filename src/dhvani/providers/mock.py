@@ -8,6 +8,7 @@ paths can be exercised without touching a real provider.
 
 from __future__ import annotations
 
+import re
 from collections.abc import AsyncIterator, Mapping, Sequence
 from dataclasses import dataclass
 
@@ -80,7 +81,12 @@ class MockSTT:
 
 
 class MockLLM:
-    """Emits `response` split on whitespace, one delta per token, then final.
+    """Emits `response` as whitespace-preserving tokens, then a final delta.
+
+    Concatenating every yielded delta's text reproduces `response` exactly --
+    the same invariant a real streaming chat-completions API guarantees, and
+    one `OverlappedRunner` relies on directly (it reassembles sentences by
+    concatenating deltas, the way a real LLMProvider's tokens would).
 
     If `tool_calls` is non-empty, those are emitted before the final delta.
     """
@@ -95,7 +101,7 @@ class MockLLM:
         tool_calls: Sequence[ToolCall] = (),
         fail_after: int | None = None,
     ) -> None:
-        self._tokens = response.split()
+        self._tokens = re.findall(r"\S+\s*", response)
         self._timing = timing
         self._clock = clock
         self._tool_calls = tool_calls

@@ -19,6 +19,7 @@ spec section 2).
 
 from __future__ import annotations
 
+import logging
 import re
 from collections.abc import AsyncIterator, Callable, Mapping, Sequence
 from dataclasses import dataclass
@@ -116,6 +117,9 @@ def _to_groq_tools(functions: Sequence[Mapping[str, object]]) -> list[Mapping[st
     return [{"type": "function", "function": fn} for fn in fixed]
 
 
+logger = logging.getLogger(__name__)
+
+
 async def _iter_chunks(chunks: Sequence[AudioChunk]) -> AsyncIterator[AudioChunk]:
     for chunk in chunks:
         yield chunk
@@ -128,18 +132,33 @@ async def _run_condition(
     llm: LLMProvider,
     clock: Clock,
 ) -> bool:
+    """Runs one example through one STT/LLM condition and judges the
+    result. A provider failure counts as a task failure rather than
+    aborting the whole ablation run -- verified necessary by a real run:
+    Groq occasionally rejects its *own* generated tool call server-side
+    when an argument doesn't strictly match the declared schema (observed:
+    `expected integer, but got number` on a real `walmart.check_price`
+    call), which is a genuine intermittent failure of a hosted LLM, not a
+    bug to fix here -- one bad example shouldn't lose the other 79.
+    """
     trace = TurnTrace(clock)
-    final_transcript = ""
-    async for transcript in stt.stream(_iter_chunks(audio_chunks), trace=trace):
-        if transcript.is_final:
-            final_transcript = transcript.text
+    try:
+        final_transcript = ""
+        async for transcript in stt.stream(_iter_chunks(audio_chunks), trace=trace):
+            if transcript.is_final:
+                final_transcript = transcript.text
 
-    tools = _to_groq_tools(example.functions)
-    messages = [Message(role="user", content=final_transcript)]
-    tool_call: ToolCall | None = None
-    async for delta in llm.stream(messages, trace=trace, tools=tools):
-        if delta.tool_call is not None:
-            tool_call = delta.tool_call
+        tools = _to_groq_tools(example.functions)
+        messages = [Message(role="user", content=final_transcript)]
+        tool_call: ToolCall | None = None
+        async for delta in llm.stream(messages, trace=trace, tools=tools):
+            if delta.tool_call is not None:
+                tool_call = delta.tool_call
+    except Exception:
+        logger.warning(
+            "provider error on example %s, counting as failure", example.id, exc_info=True
+        )
+        return False
 
     return judge_tool_call(tool_call, example.expected_tool_call)
 

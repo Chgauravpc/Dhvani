@@ -210,3 +210,33 @@ async def test_run_ablation_includes_corrected_condition_when_given(tmp_path: Pa
     )
 
     assert report.per_language["hindi"].success_rate_corrected_asr == pytest.approx(1.0)
+
+
+@pytest.mark.asyncio
+async def test_run_ablation_counts_a_provider_failure_as_task_failure(tmp_path: Path) -> None:
+    """Regression: a real ablation run hit `groq.APIError` when the model's
+    own generated tool call failed Groq's server-side schema validation --
+    a genuine intermittent hosted-LLM failure, not a bug. One bad example
+    must not abort the whole batch."""
+    wav_path = tmp_path / "silence.wav"
+    _write_silence_wav(wav_path)
+    clock = FakeClock()
+    timing = MockTiming(ttfb_ms=1.0, per_unit_ms=1.0)
+    llm = MockLLM(
+        response="",
+        timing=timing,
+        clock=clock,
+        tool_calls=(ToolCall(id="1", name="book", arguments={"time": "7pm"}),),
+        fail_after=0,  # raises ProviderError before ever emitting the tool call
+    )
+    examples = [_example("h1", "hindi", wav_path, "book", "7pm")]
+
+    report = await run_ablation(
+        examples,
+        make_real_stt=lambda: MockSTT(partials=[], final="x", timing=timing, clock=clock),
+        llm=llm,
+        clock=clock,
+    )
+
+    assert report.per_language["hindi"].success_rate_ground_truth == pytest.approx(0.0)
+    assert report.per_language["hindi"].success_rate_real_asr == pytest.approx(0.0)

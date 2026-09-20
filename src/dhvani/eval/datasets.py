@@ -34,6 +34,7 @@ silently reading the wrong field.
 from __future__ import annotations
 
 import json
+import random
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -41,6 +42,7 @@ from pathlib import Path
 import pyarrow.parquet as pq
 from huggingface_hub import hf_hub_download, list_repo_files
 
+from dhvani.entity.lexicon import DomainLexicon
 from dhvani.eval.audio_io import decode_audio_bytes_to_chunks
 from dhvani.types import AudioChunk
 
@@ -197,6 +199,83 @@ def _load_hf_audio_parquet_examples(
     return examples
 
 
+@dataclass(frozen=True, slots=True)
+class FilteredExamples:
+    """Result of `load_*_filtered`: the entity-bearing rows (all of them --
+    the phase-2 spec section 2A gate already sized these in the hundreds,
+    not the thousands) plus a bounded random sample of entity-free rows for
+    the `corruption_rate` arm. Deliberately not "the whole dataset with
+    audio decoded" -- Svarah and LAHAJA are each ~6,000+ rows, and decoding
+    and transcribing all of them would turn a few-minute eval into a
+    multi-hour one for no additional signal `compute_entity_error_rate`
+    actually uses."""
+
+    entity_bearing: list[TranscriptExample]
+    clean_sample: list[TranscriptExample]
+
+
+def _has_lexicon_mention(text: str, lexicon: DomainLexicon) -> bool:
+    lowered = text.lower()
+    return any(variant.lower() in lowered for _, _, variant in lexicon.all_variants())
+
+
+def _load_hf_audio_parquet_filtered(
+    repo_id: str,
+    lexicon: DomainLexicon,
+    cache_dir: Path | None,
+    n_clean_sample: int,
+    seed: int,
+) -> FilteredExamples:
+    """Like `_load_hf_audio_parquet_examples`, but only decodes audio for
+    rows that either mention a lexicon entity or land in a per-shard random
+    sample of entity-free rows -- everything else's audio is never decoded
+    (the compressed bytes are still fetched as part of the shard download,
+    an unavoidable Hugging Face Hub file-level granularity limit, but the
+    CPU cost of decoding/resampling and the later transcription cost are
+    both skipped for rows this eval has no use for).
+    """
+    cache_dir_str = str(cache_dir) if cache_dir is not None else None
+    rng = random.Random(seed)
+    entity_examples: list[TranscriptExample] = []
+    clean_examples: list[TranscriptExample] = []
+
+    shards = _repo_parquet_files(repo_id)
+    per_shard_clean_quota = max(1, -(-n_clean_sample // len(shards))) if shards else 0
+
+    for shard in shards:
+        shard_path = hf_hub_download(repo_id, shard, repo_type="dataset", cache_dir=cache_dir_str)
+        schema_names = pq.read_schema(shard_path).names
+        text_column = _pick_column(schema_names, _TEXT_COLUMN_CANDIDATES, "text")
+        audio_column = _pick_column(schema_names, _AUDIO_COLUMN_CANDIDATES, "audio")
+        table = pq.read_table(shard_path, columns=[text_column, audio_column])
+        rows = table.to_pylist()
+
+        clean_row_indices = [
+            i
+            for i, row in enumerate(rows)
+            if not _has_lexicon_mention(str(row[text_column]), lexicon)
+        ]
+        sampled_clean_indices = set(
+            rng.sample(clean_row_indices, min(per_shard_clean_quota, len(clean_row_indices)))
+        )
+
+        for i, row in enumerate(rows):
+            text = str(row[text_column])
+            is_entity_bearing = _has_lexicon_mention(text, lexicon)
+            if not is_entity_bearing and i not in sampled_clean_indices:
+                continue
+            audio_value = row[audio_column]
+            audio_bytes = audio_value["bytes"] if isinstance(audio_value, dict) else audio_value
+            chunks = decode_audio_bytes_to_chunks(audio_bytes)
+            example = TranscriptExample(audio_chunks=chunks, ground_truth_text=text)
+            if is_entity_bearing:
+                entity_examples.append(example)
+            else:
+                clean_examples.append(example)
+
+    return FilteredExamples(entity_bearing=entity_examples, clean_sample=clean_examples)
+
+
 def load_svarah_ground_truth_texts(cache_dir: Path | None = None) -> list[str]:
     """Ground-truth transcripts only, no audio -- for the entity-density
     gate (phase-2 spec section 2A)."""
@@ -215,3 +294,27 @@ def load_svarah(cache_dir: Path | None = None) -> list[TranscriptExample]:
 
 def load_lahaja(cache_dir: Path | None = None) -> list[TranscriptExample]:
     return _load_hf_audio_parquet_examples(_LAHAJA_REPO, cache_dir)
+
+
+def load_svarah_filtered(
+    lexicon: DomainLexicon,
+    n_clean_sample: int = 150,
+    seed: int = 0,
+    cache_dir: Path | None = None,
+) -> FilteredExamples:
+    """Every entity-bearing Svarah row plus a bounded random sample of
+    entity-free rows, with audio decoded only for those -- see
+    `FilteredExamples`. What `compute_entity_error_rate` actually needs;
+    `load_svarah` decodes all 6,656 rows and is not what a real eval run
+    should use."""
+    return _load_hf_audio_parquet_filtered(_SVARAH_REPO, lexicon, cache_dir, n_clean_sample, seed)
+
+
+def load_lahaja_filtered(
+    lexicon: DomainLexicon,
+    n_clean_sample: int = 150,
+    seed: int = 0,
+    cache_dir: Path | None = None,
+) -> FilteredExamples:
+    """Same as `load_svarah_filtered`, for LAHAJA."""
+    return _load_hf_audio_parquet_filtered(_LAHAJA_REPO, lexicon, cache_dir, n_clean_sample, seed)

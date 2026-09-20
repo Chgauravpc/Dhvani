@@ -6,7 +6,11 @@ from dhvani.clock import FakeClock
 from dhvani.entity.corrector import EntityCorrector
 from dhvani.entity.lexicon import LATIN, DomainLexicon, LexiconEntry
 from dhvani.eval.datasets import TranscriptExample
-from dhvani.eval.entity_error_rate import compute_entity_error_rate
+from dhvani.eval.entity_error_rate import (
+    compute_entity_error_rate,
+    score_transcripts,
+    transcribe_examples,
+)
 from dhvani.providers.mock import MockSTT, MockTiming
 from dhvani.types import AudioChunk
 
@@ -141,3 +145,47 @@ async def test_report_carries_split_and_threshold() -> None:
     )
     assert report.split == "dev"
     assert report.threshold == pytest.approx(0.75)
+
+
+async def test_transcribe_then_score_matches_compute_entity_error_rate() -> None:
+    """The threshold-sweep path (transcribe_examples once, score_transcripts
+    per threshold) must produce the same numbers as the single-call
+    convenience function -- it's a performance split, not a behavior
+    change."""
+    clock = FakeClock()
+    examples = [
+        _example("please check my aadhaar status"),
+        _example("the weather is nice today"),
+    ]
+    corrector = EntityCorrector(_LEXICON, threshold=0.82)
+
+    direct = await compute_entity_error_rate(
+        examples, _LEXICON, _stt("please check my adhar status", clock), corrector, clock, "test"
+    )
+
+    transcribed = await transcribe_examples(
+        examples, _stt("please check my adhar status", clock), clock
+    )
+    via_sweep = score_transcripts(transcribed, _LEXICON, corrector, split="test")
+
+    assert via_sweep == direct
+
+
+async def test_score_transcripts_reused_across_thresholds() -> None:
+    """The whole point of splitting transcription from scoring: one
+    transcription pass, multiple thresholds scored from it."""
+    clock = FakeClock()
+    examples = [_example("please check my aadhaar status")]
+    transcribed = await transcribe_examples(
+        examples, _stt("please check my adar status", clock), clock
+    )
+
+    lenient = score_transcripts(
+        transcribed, _LEXICON, EntityCorrector(_LEXICON, threshold=0.5), "dev"
+    )
+    strict = score_transcripts(
+        transcribed, _LEXICON, EntityCorrector(_LEXICON, threshold=0.95), "dev"
+    )
+
+    assert lenient.eer_after == pytest.approx(0.0)
+    assert strict.eer_after == pytest.approx(1.0)

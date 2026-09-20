@@ -63,23 +63,41 @@ async def _transcribe(example: TranscriptExample, stt: STTProvider, clock: Clock
     return final_text
 
 
-async def compute_entity_error_rate(
-    examples: Sequence[TranscriptExample],
+@dataclass(frozen=True, slots=True)
+class TranscribedExample:
+    ground_truth_text: str
+    raw_text: str
+
+
+async def transcribe_examples(
+    examples: Sequence[TranscriptExample], stt: STTProvider, clock: Clock
+) -> list[TranscribedExample]:
+    """Transcribes each example once with `stt`.
+
+    Split out from `compute_entity_error_rate` so a threshold sweep (spec
+    section 6.7: tune on dev, report on test) can reuse the same
+    transcriptions across every threshold tried instead of re-running STT
+    once per threshold -- the raw transcript doesn't depend on the
+    correction threshold, only the scoring does.
+    """
+    return [
+        TranscribedExample(
+            ground_truth_text=example.ground_truth_text,
+            raw_text=await _transcribe(example, stt, clock),
+        )
+        for example in examples
+    ]
+
+
+def score_transcripts(
+    transcribed: Sequence[TranscribedExample],
     lexicon: DomainLexicon,
-    stt: STTProvider,
     corrector: EntityCorrector,
-    clock: Clock,
     split: str,
 ) -> EerReport:
-    """Transcribes `examples` with `stt`, corrects each transcript with
-    `corrector`, and scores both entity recovery and corruption.
-
-    Entity-bearing arm: examples whose ground truth mentions at least one
-    lexicon entity. For each mention, checks whether the canonical form
-    ended up present in the raw transcript and in the corrected one.
-
-    Clean arm: examples whose ground truth mentions none. Runs the
-    corrector anyway and counts how many come back changed at all.
+    """Same scoring `compute_entity_error_rate` does, from already-
+    transcribed text (see `transcribe_examples`) instead of running STT
+    again -- what a threshold sweep should call per threshold.
     """
     n_mentions = 0
     n_wrong_before = 0
@@ -87,9 +105,9 @@ async def compute_entity_error_rate(
     n_clean = 0
     n_corrupted = 0
 
-    for example in examples:
-        mentioned = _mentioned_entities(example.ground_truth_text, lexicon)
-        raw_text = await _transcribe(example, stt, clock)
+    for item in transcribed:
+        mentioned = _mentioned_entities(item.ground_truth_text, lexicon)
+        raw_text = item.raw_text
         corrected_text = corrector.correct(raw_text).text
 
         if mentioned:
@@ -120,3 +138,25 @@ async def compute_entity_error_rate(
         n_clean_examples=n_clean,
         corruption_rate=corruption_rate,
     )
+
+
+async def compute_entity_error_rate(
+    examples: Sequence[TranscriptExample],
+    lexicon: DomainLexicon,
+    stt: STTProvider,
+    corrector: EntityCorrector,
+    clock: Clock,
+    split: str,
+) -> EerReport:
+    """Convenience: transcribe then score in one call, for a single fixed
+    threshold. Entity-bearing arm: examples whose ground truth mentions at
+    least one lexicon entity, scored on whether the canonical form ended
+    up present in the raw and corrected transcripts. Clean arm: examples
+    with no mention, scored on whether correction touched them at all.
+
+    A threshold sweep should call `transcribe_examples` once and
+    `score_transcripts` per threshold instead of calling this repeatedly,
+    to avoid re-running STT for every threshold.
+    """
+    transcribed = await transcribe_examples(examples, stt, clock)
+    return score_transcripts(transcribed, lexicon, corrector, split)

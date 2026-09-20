@@ -47,7 +47,7 @@ strict = true
 python_version = "3.13"
 
 [[tool.mypy.overrides]]
-module = ["silero_vad_notorch.*", "faster_whisper.*"]
+module = ["silero_vad_notorch.*", "faster_whisper.*", "pyarrow.*", "indic_transliteration.*"]
 ignore_missing_imports = true
 
 [tool.ruff]

@@ -70,14 +70,21 @@ test rather than an observation. This is test hygiene, not a feature.*
 
 The highest-signal pair. F1 is nearly free once Phase 1 exists; F2 is the flagship.
 
-- [ ] **F1 — ASR ablation harness.** Identical tasks run with real ASR vs
+- [x] **F1 — ASR ablation harness.** Identical tasks run with real ASR vs
       ground-truth transcripts; report task-success delta per language.
-- [ ] **F2 — `dhvani-entity`.** Post-ASR contextual biasing: domain lexicon plus
+      Real run: English loses 27.5% of task success to ASR, Hindi 10.0% —
+      see `docs/specs/phase-2.md` section 12 for the honest reading of
+      that gap (small-model caveats, lower-bound caveat).
+- [x] **F2 — `dhvani-entity`.** Post-ASR contextual biasing: domain lexicon plus
       phonetic matching across scripts (Devanagari, Latin, Tamil), so
       Aadhaar / aadhar / आधार and "Pradhan Mantri Awas Yojana" resolve correctly.
-- [ ] Evaluate on **Svarah** and **LAHAJA**
+      Code and unit tests done; wired into the live demo.
+- [ ] Evaluate on **Svarah** and **LAHAJA** — blocked on Hugging Face
+      access (both turned out to be gated); code is ready
+      (`scripts/entity_density_gate.py`, `scripts/run_f2_entity_eval.py`).
 - [ ] **Milestone: "the agent loses X% of task success to transcription alone,
-      and `dhvani-entity` recovers Y% of it."**
+      and `dhvani-entity` recovers Y% of it."** X half-done (F1's number
+      above); Y needs the Svarah/LAHAJA access above.
 
 **Proves:** you locate a bottleneck, fix it, and measure the fix.
 

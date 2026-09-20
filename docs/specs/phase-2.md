@@ -645,9 +645,11 @@ Whisper's language detection was unreliable on this audio (`en` at
 0.22-0.73 confidence, never `hi`, despite the input being Hindi) and one
 transcript came back as a clear hallucination ("Thank you for watching.")
 — a known `tiny`-model failure mode on ambiguous/foreign audio, not a
-Phase 2 regression; the real default (`small`) is unaffected and still
-unverified in this sandbox for the same download-restriction reason as
-phase-1.
+Phase 2 regression. (Update, section 14: `small` was re-tried directly
+right after this and downloaded and loaded fine -- whatever caused
+phase-1's "small" download failures in this sandbox is no longer
+happening, so this specific "unverified" note turned out to be
+short-lived.)
 
 **Kept from this exercise**: `pipeline/session.py` now logs each
 completed turn's transcript and TTFA, and each barge-in interruption, at
@@ -655,3 +657,82 @@ INFO level (previously a crashed session logged nothing about what it was
 even doing) — this is genuinely useful live-demo observability, not a
 test-only artifact, so it stayed in the code after the temporary RMS
 diagnostic was removed.
+
+---
+
+## 14. F2 real numbers -- the entity-density gate and EER (real run)
+
+**Hugging Face access**: granted (both `ai4bharat/Svarah` and
+`ai4bharat/Lahaja` accepted). Worth recording precisely what that took,
+since it tripped up the first attempt: a valid token is not the same as
+approved access. `huggingface_hub.login(token=...)` succeeds and
+`whoami()` returns the account regardless of dataset access; an actual
+`hf_hub_download` against a gated repo still 403s with `GatedRepoError`
+("not in the authorized list") until the account has separately clicked
+"request access" on that specific dataset's page on huggingface.co and
+been approved. Confirmed both ways: failed before that step, succeeded
+after.
+
+**Section 2A entity-density gate, run for real**
+(`scripts/entity_density_gate.py`, text-only, no audio downloaded for the
+gate itself):
+
+| dataset | transcripts | total mentions | top entities | decision |
+|---|---|---|---|---|
+| Svarah | 6,656 | 212 | PAN card 69, ESIC 35, Provident Fund 31, EPFO 23 | **PROCEED** (>=100) |
+| LAHAJA | 6,152 | 40 | Aadhaar 23, CoWIN 17 | **PROCEED with a confidence interval** (30-100) |
+
+**A real memory-pressure bug, found and fixed before the real EER run**:
+the first attempt at loading Svarah/LAHAJA for the EER eval was killed by
+the harness for system memory pressure. Cause: the filtered loader used
+`pyarrow.parquet.read_table()`, which decodes *every* row's embedded audio
+bytes into one in-memory table before any entity/clean filtering happens
+-- for a ~6,000+ row shard, almost all of that decoded audio was for rows
+about to be thrown away. Fixed by switching to
+`ParquetFile.iter_batches()`: a first text-only pass picks the row indices
+actually wanted (entity-bearing, plus a bounded random clean sample), a
+second pass streams small batches and only decodes audio for a batch that
+contains at least one wanted row, via `RecordBatch.take()`.
+
+**`small` Whisper now downloads in this sandbox.** Re-tried directly after
+the memory fix, using the real default model rather than `tiny`: it
+downloaded and loaded without the 0-byte-incomplete-file failure phase-1
+spec section 11 documented. Whatever caused that restriction is no longer
+in effect here. The real EER run below used `small`.
+
+**F2 threshold sweep and result, Svarah** (179 entity-bearing rows + 150
+clean sample; 30/70 dev/test split; dev: 54 entity-bearing/45 clean, test:
+125 entity-bearing/105 clean; threshold grid 0.70-0.95; selection rule:
+minimize `eer_after + corruption_rate` on dev, ties toward the higher
+threshold):
+
+| threshold (dev) | eer_after | corruption_rate | combined cost |
+|---|---|---|---|
+| 0.70 | 45.8% | 17.8% | 63.6% |
+| 0.75 | 57.6% | 13.3% | 70.9% |
+| **0.80** | **57.6%** | **2.2%** | **59.8%** ← chosen |
+| 0.82 | 61.0% | 0.0% | 61.0% |
+| 0.85 | 61.0% | 0.0% | 61.0% |
+| 0.90 | 64.4% | 0.0% | 64.4% |
+| 0.95 | 66.1% | 0.0% | 66.1% |
+
+**Test split, single run at threshold=0.80 (never re-run to chase a
+number)**: 143 entity mentions, **EER 59.4% → 49.0%** (95% CI on
+`eer_after`: [40.9%, 57.1%]), corruption_rate **2.9%** on 105 clean
+examples.
+
+**Read honestly**: `dhvani-entity` recovers 10.4 points of EER on Svarah
+(59.4% → 49.0%, a ~17.5% relative reduction) at a real but small cost
+(2.9% of clean transcripts altered). `eer_before` itself is high --
+`small` Whisper gets nearly 6 in 10 entity mentions wrong on Svarah's
+accented English even before any ASR-quality argument about Indic
+languages specifically, which is itself evidence for this project's
+thesis. The dev sweep table above is not a footnote: a reader who prefers
+recall over precision could reasonably pick threshold 0.70 instead (recovers
+to 45.8%, roughly 22 points, at 17.8% corruption) -- the milestone number
+depends on that choice, and both the choice and the alternative are shown,
+not just the winner.
+
+LAHAJA's result is in section 15 (its 40-mention gate result puts it in
+the spec's own "report a confidence interval, and expect it to be wide"
+bucket -- section 6.7's own warning, not an excuse added after the fact).

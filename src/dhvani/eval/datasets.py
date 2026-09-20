@@ -219,6 +219,9 @@ def _has_lexicon_mention(text: str, lexicon: DomainLexicon) -> bool:
     return any(variant.lower() in lowered for _, _, variant in lexicon.all_variants())
 
 
+_STREAM_BATCH_ROWS = 64
+
+
 def _load_hf_audio_parquet_filtered(
     repo_id: str,
     lexicon: DomainLexicon,
@@ -228,11 +231,16 @@ def _load_hf_audio_parquet_filtered(
 ) -> FilteredExamples:
     """Like `_load_hf_audio_parquet_examples`, but only decodes audio for
     rows that either mention a lexicon entity or land in a per-shard random
-    sample of entity-free rows -- everything else's audio is never decoded
-    (the compressed bytes are still fetched as part of the shard download,
-    an unavoidable Hugging Face Hub file-level granularity limit, but the
-    CPU cost of decoding/resampling and the later transcription cost are
-    both skipped for rows this eval has no use for).
+    sample of entity-free rows.
+
+    Streams each shard in small batches via `ParquetFile.iter_batches`
+    rather than `read_table` -- a real run against Svarah/LAHAJA (each
+    ~6,000+ rows) was killed for memory pressure with the `read_table`
+    version, which materializes every row's embedded audio bytes into a
+    single in-memory table before any filtering happens. Streaming keeps at
+    most `_STREAM_BATCH_ROWS` rows' audio in memory at once, and a batch
+    with nothing wanted in it is dropped without ever touching its audio
+    column.
     """
     cache_dir_str = str(cache_dir) if cache_dir is not None else None
     rng = random.Random(seed)
@@ -244,34 +252,53 @@ def _load_hf_audio_parquet_filtered(
 
     for shard in shards:
         shard_path = hf_hub_download(repo_id, shard, repo_type="dataset", cache_dir=cache_dir_str)
-        schema_names = pq.read_schema(shard_path).names
+        parquet_file = pq.ParquetFile(shard_path)
+        schema_names = parquet_file.schema_arrow.names
         text_column = _pick_column(schema_names, _TEXT_COLUMN_CANDIDATES, "text")
         audio_column = _pick_column(schema_names, _AUDIO_COLUMN_CANDIDATES, "audio")
-        table = pq.read_table(shard_path, columns=[text_column, audio_column])
-        rows = table.to_pylist()
 
-        clean_row_indices = [
-            i
-            for i, row in enumerate(rows)
-            if not _has_lexicon_mention(str(row[text_column]), lexicon)
-        ]
+        # Pass 1: text only, to decide which row indices are wanted.
+        texts: list[str] = []
+        for batch in parquet_file.iter_batches(
+            columns=[text_column], batch_size=_STREAM_BATCH_ROWS
+        ):
+            texts.extend(str(v) for v in batch.column(text_column).to_pylist())
+
+        entity_row_indices = {
+            i for i, text in enumerate(texts) if _has_lexicon_mention(text, lexicon)
+        }
+        clean_row_indices = [i for i in range(len(texts)) if i not in entity_row_indices]
         sampled_clean_indices = set(
             rng.sample(clean_row_indices, min(per_shard_clean_quota, len(clean_row_indices)))
         )
+        wanted_indices = entity_row_indices | sampled_clean_indices
+        if not wanted_indices:
+            continue
 
-        for i, row in enumerate(rows):
-            text = str(row[text_column])
-            is_entity_bearing = _has_lexicon_mention(text, lexicon)
-            if not is_entity_bearing and i not in sampled_clean_indices:
-                continue
-            audio_value = row[audio_column]
-            audio_bytes = audio_value["bytes"] if isinstance(audio_value, dict) else audio_value
-            chunks = decode_audio_bytes_to_chunks(audio_bytes)
-            example = TranscriptExample(audio_chunks=chunks, ground_truth_text=text)
-            if is_entity_bearing:
-                entity_examples.append(example)
-            else:
-                clean_examples.append(example)
+        # Pass 2: text + audio, streamed in batches; only decode audio for
+        # rows in `wanted_indices`, and only for the batch that has them.
+        row_offset = 0
+        for batch in parquet_file.iter_batches(
+            columns=[text_column, audio_column], batch_size=_STREAM_BATCH_ROWS
+        ):
+            batch_len = batch.num_rows
+            local_indices = [
+                i - row_offset for i in wanted_indices if row_offset <= i < row_offset + batch_len
+            ]
+            if local_indices:
+                for row in batch.take(local_indices).to_pylist():
+                    text = str(row[text_column])
+                    audio_value = row[audio_column]
+                    audio_bytes = (
+                        audio_value["bytes"] if isinstance(audio_value, dict) else audio_value
+                    )
+                    chunks = decode_audio_bytes_to_chunks(audio_bytes)
+                    example = TranscriptExample(audio_chunks=chunks, ground_truth_text=text)
+                    if _has_lexicon_mention(text, lexicon):
+                        entity_examples.append(example)
+                    else:
+                        clean_examples.append(example)
+            row_offset += batch_len
 
     return FilteredExamples(entity_bearing=entity_examples, clean_sample=clean_examples)
 

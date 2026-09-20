@@ -599,3 +599,59 @@ unaffected). Real Groq (`openai/gpt-oss-20b`), real `faster-whisper`.
   this specific comparison.
 - F2's real numbers (entity recovery) are not yet available -- see
   section 11's Hugging Face access note.
+
+---
+
+## 13. Live re-verification with `CorrectedSTT` in the pipeline (real browser)
+
+Re-ran phase-1 spec section 11's methodology (real system Chrome via
+Playwright, `channel="chrome"`, fake-microphone flags feeding a real
+Piper-synthesized question) to confirm Phase 2's changes to `dhvani.live`
+(wiring `CorrectedSTT` in) didn't break the live path. Playwright was
+added as a dev dependency for this, then removed afterward, same as
+phase-1 didn't keep it either — this is a one-off verification tool, not
+a permanent test dependency.
+
+**Found and fixed a real methodology bug, not a product bug**: the first
+run showed real non-silent audio reaching the server (confirmed via a
+temporary RMS diagnostic) but no turn ever completed, even after 60+
+seconds. Cause: Chrome's `--use-file-for-fake-audio-capture` loops the
+input file back-to-back with no gap, and the synthesized WAV had no
+trailing silence — so the endpointer's VAD never saw the 500ms of quiet it
+needs to fire `SPEECH_ENDED`, and `WhisperSTT` (which just buffers until
+its audio iterator ends) buffered forever. Padding 1.5s of silence onto
+the test WAV fixed it: each loop cycle then has a real speech-then-silence
+boundary.
+
+**With that fixed, confirmed working end-to-end**, independently at each
+layer, same spirit as phase-1's original verification: real captured
+audio (RMS in the thousands, not silence) → Silero firing `SPEECH_STARTED`
+/`SPEECH_ENDED` → `faster-whisper` transcribing (`tiny` model, since this
+sandboxed environment still can't download `small`) → a real
+`POST api.groq.com/.../chat/completions` returning `200 OK` → Piper
+synthesizing → that audio arriving back at the browser (Chrome's own
+`inbound-rtp` `totalAudioEnergy` > 0, not a custom analyser script).
+`CorrectedSTT` ran on every transcript with no crash (confirmed via the
+new per-turn log line — see below) — the entity-density gate hasn't run
+yet, so no assertion is made here about whether it *changed* the
+transcript, only that it doesn't break the pipeline.
+
+**Also found, and this one's real**: the looping test audio repeatedly
+triggered barge-in (a new `SPEECH_STARTED` arriving while the previous
+turn's TTS was still playing back, since the loop restarts before a slow
+`tiny`-model turn finishes) — the barge-in path was exercised for real,
+unintentionally, and handled without crashing. Separately, `tiny`
+Whisper's language detection was unreliable on this audio (`en` at
+0.22-0.73 confidence, never `hi`, despite the input being Hindi) and one
+transcript came back as a clear hallucination ("Thank you for watching.")
+— a known `tiny`-model failure mode on ambiguous/foreign audio, not a
+Phase 2 regression; the real default (`small`) is unaffected and still
+unverified in this sandbox for the same download-restriction reason as
+phase-1.
+
+**Kept from this exercise**: `pipeline/session.py` now logs each
+completed turn's transcript and TTFA, and each barge-in interruption, at
+INFO level (previously a crashed session logged nothing about what it was
+even doing) — this is genuinely useful live-demo observability, not a
+test-only artifact, so it stayed in the code after the temporary RMS
+diagnostic was removed.

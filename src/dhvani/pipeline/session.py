@@ -17,6 +17,7 @@ window); not handled here rather than adding unverified complexity for it.
 from __future__ import annotations
 
 import asyncio
+import logging
 from collections.abc import AsyncIterator, Callable
 from typing import Protocol
 
@@ -24,6 +25,8 @@ from dhvani.pipeline.overlapped import BargeInError, OverlappedRunner
 from dhvani.telemetry.session import SessionTrace
 from dhvani.types import AudioChunk
 from dhvani.vad.endpointer import EndpointEvent
+
+logger = logging.getLogger(__name__)
 
 _Queue = asyncio.Queue["AudioChunk | None"]
 
@@ -128,10 +131,17 @@ class ConversationSession:
         try:
             result = await self._runner.run_turn(self._utterance_stream(queue), barge_in=barge_in)
             self.session_trace.add(result.trace)
+            logger.info(
+                "turn %s: heard %r, ttfa=%sms",
+                result.trace.turn_id,
+                result.transcript,
+                result.trace.ttfa_ms,
+            )
             for chunk in result.audio:
                 self._audio_sink(chunk)
         except BargeInError as exc:
             self.session_trace.add(exc.trace)
+            logger.info("turn %s: interrupted by barge-in", exc.trace.turn_id)
         finally:
             self._active_turn_queue = None
             self._turn_task = None

@@ -1,9 +1,10 @@
 # Phase 2 — F1 + F2
 
-**Status:** F1 implemented and run for real (milestone numbers captured,
-section 12). F2's code is implemented and unit-tested; the real
-Svarah/LAHAJA-backed entity-density gate (section 2A) and EER numbers are
-blocked on Hugging Face access -- see section 11.
+**Status:** Both F1 and F2 implemented, tested, and run for real against
+real datasets -- see sections 12 (F1), 14-15 (F2 Svarah/LAHAJA), and 16
+(the combined milestone). Not done: tying F1 and F2 together at the
+task-success level (running `run_ablation` with `CorrectedSTT` in the
+real-ASR-vs-corrected-ASR arm against VoiceAgentBench) -- section 16.
 **Depends on:** Phase 0 (instrumentation), Phase 1 (real providers,
 overlapped runner, WebRTC transport)
 **Blocks:** Phase 3 (F3 + channel robustness)
@@ -736,3 +737,82 @@ not just the winner.
 LAHAJA's result is in section 15 (its 40-mention gate result puts it in
 the spec's own "report a confidence interval, and expect it to be wide"
 bucket -- section 6.7's own warning, not an excuse added after the fact).
+
+---
+
+## 15. F2 real numbers -- LAHAJA
+
+40 entity-bearing rows (all of them; the gate found no more) + 50 clean
+sample; 30/70 split gave dev 12 entity-bearing/16 clean, test 28 entity-
+bearing/36 clean. First attempt at this run was killed twice for system
+memory pressure (not a code bug the second time -- see section 14's
+streaming fix, which this run also used); it succeeded on retry with
+`--n-clean-sample 50` instead of the default 150, which this thin a
+dataset didn't need anyway.
+
+| threshold (dev) | eer_after | corruption_rate | combined cost |
+|---|---|---|---|
+| 0.70 | 0.0% | 18.8% | 18.8% |
+| 0.75 | 0.0% | 12.5% | 12.5% |
+| 0.80 | 0.0% | 6.2% | 6.2% |
+| **0.82** | **0.0%** | **0.0%** | **0.0%** ← chosen |
+| 0.85 | 8.3% | 0.0% | 8.3% |
+| 0.90 | 8.3% | 0.0% | 8.3% |
+| 0.95 | 50.0% | 0.0% | 50.0% |
+
+`eer_before` on dev is **100.0%** at every threshold -- correctly
+threshold-invariant, since it measures the raw, uncorrected transcript.
+`small` Whisper got every single one of the 12 dev entity mentions wrong.
+Threshold 0.82 recovers all 12 with zero clean-example corruption on dev,
+a suspiciously clean result for n=12 -- flagged rather than trusted at
+face value, which the test split promptly justified.
+
+**Test split, single run at threshold=0.82**: 28 entity mentions,
+`eer_before` again **100.0%** (small Whisper got every one of these 28
+wrong too, independently confirming dev's finding wasn't a fluke of which
+12 got sampled), `eer_after` **46.4%** (95% CI [29.5%, 64.2%] -- this
+interval is wide, as the gate's own decision rule warned it would be for
+a 30-100 mention corpus), corruption_rate **19.4%** on 36 clean examples.
+
+**Read honestly, especially the discrepancy**: dev showed 0% corruption
+at threshold 0.82; test showed 19.4% at the same threshold. That is not
+noise to wave away -- it means the dev-chosen threshold does not
+generalize cleanly to test on this corpus, most likely because n=16 (dev
+clean) and n=12 (dev mentions) are simply too small for the sweep to have
+found a threshold that holds up, exactly the risk the gate's own 30-100
+bucket warning was about. The honest summary for LAHAJA is: **`small`
+Whisper fails completely (100% EER) on every Hindi entity mention
+sampled, in both splits independently** -- the clearest, most reproducible
+finding in this phase, and squarely the failure mode F2 exists to
+address -- and **`dhvani-entity` recovers roughly half of that (to 46.4%
+EER) on test, at a real and non-trivial corruption cost (19.4%) that did
+not show up during tuning**. Reporting only the recovery number without
+the corruption discrepancy would be exactly the kind of favorable-reading
+this project's own evaluation ethos (paired corruption metrics, honest
+lower bounds) exists to prevent.
+
+## 16. Milestone, both datasets
+
+Per `ROADMAP.md`'s framing ("the agent loses X% of task success to
+transcription alone, and `dhvani-entity` recovers Y% of it"): X is F1's
+number (section 12: English 27.5%, Hindi 10.0% task-success loss to ASR,
+both lower bounds on VoiceAgentBench's synthesized audio). Y, the entity-
+level recovery, now has two real numbers instead of zero:
+
+| dataset | eer_before | eer_after | absolute recovery | corruption_rate |
+|---|---|---|---|---|
+| Svarah (test, n=143) | 59.4% | 49.0% | 10.4 points | 2.9% |
+| LAHAJA (test, n=28) | 100.0% | 46.4% | 53.6 points | 19.4% |
+
+Both are real `small`-model, real-dataset, dev-tuned/test-reported
+numbers -- not projections. Neither should be read as "the" F2 number:
+Svarah is Indic-accented English at a corpus scale (143 test mentions)
+that supports a real point estimate; LAHAJA is Hindi at a scale (28 test
+mentions) the gate itself flagged as needing a confidence interval, and
+that interval is wide ([29.5%, 64.2%]) with a real dev/test corruption
+discrepancy alongside it. The task-success-level tie-together this
+section's header promises (F1's tool-call outcomes actually flipping
+because of `dhvani-entity`) is not measured here -- that would need
+`run_ablation`'s `make_corrected_stt` argument exercised against
+VoiceAgentBench with `CorrectedSTT` in the real-ASR arm, which this phase
+built (`run_ablation` already accepts it) but did not run.

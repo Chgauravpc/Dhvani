@@ -79,12 +79,19 @@ The highest-signal pair. F1 is nearly free once Phase 1 exists; F2 is the flagsh
       phonetic matching across scripts (Devanagari, Latin, Tamil), so
       Aadhaar / aadhar / आधार and "Pradhan Mantri Awas Yojana" resolve correctly.
       Code and unit tests done; wired into the live demo.
-- [ ] Evaluate on **Svarah** and **LAHAJA** — blocked on Hugging Face
-      access (both turned out to be gated); code is ready
-      (`scripts/entity_density_gate.py`, `scripts/run_f2_entity_eval.py`).
-- [ ] **Milestone: "the agent loses X% of task success to transcription alone,
-      and `dhvani-entity` recovers Y% of it."** X half-done (F1's number
-      above); Y needs the Svarah/LAHAJA access above.
+- [x] Evaluate on **Svarah** and **LAHAJA** — entity-density gate passed both
+      (212 and 40 mentions). Real EER: Svarah 59.4%→49.0% (10.4-point
+      recovery, 2.9% corruption); LAHAJA 100%→46.4% (53.6-point recovery,
+      but 19.4% corruption on test vs 0% on dev — a real dev/test
+      discrepancy at this small a scale, not swept under the rug). See
+      `docs/specs/phase-2.md` sections 14–15.
+- [x] **Milestone: "the agent loses X% of task success to transcription alone,
+      and `dhvani-entity` recovers Y% of it."** X: F1's numbers above. Y:
+      the two EER recoveries above — read both with their caveats, not as
+      one clean number; see `docs/specs/phase-2.md` section 16. Not done:
+      tying X and Y together at the task-success level (running F1's
+      ablation with `CorrectedSTT` in the loop, not just measuring EER
+      standalone).
 
 **Proves:** you locate a bottleneck, fix it, and measure the fix.
 

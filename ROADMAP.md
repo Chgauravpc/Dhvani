@@ -88,10 +88,14 @@ The highest-signal pair. F1 is nearly free once Phase 1 exists; F2 is the flagsh
 - [x] **Milestone: "the agent loses X% of task success to transcription alone,
       and `dhvani-entity` recovers Y% of it."** X: F1's numbers above. Y:
       the two EER recoveries above — read both with their caveats, not as
-      one clean number; see `docs/specs/phase-2.md` section 16. Not done:
-      tying X and Y together at the task-success level (running F1's
-      ablation with `CorrectedSTT` in the loop, not just measuring EER
-      standalone).
+      one clean number. Also ran the task-success-level tie-together
+      (`run_ablation` with `CorrectedSTT` against VoiceAgentBench): came
+      back near-zero (+2.5pp English, -5.0pp Hindi), and the run itself
+      explains why honestly — only 2/80 VoiceAgentBench queries mention a
+      lexicon entity at all, so this is mostly independent-LLM-call noise
+      on identical input, not a measured effect. The real recovery signal
+      is the EER numbers, on corpora that actually contain the entities;
+      see `docs/specs/phase-2.md` section 16 for the full read.
 
 **Proves:** you locate a bottleneck, fix it, and measure the fix.
 

@@ -1,10 +1,10 @@
 # Phase 2 — F1 + F2
 
-**Status:** Both F1 and F2 implemented, tested, and run for real against
-real datasets -- see sections 12 (F1), 14-15 (F2 Svarah/LAHAJA), and 16
-(the combined milestone). Not done: tying F1 and F2 together at the
-task-success level (running `run_ablation` with `CorrectedSTT` in the
-real-ASR-vs-corrected-ASR arm against VoiceAgentBench) -- section 16.
+**Status:** Complete. F1 and F2 both implemented, tested, and run for real
+against real datasets -- sections 12 (F1), 14-15 (F2 Svarah/LAHAJA), 16
+(the combined milestone, including the task-success tie-together run,
+which came back as an honest negative result -- see section 16 for why
+that's the correct reading, not a discouraging one).
 **Depends on:** Phase 0 (instrumentation), Phase 1 (real providers,
 overlapped runner, WebRTC transport)
 **Blocks:** Phase 3 (F3 + channel robustness)
@@ -810,9 +810,41 @@ Svarah is Indic-accented English at a corpus scale (143 test mentions)
 that supports a real point estimate; LAHAJA is Hindi at a scale (28 test
 mentions) the gate itself flagged as needing a confidence interval, and
 that interval is wide ([29.5%, 64.2%]) with a real dev/test corruption
-discrepancy alongside it. The task-success-level tie-together this
-section's header promises (F1's tool-call outcomes actually flipping
-because of `dhvani-entity`) is not measured here -- that would need
-`run_ablation`'s `make_corrected_stt` argument exercised against
-VoiceAgentBench with `CorrectedSTT` in the real-ASR arm, which this phase
-built (`run_ablation` already accepts it) but did not run.
+discrepancy alongside it.
+
+**The task-success-level tie-together, now run**
+(`uv run python scripts/run_f1_ablation.py --with-corrected-stt`,
+`n_per_language=40`, `small` Whisper, default threshold 0.82 -- no
+VoiceAgentBench-specific dev/test tuning exists, unlike Svarah/LAHAJA):
+
+| language | n | ground truth | real ASR | loss | corrected ASR | recovered |
+|---|---|---|---|---|---|---|
+| english | 40 | 42.5% | 30.0% | 12.5% | 32.5% | +2.5 pts |
+| hindi | 40 | 15.0% | 25.0% | -10.0% | 20.0% | -5.0 pts |
+
+**Read this one especially carefully -- it is mostly noise, and the run
+itself proves why.** The script printed, before any condition ran: only
+**2 of the 80** example queries mention a lexicon entity at all --
+VoiceAgentBench's `single_tool` category is restaurant/recipe/local-
+search queries, not `DEFAULT_LEXICON`'s civic/government/finance domain.
+For the other 78/80 examples, `CorrectedSTT` is a byte-for-byte no-op: it
+transcribes with the same `WhisperSTT` and applies zero corrections, so
+the real-ASR and corrected-ASR conditions feed the LLM *identical* text.
+Any difference in their success rate on those 78 examples is not
+`dhvani-entity` doing anything -- it is two independent, non-deterministic
+Groq calls on the same input landing on different tool-call outputs
+(the same real, sampling-driven variance section 11 already found once,
+in `groq.APIError`'s `walmart.check_price` schema failures reproducing
+identically across all three conditions for one example). A same-input
+comparison with only 2/80 examples able to differ *should* show
+close-to-zero net change with real sampling noise scattered around it,
+and that is exactly what these numbers look like (+2.5 points, -5.0
+points) -- not a demonstrated recovery, and not a demonstrated harm
+either. **The honest conclusion is a negative-but-informative result**:
+these two corpora don't overlap enough for `dhvani-entity` to matter at
+the task-success level, and the real recovery signal lives entirely in
+the EER numbers above, measured on corpora (Svarah, LAHAJA) that actually
+contain the entities the corrector targets. Measuring this properly would
+need a VoiceAgentBench subset deliberately filtered or constructed to
+contain lexicon entities in the query text -- out of scope for what this
+phase built.

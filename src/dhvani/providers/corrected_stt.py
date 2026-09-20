@@ -27,10 +27,11 @@ class CorrectedSTT:
     def __init__(self, inner: STTProvider, corrector: EntityCorrector) -> None:
         self._inner = inner
         self._corrector = corrector
-
-    @property
-    def name(self) -> str:
-        return f"{self._inner.name}+dhvani-entity"
+        # A plain attribute, not a property -- STTProvider.name is a plain
+        # `str` attribute in the Protocol (matching every other provider:
+        # WhisperSTT/GroqLLM/MockSTT all assign `name` directly), and mypy
+        # --strict correctly rejects a read-only property there structurally.
+        self.name = f"{inner.name}+dhvani-entity"
 
     async def stream(
         self, audio: AsyncIterator[AudioChunk], *, trace: TurnTrace

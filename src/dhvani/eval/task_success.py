@@ -25,7 +25,7 @@ from collections.abc import AsyncIterator, Callable, Mapping, Sequence
 from dataclasses import dataclass
 
 from dhvani.clock import Clock
-from dhvani.eval.audio_io import decode_audio_file_to_chunks
+from dhvani.eval.audio_io import decode_audio_file_to_chunks, iter_chunks
 from dhvani.eval.datasets import ExpectedToolCall, VoiceAgentBenchExample
 from dhvani.providers.base import LLMProvider, STTProvider
 from dhvani.telemetry.span import TurnTrace
@@ -120,11 +120,6 @@ def _to_groq_tools(functions: Sequence[Mapping[str, object]]) -> list[Mapping[st
 logger = logging.getLogger(__name__)
 
 
-async def _iter_chunks(chunks: Sequence[AudioChunk]) -> AsyncIterator[AudioChunk]:
-    for chunk in chunks:
-        yield chunk
-
-
 async def _run_condition(
     example: VoiceAgentBenchExample,
     audio_chunks: Sequence[AudioChunk],
@@ -144,7 +139,7 @@ async def _run_condition(
     trace = TurnTrace(clock)
     try:
         final_transcript = ""
-        async for transcript in stt.stream(_iter_chunks(audio_chunks), trace=trace):
+        async for transcript in stt.stream(iter_chunks(audio_chunks), trace=trace):
             if transcript.is_final:
                 final_transcript = transcript.text
 

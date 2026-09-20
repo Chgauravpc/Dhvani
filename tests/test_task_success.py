@@ -6,10 +6,10 @@ from pathlib import Path
 import pytest
 
 from dhvani.clock import FakeClock
+from dhvani.eval.audio_io import iter_chunks
 from dhvani.eval.datasets import ExpectedToolCall, VoiceAgentBenchExample
 from dhvani.eval.task_success import (
     GroundTruthSTT,
-    _iter_chunks,
     _json_schema_fix_types,
     judge_tool_call,
     run_ablation,
@@ -118,7 +118,7 @@ async def test_ground_truth_stt_ignores_audio_and_yields_given_text() -> None:
     trace = TurnTrace(clock)
     stt = GroundTruthSTT("the real transcript")
 
-    transcripts = [t async for t in stt.stream(_iter_chunks([]), trace=trace)]
+    transcripts = [t async for t in stt.stream(iter_chunks([]), trace=trace)]
 
     assert len(transcripts) == 1
     assert transcripts[0].text == "the real transcript"

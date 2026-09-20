@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import dataclasses
 import io
+from collections.abc import AsyncIterator, Sequence
 from pathlib import Path
 from typing import BinaryIO
 
@@ -64,3 +65,11 @@ def decode_audio_bytes_to_chunks(
     LAHAJA), which arrive already-decoded-from-parquet but still
     container/codec-encoded (typically WAV or FLAC)."""
     return _decode(io.BytesIO(data), target_sample_rate)
+
+
+async def iter_chunks(chunks: Sequence[AudioChunk]) -> AsyncIterator[AudioChunk]:
+    """Wraps an in-memory chunk list as the `AsyncIterator[AudioChunk]`
+    every `STTProvider.stream` expects -- eval code decodes a whole file
+    up front rather than genuinely streaming it."""
+    for chunk in chunks:
+        yield chunk

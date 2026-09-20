@@ -63,6 +63,13 @@ class EntityCorrector:
             default=1,
         )
 
+    @property
+    def threshold(self) -> float:
+        """The fuzzy-match threshold this corrector was built with -- for
+        reporting alongside its results (phase-2 spec section 6.7 requires
+        every `EerReport` to carry the threshold it used)."""
+        return self._threshold
+
     def _best_match(self, candidate_key: str) -> tuple[str, float] | None:
         if not candidate_key:
             return None

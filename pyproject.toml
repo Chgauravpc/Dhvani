@@ -9,8 +9,12 @@ dependencies = [
     "aiortc>=1.15.0",
     "faster-whisper>=1.2.1",
     "groq>=1.7.0",
+    "huggingface-hub>=1.32.0",
+    "indic-transliteration>=2.3.82",
     "onnxruntime>=1.30.0",
     "piper-tts>=1.8.0",
+    "pyarrow>=19.0.0",
+    "rapidfuzz>=3.14.0",
     "silero-vad-notorch>=6.2.1.1",
 ]
 

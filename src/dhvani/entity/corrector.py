@@ -11,8 +11,8 @@ from dataclasses import dataclass
 
 from rapidfuzz import fuzz
 
-from dhvani.entity.lexicon import LATIN, DomainLexicon
-from dhvani.entity.phonetic import phonetic_key
+from dhvani.entity.lexicon import DomainLexicon
+from dhvani.entity.phonetic import detect_script, phonetic_key
 
 _WORD_RE = re.compile(r"\S+")
 
@@ -84,13 +84,17 @@ class EntityCorrector:
             return None
         return best_canonical, best_score
 
-    def correct(self, text: str, script: str = LATIN) -> CorrectionResult:
+    def correct(self, text: str) -> CorrectionResult:
         """Slides a word-window (longest lexicon phrase down to one word)
         over `text`, replacing the first (greedy, non-overlapping,
         longest-first) window at or above `threshold` with its canonical
-        form. `script` says how to interpret `text` for phonetic-key
-        generation -- `LATIN` for a romanized/English-heavy ASR transcript,
-        the usual case for `CorrectedSTT`.
+        form.
+
+        Detects each candidate window's script independently (see
+        `phonetic.detect_script`) rather than assuming one script for the
+        whole transcript -- real ASR output script can't be assumed from
+        the spoken language alone (verified: real Hindi audio came back
+        romanized from `WhisperSTT`'s `tiny` model, not Devanagari).
         """
         words = list(_WORD_RE.finditer(text))
         corrections: list[Correction] = []
@@ -106,7 +110,7 @@ class EntityCorrector:
                 start_char = words[i].start()
                 end_char = words[i + width - 1].end()
                 candidate = text[start_char:end_char]
-                key = phonetic_key(candidate, script)
+                key = phonetic_key(candidate, detect_script(candidate))
                 match = self._best_match(key)
                 if match is not None and match[1] >= self._threshold:
                     canonical, _score = match

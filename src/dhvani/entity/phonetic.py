@@ -43,12 +43,39 @@ _SOURCE_SCHEME = {
 _NON_ALNUM_RE = re.compile(r"[^a-z0-9 ]+")
 _RUN_OF_SPACES_RE = re.compile(r" {2,}")
 
+_DEVANAGARI_BLOCK = range(0x0900, 0x0980)
+_TAMIL_BLOCK = range(0x0B80, 0x0C00)
+
+
+def detect_script(text: str) -> str:
+    """Classifies `text` as `DEVANAGARI`, `TAMIL`, or `LATIN` by its
+    dominant Unicode block.
+
+    Exists because ASR output script can't be assumed from the spoken
+    language -- verified directly and reproducibly (not a one-off): real
+    Hindi audio transcribed through `WhisperSTT` with faster-whisper's
+    `tiny` model came back as romanized/Latin text ("Varanasi mein Achesh
+    Shaka Hari restaurant batao..."), not Devanagari, across every example
+    tried. Whether the project's real default (`small`) behaves the same
+    way is unverified -- this environment cannot download it (phase-1 spec
+    section 11) -- so `EntityCorrector` detects script per candidate window
+    instead of trusting a caller-declared one.
+    """
+    devanagari = sum(1 for ch in text if ord(ch) in _DEVANAGARI_BLOCK)
+    tamil = sum(1 for ch in text if ord(ch) in _TAMIL_BLOCK)
+    if devanagari and devanagari >= tamil:
+        return DEVANAGARI
+    if tamil:
+        return TAMIL
+    return LATIN
+
 
 def phonetic_key(text: str, script: str) -> str:
     """Transliterate `text` to a common romanized form and normalize it
     (case, punctuation, repeated spaces) for fuzzy cross-script comparison.
 
-    `script` must be one of `dhvani.entity.lexicon.{DEVANAGARI,LATIN,TAMIL}`.
+    `script` must be one of `dhvani.entity.lexicon.{DEVANAGARI,LATIN,TAMIL}`
+    -- use `detect_script` first if the caller doesn't already know it.
     """
     try:
         source_scheme = _SOURCE_SCHEME[script]

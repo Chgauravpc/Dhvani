@@ -55,6 +55,18 @@ def test_correct_matches_a_single_word_acronym() -> None:
     assert "UPI" in result.text
 
 
+def test_correct_detects_script_per_window_in_a_mixed_transcript() -> None:
+    """The motivating case: a single transcript mixing Devanagari and
+    Latin script (real, reproducible faster-whisper behavior on Hindi
+    audio -- see entity/phonetic.py's `detect_script` docstring). Neither
+    entity would match if the whole transcript were forced through one
+    script."""
+    corrector = EntityCorrector(_LEXICON, threshold=0.82)
+    result = corrector.correct("मेरा आधार link करो upi से")
+    assert "Aadhaar" in result.text
+    assert "UPI" in result.text
+
+
 def test_correct_handles_empty_text() -> None:
     corrector = EntityCorrector(_LEXICON, threshold=0.82)
     result = corrector.correct("")

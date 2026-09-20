@@ -8,7 +8,6 @@ from __future__ import annotations
 from collections.abc import AsyncIterator
 
 from dhvani.entity.corrector import EntityCorrector
-from dhvani.entity.lexicon import LATIN
 from dhvani.providers.base import STTProvider
 from dhvani.telemetry.span import TurnTrace
 from dhvani.types import AudioChunk, Stage, Transcript
@@ -25,10 +24,9 @@ class CorrectedSTT:
     (phase-2 spec section 6.4).
     """
 
-    def __init__(self, inner: STTProvider, corrector: EntityCorrector, script: str = LATIN) -> None:
+    def __init__(self, inner: STTProvider, corrector: EntityCorrector) -> None:
         self._inner = inner
         self._corrector = corrector
-        self._script = script
 
     @property
     def name(self) -> str:
@@ -39,7 +37,7 @@ class CorrectedSTT:
     ) -> AsyncIterator[Transcript]:
         async for transcript in self._inner.stream(audio, trace=trace):
             async with trace.aspan(Stage.STT, "dhvani-entity"):
-                result = self._corrector.correct(transcript.text, script=self._script)
+                result = self._corrector.correct(transcript.text)
             yield Transcript(
                 text=result.text,
                 is_final=transcript.is_final,

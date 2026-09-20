@@ -3,7 +3,7 @@ from __future__ import annotations
 import pytest
 
 from dhvani.entity.lexicon import DEVANAGARI, LATIN, TAMIL
-from dhvani.entity.phonetic import phonetic_key
+from dhvani.entity.phonetic import detect_script, phonetic_key
 
 # Devanagari/Tamil literals below are the exact strings this test pins
 # against -- verified directly against installed indic-transliteration
@@ -49,3 +49,26 @@ def test_phonetic_key_normalizes_case_and_whitespace() -> None:
 def test_phonetic_key_rejects_unsupported_script() -> None:
     with pytest.raises(ValueError, match="unsupported script"):
         phonetic_key("aadhaar", "klingon")
+
+
+def test_detect_script_devanagari() -> None:
+    assert detect_script(AADHAAR_DEVANAGARI) == DEVANAGARI
+
+
+def test_detect_script_tamil() -> None:
+    assert detect_script(AADHAAR_TAMIL) == TAMIL
+
+
+def test_detect_script_latin() -> None:
+    assert detect_script("aadhaar card") == LATIN
+
+
+def test_detect_script_falls_back_to_latin_for_empty_text() -> None:
+    assert detect_script("") == LATIN
+
+
+def test_detect_script_picks_dominant_block_in_mixed_text() -> None:
+    """A word or two of English leaking into an otherwise-Devanagari
+    transcript (very common in real Indic ASR output) should still read as
+    Devanagari overall."""
+    assert detect_script("मेरा आधार card चेक करो") == DEVANAGARI

@@ -87,21 +87,33 @@ Sarvam does **not** make this question moot -- it improves entity
 handling (§18) but was never measured for latency in this pass (both F2
 re-runs used it purely for its EER/WER numbers; no timing sweep was run
 against it, and running one risks the same memory-pressure kill §2.2 just
-hit twice). Keep `dhvani.live`'s default at `small`/`int8` for now, but
-flag it as a live tension rather than a settled choice: phase-2b's own
-Svarah sweep measured `small`/`int8` at **p50=7.46s**, roughly **9x**
-Phase 0's 800ms end-to-end target on its own, before LLM/TTS latency is
-even added -- see §3.1. `tiny`/`float32` (WER 27.9%, p50=1.55s) is the
-better choice *for a live spoken demo where a caller is waiting on the
-line*, and is what this project would ship if latency were the only axis
-that mattered. The reason not to switch the shipped default here: Phase 4
-records the demo from `dhvani.live` as it already exists and is verified
-end-to-end (phase-2 spec section 13), and changing the default now, this
-late, without re-verifying the live path against it, trades one unverified
-change for a latency number that already has an honest caveat recorded in
-§3.1. **Whoever records the Phase 4 demo should switch to `tiny`/`float32`
-first and re-verify**, rather than recording against a default already
-known to be ~9x over budget.
+hit twice).
+
+**`dhvani.live`'s shipped default is changed to `tiny`/`float32`.** Not a
+recommendation for someone else to apply later -- `src/dhvani/live.py`'s
+`WHISPER_MODEL_SIZE`/`WHISPER_COMPUTE_TYPE` module constants (both still
+overridable via `DHVANI_WHISPER_MODEL`/`DHVANI_WHISPER_COMPUTE_TYPE`) now
+default to `tiny`/`float32`, and the module's own docstring records the
+reasoning inline. `small`/`int8` measured p50=7.46s STT latency (phase-2b
+§12), roughly **9x** Phase 0's 800ms end-to-end target from the STT stage
+alone, before LLM/TTS latency is even added -- not viable for a live
+conversation. `tiny`/`float32` (WER 27.9%, p50=1.55s) accepts a real
+accuracy cost for latency a caller can actually sit through, which is the
+honest tradeoff this phase's own measurements argue for.
+
+**What was and wasn't re-verified.** `WhisperSTT("tiny", clock,
+compute_type="float32")` was exercised repeatedly and successfully in this
+phase's own real runs (the degradation sweep, §12 below, and the new
+`test_degradation_integration.py`) -- constructing it, loading the model,
+and transcribing real audio all work. What was **not** repeated is
+phase-1 spec section 7's real-browser-and-microphone manual verification
+of the full live WebRTC path end-to-end with this specific config; this
+sandboxed environment has no browser or microphone, the same limitation
+`dhvani.live`'s own module docstring already states. Whoever next runs
+`dhvani.live` interactively is the first real check of this exact
+default -- worth doing before Phase 4 records the demo from it, not
+because the config is expected to fail, but because it hasn't been
+watched succeed with a human on the other end yet.
 
 ---
 
@@ -430,8 +442,12 @@ larger finding.
 | `test_mediastreams.py` | barge-in emits `clear` and cancels the turn |
 | `test_mock_twilio.py` | full loopback over a localhost WebSocket, no external service |
 
-**Integration (opt-in):** the degradation sweep against real Svarah/LAHAJA
-audio and a real STT.
+**Integration (opt-in):**
+
+| Test | Asserts |
+|---|---|
+| `test_degradation_integration.py` | the degradation sweep against real Svarah audio and a real (`tiny`) `WhisperSTT`, bounded small given the host's memory constraints |
+| `test_degradation_integration.py` | same, against real LAHAJA audio |
 
 ---
 
@@ -443,23 +459,33 @@ audio and a real STT.
       honest caveat phase-2b's own DoD recorded about its own CI workflow
 - [x] `uv run mypy --strict src/dhvani` clean; `ruff check`/`ruff format
       --check` clean, across the whole package, not just the new files
-- [x] `mulaw.py` and `resample.py` import nothing outside the standard
-      library, as designed. `channel.py` additionally imports
-      `dhvani.clock.Clock` and `dhvani.types.AudioChunk` -- project-
-      internal, both themselves stdlib-only, so this adds zero new
-      *runtime* dependencies, which is what §5's ground rule actually
-      guards against; the literal "nothing outside the standard library"
-      wording above didn't anticipate `channel.py` needing the project's
-      own `Clock`/`AudioChunk` abstractions
+- [ ] `src/dhvani/audio/` imports nothing outside the standard library --
+      **not literally true**, and left unchecked rather than rationalized
+      into a pass. `mulaw.py` and `resample.py` satisfy it exactly.
+      `channel.py` imports `dhvani.clock.Clock` and `dhvani.types.AudioChunk`
+      (both themselves stdlib-only, so no third-party runtime dependency is
+      added -- that much matches §5's ground rule). But those two imports
+      are real, are outside the standard library, and this bullet says what
+      it says. Removing them would mean either duplicating `Clock`/
+      `AudioChunk` inside `audio/` (worse: two definitions of the same
+      concept drifting apart) or not having `TelephonyChannel` take a
+      `Clock` at all (breaks the deterministic-under-`FakeClock` testing
+      this whole project is built around). No change made; flagged as an
+      unresolved spec/design tension for whoever owns this tradeoff, not
+      quietly marked done.
 - [x] Sarvam baseline (§2.1) **run**, with whichever preregistered outcome
       occurred written down -- `docs/specs/phase-2.md` §18
 - [ ] LAHAJA sweep (§2.2) -- **blocked**, killed twice now by the host's
       own memory-pressure safeguard; not re-run a third time automatically,
       per that safeguard's own guidance. See §2.2.
-- [x] Live-demo operating point (§2.3) decided and justified -- decided
-      from the already-real Svarah grid rather than blocked on §2.2, since
-      §2.2's numbers wouldn't have changed the STT-latency argument, only
-      added a second dataset's confirmation of it
+- [x] Live-demo operating point (§2.3) decided and justified -- `dhvani.live`'s
+      shipped default is changed in code to `tiny`/`float32` (was
+      `small`/`int8`), not left as a recommendation. Decided from the
+      already-real Svarah grid rather than blocked on §2.2, since §2.2's
+      numbers wouldn't have changed the STT-latency argument, only added a
+      second dataset's confirmation of it. The one thing not re-verified:
+      a real-browser-and-microphone manual check of the live path with
+      this exact config -- see §2.3's own note on that.
 - [x] `eval/degradation.py` and `scripts/run_degradation_sweep.py` built,
       unit-tested, and run for real against Svarah audio (§12): both axes
       reported at every point. WER is noisy at this n (honestly flagged in
@@ -503,13 +529,16 @@ audio and a real STT.
 ## 12. Real degradation sweep results
 
 `uv run python scripts/run_degradation_sweep.py --dataset svarah --n-examples 20`,
-`DHVANI_WHISPER_MODEL=tiny`. `tiny`, not the shipped `small` default, by
-deliberate choice: the host has already killed the LAHAJA model sweep
-twice under memory pressure (§2.2), and `tiny`'s footprint is small enough
-to run this safely rather than risk a third kill on a heavier model. This
-is the real sweep the unit tests (test_degradation.py) don't and can't
-cover -- they use a synthetic draining STT precisely so they don't need a
-real model or real audio.
+`DHVANI_WHISPER_MODEL=tiny` (this run predates the §2.3 default change
+below -- at the time this ran, `tiny` still had to be requested explicitly;
+it is `dhvani.live`'s default as of §2.3). Chosen deliberately light either
+way: the host has already killed the LAHAJA model sweep twice under memory
+pressure (§2.2), and `tiny`'s footprint is small enough to run this safely
+rather than risk a third kill on a heavier model. This is the real sweep
+the unit tests (`test_degradation.py`) don't and can't cover -- they use a
+synthetic draining STT precisely so they don't need a real model or real
+audio; `test_degradation_integration.py` (new, opt-in) covers that gap
+with a small real run against real Svarah and LAHAJA audio.
 
 | config | wer | stt_p50_ms | stt_p90_ms | frames_lost | n |
 |---|---|---|---|---|---|

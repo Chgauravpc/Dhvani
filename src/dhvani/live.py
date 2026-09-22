@@ -45,11 +45,23 @@ from dhvani.vad.silero import SileroVad
 
 logger = logging.getLogger("dhvani.live")
 
-WHISPER_MODEL_SIZE = os.environ.get("DHVANI_WHISPER_MODEL", "small")
-"""Override with DHVANI_WHISPER_MODEL for a smaller/faster model on a
-constrained connection or machine -- "small" is the real default because
-transcription quality is this project's whole point, not something to
-water down for convenience."""
+WHISPER_MODEL_SIZE = os.environ.get("DHVANI_WHISPER_MODEL", "tiny")
+"""Live-demo operating point, decided in phase-3 spec section 2.3: this
+used to default to "small" on the reasoning that transcription quality is
+the project's whole point. Phase 2B's real model sweep against Svarah
+(`phase-2b.md` section 12) put a number on what that cost: `small`/`int8`
+measured at p50=7.46s STT latency, roughly 9x Phase 0's own 200ms STT
+stage budget, before LLM/TTS latency is even added -- not a viable choice
+for a live conversational demo where a caller is waiting on the line.
+`tiny`/`float32` (below) measured at p50=1.55s, WER 27.9% vs. `small`'s
+14.6% -- a real accuracy cost, accepted here for latency a caller can
+actually sit through. Override with DHVANI_WHISPER_MODEL for a different
+tradeoff."""
+
+WHISPER_COMPUTE_TYPE = os.environ.get("DHVANI_WHISPER_COMPUTE_TYPE", "float32")
+"""Paired with WHISPER_MODEL_SIZE above -- `tiny`/`float32` was the
+sweep's stated operating point, not `tiny`/`int8`, per phase-2b.md
+section 12's own reasoning."""
 
 
 def _make_peer_handler(runner: OverlappedRunner, tts_sample_rate: int) -> OnPeerConnected:
@@ -109,7 +121,10 @@ def main() -> None:
 
     logger.info("loading models (faster-whisper, Piper voice) -- once, at startup...")
     clock = RealClock()
-    stt = CorrectedSTT(WhisperSTT(WHISPER_MODEL_SIZE, clock), EntityCorrector(DEFAULT_LEXICON))
+    stt = CorrectedSTT(
+        WhisperSTT(WHISPER_MODEL_SIZE, clock, compute_type=WHISPER_COMPUTE_TYPE),
+        EntityCorrector(DEFAULT_LEXICON),
+    )
     llm = GroqLLM(clock)
     model_path, config_path = ensure_voice_downloaded(DEFAULT_VOICE)
     tts = PiperTTS(model_path, clock, voice_config_path=config_path)

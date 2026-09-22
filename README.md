@@ -78,8 +78,11 @@ uv run python -m dhvani.live
 
 Then open <http://localhost:8080/> in a browser, grant microphone access,
 and talk. faster-whisper's model and the pinned Piper Hindi voice download
-on first run — set `DHVANI_WHISPER_MODEL=tiny` for a faster/smaller model on
-a constrained connection; the real default is `small`.
+on first run. Default STT is `tiny`/`float32` (`DHVANI_WHISPER_MODEL` /
+`DHVANI_WHISPER_COMPUTE_TYPE` to override) — a phase-3 decision
+(`docs/specs/phase-3.md` §2.3): the real model sweep measured `small`/`int8`
+at p50=7.46s STT latency, far too slow for a live conversation, against
+`tiny`/`float32`'s 1.55s at a real but accepted accuracy cost.
 
 The full chain (real browser → WebRTC → Silero VAD → faster-whisper → Groq
 → Piper → audio back to the browser) has been verified end-to-end with an

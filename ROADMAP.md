@@ -16,35 +16,42 @@ measurements in it.
 Not a feature list. Five measured defects from the literature, each becoming
 one deliverable with one metric.
 
-| # | Finding | Source | Deliverable | Metric |
-|---|---------|--------|-------------|--------|
-| F1 | ASR is the bottleneck, not the LLM — 24%+ swing from transcript quality | VoiceAgentBench 2025 | ASR-ablation harness | task success: real ASR vs ground-truth transcript |
-| F2 | Named entities are where Indic ASR breaks — 11.2% vs 6.2% WER | Svarah, LAHAJA | `dhvani-entity` post-ASR corrector | Entity Error Rate before/after |
-| F3 | Code-switching costs 30–50% relative WER | CS-ASR review, HiACC | Hinglish-aware decode + script normalization | WER on CS vs monolingual segments |
-| F4 | Safety refusal collapses 51.78% to 2.67% English-to-Indic | VoiceAgentBench 2025 | pre-LLM language-agnostic intent guard | refusal-rate parity across languages |
-| F5 | Zero Indic turn-taking / full-duplex research exists | gap in literature | Indic endpointer (prosody + semantic completion) | false-interruption rate, yield latency p90/p99 |
+| # | Finding | Deliverable | Status |
+|---|---------|-------------|--------|
+| F1 | ASR is the bottleneck, not the LLM — 24%+ swing from transcript quality | ASR-ablation harness | **done**, pending re-run against an Indic ASR baseline |
+| F2 | Named entities are where Indic ASR breaks — 11.2% vs 6.2% WER | `dhvani-entity` post-ASR corrector | **done**, same pending re-run |
+| F3 | Code-switching costs 30–50% relative WER | Hinglish-aware decode + script normalization | deferred past Nov 3 |
+| F4 | Safety refusal collapses 51.78% to 2.67% English-to-Indic | pre-LLM language-agnostic intent guard | deferred past Nov 3 |
+| F5 | Zero Indic turn-taking / full-duplex research exists | Indic endpointer (prosody + semantic completion) | deferred past Nov 3 |
 
 F1 is the narrative spine: proving the bottleneck on our own stack is what
-justifies spending the project on F2 and F3 rather than on prompt engineering.
-F5 is the only genuinely novel contribution.
+justifies spending the project on transcription rather than on prompt
+engineering. F5 remains the only genuinely novel contribution, and is the
+reason the deferred list is a list rather than a deletion.
+
+**Scope decision, 21 Sep 2026.** F1 and F2 are measured. The remaining
+43 days do not fit F3, F4, F5, the Twilio reframe and a finished artifact,
+so the deadline was held and the findings were cut. What ships on Nov 3 is
+Phases 0–2 plus an Indic ASR baseline, the Twilio reframe, and a README
+that reports all of it honestly — including the negative result.
 
 ## Two tracks
 
 - **Track A — the host.** An agent you can talk to: streaming pipeline, barge-in,
   latency waterfall. Without this the findings have nowhere to live.
-- **Track B — the findings.** F1 through F5.
+- **Track B — the findings.** F1 and F2 before Nov 3; F3–F5 after.
 
 ---
 
-# SHORT TERM — 7 weeks (15 Sep to 3 Nov 2026)
+# BEFORE 3 NOVEMBER 2026
 
-## Phase 0 · Instrumentation spine — Week 1 (Sep 15–21)
+## Phase 0 · Instrumentation spine — DONE (Sep 17)
 
-- [ ] Project skeleton, Python 3.13, typed config
-- [ ] **Telemetry layer**: per-stage spans — endpointing / STT / LLM / tools / TTS —
+- [x] Project skeleton, Python 3.13, typed config
+- [x] **Telemetry layer**: per-stage spans — endpointing / STT / LLM / tools / TTS —
       aggregated to p50 / p90 / p99. Never a single total.
-- [ ] Provider protocols (STT / TTS / LLM)
-- [ ] Test suite green in CI
+- [x] Provider protocols (STT / TTS / LLM)
+- [x] Test suite green in CI
 
 *Mock providers with scripted delays ship alongside the protocols. Reason: the
 Phase 0 deliverable is timing instrumentation, and timing assertions against a
@@ -53,20 +60,20 @@ test rather than an observation. This is test hygiene, not a feature.*
 
 **Proves:** you instrument before you optimize.
 
-## Phase 1 · Working agent — Weeks 2–3 (Sep 22 to Oct 5)
+## Phase 1 · Working agent — DONE (Sep 19–20)
 
-- [ ] Real providers: faster-whisper / IndicConformer (STT), Piper / IndicF5 (TTS),
+- [x] Real providers: faster-whisper / IndicConformer (STT), Piper / IndicF5 (TTS),
       Groq or local Ollama (LLM)
-- [ ] **Streaming with overlapped stages** — STT partials feed the LLM early;
+- [x] **Streaming with overlapped stages** — STT partials feed the LLM early;
       TTS begins on the first sentence, not the full response
-- [ ] Silero VAD + **barge-in**: user interrupts mid-sentence, agent yields
-- [ ] Voice-safe prompt guards — no markdown, lists, or headers
-- [ ] Browser/WebRTC transport
-- [ ] **Milestone: first sub-800ms p50 conversation, waterfall published**
+- [x] Silero VAD + **barge-in**: user interrupts mid-sentence, agent yields
+- [x] Voice-safe prompt guards — no markdown, lists, or headers
+- [x] Browser/WebRTC transport
+- [x] **Milestone: first sub-800ms p50 conversation, waterfall published**
 
 **Proves:** you can ship a real-time system, not an API wrapper.
 
-## Phase 2 · F1 + F2 — Weeks 4–5 (Oct 6–19)
+## Phase 2 · F1 + F2 — DONE (Sep 20–21)
 
 The highest-signal pair. F1 is nearly free once Phase 1 exists; F2 is the flagship.
 
@@ -99,42 +106,173 @@ The highest-signal pair. F1 is nearly free once Phase 1 exists; F2 is the flagsh
 
 **Proves:** you locate a bottleneck, fix it, and measure the fix.
 
-## Phase 3 · F3 + channel robustness — Week 6 (Oct 20–26)
+## Phase 2B · Baselines and CI — Sep 22–26
 
-- [ ] **F3 — Hinglish handling.** Code-switch span detection on streaming
-      transcripts, script normalization, dual-decode-and-merge where it pays.
-      Data: IITG-HingCoS, HiACC.
-- [ ] **Channel simulator**: 8kHz downsample, G.711 mu-law, jitter, packet loss,
-      added delay — each parameterized and swept.
-- [ ] **Robustness curve**: WER and end-to-end latency vs degradation level
+Three things that all fit the same week because they share a harness.
 
-*A simulator is used instead of a live phone line because impairment has to be
-controllable to produce a curve. A real PSTN call gives one uncontrolled sample;
-a swept simulator gives the function. Optional: local Asterisk plus a softphone
-adds a genuine SIP path for the demo recording.*
+**Indic ASR baseline** — the one gap that stops any F2 number surviving a
+follow-up question.
 
-**Proves:** Indic competence, and that you design for hostile channels.
+- [x] Add `SarvamSTT` (Saaras — hosted, free credits, no GPU needed) behind
+      the unchanged Phase 0 `STTProvider` protocol -- built, unit-tested
+      (mocked), real API round trip **not yet run**: `SARVAM_API_KEY` is
+      not available in this environment. See `docs/specs/phase-2b.md` §11.
+- [ ] Re-run Svarah and LAHAJA EER with it as the inner ASR -- **blocked**
+      on the API key above; `--stt sarvam` is wired into
+      `scripts/run_f2_entity_eval.py` and ready
+- [ ] Re-run the F1 ablation with it -- same block; `--stt sarvam` is wired
+      into `scripts/run_f1_ablation.py` and ready
+- [x] Re-express F1 loss as **share of achievable**, not absolute points:
+      English 27.5/42.5 = **65%**, Hindi 10.0/17.5 = **57%**. Same data,
+      comparable across languages, and it dissolves the counterintuitive
+      Hindi-loses-less artifact that section 12 had to apologise for.
+- [x] Call the three-outcome framing in `phase-2.md` §17 what it is:
+      **preregistered.** What each result would mean was written down
+      before the run. Naming that costs nothing and is the difference
+      between an experiment and a demo.
 
-## Phase 4 · F4 + ship — Week 7 (Oct 27 to Nov 2)
+**Model sweep — WER against latency.** The project currently has no
+model-level work at all, which is a real gap for companies that build
+models rather than call them. This is close to free because the eval
+harness is already being re-run.
 
-- [ ] **F4 — intent guard.** Language-agnostic harmful-intent classification on
-      transcripts *before* the LLM. Indic red-team set derived from AgentHarmBench
-      categories.
-- [ ] Report **refusal-rate parity**, English vs Indic
-- [ ] README: demo recording including an interruption, latency table,
-      before/after numbers, honest "what still breaks"
+- [x] Sweep Whisper `tiny` / `small` against `int8` / `float32` (`base`
+      skipped -- not cached locally and not worth a cold download for this
+      grid; `tiny`/`small` already spans the fast/accurate tradeoff)
+- [x] Record WER and stage latency for each, from the existing telemetry
+      -- real run against Svarah (n=20); LAHAJA's run was killed by a host
+      memory-pressure safeguard mid-run, not re-run automatically per that
+      safeguard's own guidance (`docs/specs/phase-2b.md` §12)
+- [x] Plot the Pareto curve and state which point the live demo runs at,
+      and why -- all 4 Svarah grid points are Pareto-optimal (a real
+      tradeoff, no dominated point); the shipped `small`/`int8` default
+      measured at p50=7.46s STT latency against ~8.6s-average utterances,
+      ~6-40x this project's own 200ms STT stage budget across the grid --
+      see `docs/specs/phase-2b.md` §12 for the full reasoning
+
+**CI.** Nothing currently tells a visitor that 50 tests pass.
+
+- [x] GitHub Actions: `pytest -m "not integration"`, `mypy --strict`, `ruff`
+- [x] **A step that fails the build if the streaming overlap saving drops
+      below threshold.** No separate step needed: `tests/test_overlapped.py`
+      already asserts `improvement_ms >= 400.0` and runs in the default
+      (non-`integration`) suite, so CI's `pytest -m "not integration"`
+      step already gates it -- reimplementing it would have been the
+      wrong move per `docs/specs/phase-2b.md` §6.
+- [x] Badge it in the README
+
+*Why this is not optional: `eer_before` of 59.4% on Svarah and 100% on
+LAHAJA measures `small` Whisper, not Indic ASR in general. Without a
+competent Indic baseline, every F2 recovery number is contestable as
+fixing a problem the Phase 1 provider choice created. All three outcomes
+are worth having — Saaras already handles the entities (F2 is
+provider-dependent, and "pick the right ASR" is still the thesis), Saaras
+still misses them (F2 is unarguable), or Saaras misses different ones
+(the most interesting result in the project).*
+
+**Proves:** you test your own thesis against the strongest alternative,
+not the weakest.
+
+## Phase 3 · Twilio reframe — Sep 28 to Oct 9
+
+Retargets the project from browser audio to the audio a phone call actually
+delivers. Partially drafted already on the `worktree-twilio-reframe` branch
+(mu-law codec, resampler, channel simulator) — unreviewed, needs tests.
+
+- [ ] **mu-law codec**, zero-dependency (`audioop` was removed in Python 3.13
+      under PEP 594, and this sits on the hot path of every 20ms frame)
+- [ ] **Stateful resampler** — 8k/16k/22.05k, carrying interpolation state
+      across frames so boundaries do not click
+- [ ] **Channel simulator**: narrowband, G.711 companding, packet loss, jitter,
+      delay — each parameterized, seeded, and swept
+- [ ] **Twilio Media Streams transport**: bidirectional WebSocket, base64
+      `audio/x-mulaw` at 8kHz, `mark`/`clear` barge-in
+- [ ] **Mock Media Streams server** so the whole path is testable with no
+      Twilio account
+- [ ] **Degradation sweep → robustness curve**: Hindi and Hinglish WER, plus
+      end-to-end latency, against impairment level
+
+*A simulator rather than a live line because impairment has to be
+controllable to produce a curve. A real PSTN call gives one uncontrolled
+sample; a swept simulator gives the function.*
+
+**Proves:** you design for hostile channels, and you work at the layer a
+telephony company actually operates.
+
+## Phase 4 · Ship — Oct 12 to 23
+
+The artifact, not more findings. The work is already strong; almost
+nothing about it is currently visible to anyone who has not read the
+specs, and that is what this phase fixes.
+
+**`RESULTS.md` — the technical report.** The best material in this project
+is buried in `docs/specs/phase-2.md` §12–16, where no reader will find it.
+Lifting it into a standalone report is the research artifact, without
+needing F5.
+
+- [ ] Methodology: entity-density gate, dev/test protocol, preregistered
+      outcomes, why the scorer is independent of the matcher
+- [ ] Results: F1 share-of-achievable, F2 EER with corruption rates
+      alongside, confidence intervals, the model-sweep Pareto curve,
+      the degradation curve
+- [ ] **A named section for the negative result** — the 2-of-80 corpus
+      overlap and why the task-success swing is sampling noise. Most
+      projects report only wins; this one says where it found nothing,
+      and that is the part worth leading with.
+- [ ] Limitations: synthesized VoiceAgentBench audio as a lower bound,
+      n=28 on LAHAJA, the dev/test corruption discrepancy
+
+**README, results first.** It currently opens with setup instructions.
+Reorder it.
+
+- [ ] Waterfall at the top, then the headline numbers table, then what
+      did not work, then a link to `RESULTS.md`
+- [ ] CI badge
+- [ ] Setup instructions moved to the bottom, where they belong
+- [ ] **Demo recording** — a real conversation including an interruption
+- [ ] **Failure modes**: what happens on provider timeout, packet loss,
+      LLM stall mid-sentence. `ProviderError` and `fail_after` already
+      exist; this writes down what they do.
+- [ ] **Honest "what still breaks"** — accented speech, noise,
+      multi-speaker
 - [ ] Live demo deployed
 
-**Proves:** you think about safety in the languages you actually ship.
+**Proves:** you finish things, and you report them straight.
+
+## Buffer — Oct 26 to Nov 2
+
+Deliberately empty. Phases 2B–4 are ~4.5 weeks of work in 6 weeks; the
+slack is the plan, not an accident.
 
 ### Apply: 3 November 2026
 
-Phases 0–2 alone are a credible application. F3 and F4 are upside, so slipping
-does not sink the timeline.
-
 ---
 
-# LONG TERM — research capstone (Nov 2026 to Feb 2027)
+# AFTER 3 NOVEMBER — deferred by decision, not by drift
+
+F3, F4 and F5 were on the pre-Nov-3 plan and have been deliberately cut
+from it. The arithmetic did not close: F5 alone is months, and carrying
+all three would have meant shipping none of them and no artifact either.
+
+The trade is explicit. Nov 3 gets a smaller, finished, honestly-measured
+project instead of a larger unfinished one. If Phases 2B–4 land early, F3
+is the first thing to pull forward — Hinglish needs no entity gate, has a
+larger documented effect (30–50% relative WER), and demos audibly.
+
+## Phase 3-deferred · F3 — Hinglish and code-switching
+
+- [ ] Code-switch span detection on streaming transcripts
+- [ ] Script normalization across Devanagari and Latin
+- [ ] Dual-decode-and-merge where it pays for itself
+- [ ] Data: IITG-HingCoS, HiACC
+
+## Phase 4-deferred · F4 — cross-lingual safety
+
+- [ ] Language-agnostic harmful-intent classification on transcripts,
+      before the LLM
+- [ ] Indic red-team set derived from AgentHarmBench categories
+- [ ] Report refusal-rate parity, English vs Indic (VoiceAgentBench
+      measured 51.78% English collapsing to 2.67% Indic)
 
 ## Phase 5 · F5 — Indic turn-taking
 
@@ -168,8 +306,9 @@ read as sentence boundaries and agents interrupt mid-thought.
 | Risk | Mitigation |
 |------|-----------|
 | Local models too slow for sub-800ms | Report the waterfall honestly and note hosted-provider deltas; correct engineering still shows |
-| F5 needs more data or compute than available | Kaggle free T4; scope to 2–3 languages |
-| Scope creep across five findings | Phases 0–2 are self-sufficient; F3–F5 are additive |
+| Sarvam free credits run out mid-evaluation | Bound the Phase 2B re-run to the same Svarah/LAHAJA test splits already used; fall back to reporting the Whisper numbers with the caveat stated |
+| Phase 3 slips and the Twilio reframe lands half-built | Phases 0–2B alone ship as a credible artifact; the browser transport already works |
+| Scope creep back into F3–F5 | They are dated past Nov 3 and stay there. Pulling one forward means cutting Phase 4, not adding a week. |
 
 ## Non-goals
 

@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint:
+    name: Lint and type-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v9
+        with:
+          python-version: "3.13"
+          enable-cache: true
+      - run: uv sync --locked
+      - run: uv run ruff check
+      - run: uv run ruff format --check
+      - run: uv run mypy --strict src/dhvani
+
+  test:
+    name: Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # ubuntu-latest for speed; windows-latest too since it's the real dev
+        # target -- the virtual-time test loop subclasses SelectorEventLoop
+        # while Windows defaults to Proactor (phase-2b spec section 6).
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v9
+        with:
+          python-version: "3.13"
+          enable-cache: true
+      - run: uv sync --locked
+      # No secrets configured here on purpose: every real-API/real-dataset
+      # test is `pytest.mark.integration` and must skip cleanly without one
+      # (phase-2b spec section 3/6) -- if this goes red for a missing key,
+      # the skip logic is wrong, not CI.
+      - run: uv run pytest -m "not integration"

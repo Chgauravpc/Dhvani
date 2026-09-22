@@ -2,13 +2,17 @@
 
     uv run python scripts/run_f2_entity_eval.py --dataset svarah
     uv run python scripts/run_f2_entity_eval.py --dataset lahaja
+    uv run python scripts/run_f2_entity_eval.py --dataset svarah --stt sarvam
 
 Needs Hugging Face access to the chosen dataset (both are gated) -- see
 `scripts/entity_density_gate.py`'s docstring for how to set that up, and
 run that gate first (phase-2 spec section 2A: it's a go/no-go check, not
 optional -- it decides whether an EER computed on this corpus means
-anything). Downloads faster-whisper's model on first run; set
-`DHVANI_WHISPER_MODEL` (default `small`) the same way `dhvani.live` does.
+anything). `--stt whisper` (default) downloads faster-whisper's model on
+first run; set `DHVANI_WHISPER_MODEL` (default `small`) the same way
+`dhvani.live` does. `--stt sarvam` needs `SARVAM_API_KEY` -- see
+phase-2b spec section A. Per that spec's ground rules, only the inner ASR
+changes; nothing else about this script's splits, thresholds, or flow does.
 
 Only decodes/transcribes audio for entity-bearing rows plus a bounded
 random sample of entity-free rows (`eval.datasets.load_*_filtered`) --
@@ -32,7 +36,7 @@ import math
 import os
 import random
 
-from dhvani.clock import RealClock
+from dhvani.clock import Clock, RealClock
 from dhvani.config import load_dotenv
 from dhvani.entity.corrector import EntityCorrector
 from dhvani.entity.lexicon import DEFAULT_LEXICON
@@ -43,6 +47,9 @@ from dhvani.eval.entity_error_rate import (
     score_transcripts,
     transcribe_examples,
 )
+from dhvani.providers.base import STTProvider
+from dhvani.providers.sarvam_stt import DEFAULT_MODEL as DEFAULT_SARVAM_MODEL
+from dhvani.providers.sarvam_stt import SarvamSTT
 from dhvani.providers.whisper_stt import WhisperSTT
 
 _LOADERS = {"svarah": load_svarah_filtered, "lahaja": load_lahaja_filtered}
@@ -53,9 +60,19 @@ _DEV_FRACTION = 0.3
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset", choices=sorted(_LOADERS), required=True)
+    parser.add_argument("--stt", choices=["whisper", "sarvam"], default="whisper")
     parser.add_argument("--n-clean-sample", type=int, default=150)
     parser.add_argument("--seed", type=int, default=0)
     return parser.parse_args()
+
+
+def _make_stt(stt_choice: str, clock: Clock) -> STTProvider:
+    """The one thing phase-2b spec section A changes about this script --
+    same splits, same thresholds, same flow, only the inner ASR differs."""
+    if stt_choice == "sarvam":
+        return SarvamSTT(DEFAULT_SARVAM_MODEL, clock)
+    whisper_model_size = os.environ.get("DHVANI_WHISPER_MODEL", "small")
+    return WhisperSTT(whisper_model_size, clock)
 
 
 def _split_dev_test(
@@ -136,8 +153,7 @@ async def main() -> None:
     )
 
     clock = RealClock()
-    whisper_model_size = os.environ.get("DHVANI_WHISPER_MODEL", "small")
-    stt = WhisperSTT(whisper_model_size, clock)
+    stt = _make_stt(args.stt, clock)
 
     print("\ntranscribing dev split (once)...")
     dev_transcribed = await transcribe_examples(
@@ -154,7 +170,7 @@ async def main() -> None:
         test_transcribed, DEFAULT_LEXICON, final_corrector, split="test"
     )
 
-    print("\n--- final (test split, single run at the dev-chosen threshold) ---")
+    print(f"\n--- final (test split, single run at the dev-chosen threshold) [stt={stt.name}] ---")
     _print_report("test", test_report)
 
 

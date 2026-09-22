@@ -580,6 +580,25 @@ unaffected). Real Groq (`openai/gpt-oss-20b`), real `faster-whisper`.
 | english  | 40 | 42.5%        | 15.0%    | 27.5%        |
 | hindi    | 40 | 17.5%        | 7.5%     | 10.0%        |
 
+**Share of achievable success lost to ASR (phase-2b reframe, §17).** The
+absolute-points table above reads as if Hindi loses *less* to ASR than
+English, which runs backwards from this project's own thesis. Reported as
+a share of each language's own ground-truth ceiling instead, the
+comparison becomes apples-to-apples and the artifact dissolves:
+
+| language | achievable (ground truth) | lost to ASR | share of achievable lost |
+|---|---|---|---|
+| english | 42.5% | 27.5% | **65%** |
+| hindi | 17.5% | 10.0% | **57%** |
+
+Same underlying numbers, no new run. English and Hindi now read as
+comparably damaged by ASR (65% vs. 57% of what was achievable), which is
+the reading that actually matches the thesis -- the absolute-points table
+undersold Hindi's loss because Hindi had less headroom to lose from in the
+first place, not because ASR hurt it less. Both framings are kept: the
+absolute points are still the number to check the arithmetic against; the
+share-of-achievable number is the one to quote.
+
 **Read honestly, not favorably:**
 
 - Both numbers carry the lower-bound caveat from section 2:
@@ -591,13 +610,15 @@ unaffected). Real Groq (`openai/gpt-oss-20b`), real `faster-whisper`.
   LLM-judge scoring) and this run's speed-optimized model choices
   (`tiny` Whisper, `openai/gpt-oss-20b` at `reasoning_effort="low"`) — not
   a claim that the underlying agent is only ~20-40% competent.
-- Hindi's loss-to-ASR (10.0%) reading *smaller* than English's (27.5%) is
-  counterintuitive given the project's own thesis (Indic ASR is the
-  weaker link) and is most likely an artifact of Hindi's ground-truth
-  success rate already being low (17.5%) — there is less headroom left
-  for ASR to lose. Re-running with the real `small` Whisper model, on a
-  machine that can download it, is needed before reading anything into
-  this specific comparison.
+- Hindi's loss-to-ASR (10.0%) reading *smaller* than English's (27.5%) in
+  absolute points is counterintuitive given the project's own thesis
+  (Indic ASR is the weaker link) and is exactly the artifact the
+  share-of-achievable table above exists to fix: it is an artifact of
+  Hindi's ground-truth success rate already being low (17.5%) -- there is
+  less headroom left for ASR to lose -- not evidence that ASR hurts Hindi
+  less. Re-running with the real `small` Whisper model, on a machine that
+  can download it, would still be worth doing before reading anything
+  further into this specific comparison.
 - F2's real numbers (entity recovery) are not yet available -- see
   section 11's Hugging Face access note.
 
@@ -796,8 +817,15 @@ lower bounds) exists to prevent.
 Per `ROADMAP.md`'s framing ("the agent loses X% of task success to
 transcription alone, and `dhvani-entity` recovers Y% of it"): X is F1's
 number (section 12: English 27.5%, Hindi 10.0% task-success loss to ASR,
-both lower bounds on VoiceAgentBench's synthesized audio). Y, the entity-
-level recovery, now has two real numbers instead of zero:
+both lower bounds on VoiceAgentBench's synthesized audio) -- or, in the
+share-of-achievable framing section 12 also carries (phase-2b, §17):
+**English loses 65% of achievable task success to ASR, Hindi loses 57%**.
+The share-of-achievable framing is the one to quote: it is the one that
+makes English and Hindi comparable and lands the headline where the
+thesis actually is -- ASR destroys roughly 60% of achievable task
+success -- rather than making Hindi's loss look smaller than English's
+purely because Hindi's ground-truth ceiling left less to lose from. Y, the
+entity-level recovery, now has two real numbers instead of zero:
 
 | dataset | eer_before | eer_after | absolute recovery | corruption_rate |
 |---|---|---|---|---|
@@ -848,3 +876,88 @@ contain the entities the corrector targets. Measuring this properly would
 need a VoiceAgentBench subset deliberately filtered or constructed to
 contain lexicon entities in the query text -- out of scope for what this
 phase built.
+
+---
+
+## 17. Phase 2B — Indic ASR baseline (Sep 22-26, not yet built)
+
+### Why this is required before the F2 numbers are quotable
+
+Section 14 measured `eer_before` at 59.4% on Svarah; section 15 measured
+it at **100%** on LAHAJA. Those are not measurements of "Indic ASR" --
+they are measurements of `small` Whisper, an English-centric general
+model, on Indic entity mentions.
+
+That leaves the project's headline result open to one question it cannot
+currently answer: **does `dhvani-entity` still help when the ASR is
+actually good?** If a purpose-built Indic ASR gets those mentions right
+unaided, the corrector is recovering a problem the phase-1 provider choice
+created, not a problem in Indic voice agents. Every recovery number in
+sections 14-16 is contestable until this is run.
+
+### What to build
+
+- `providers/sarvam_stt.py` -- `SarvamSTT`, satisfying the **unchanged**
+  Phase 0 `STTProvider` protocol. Saaras is hosted, so no GPU is needed
+  and the no-local-model constraint that forced faster-whisper in phase 1
+  does not apply. Key via `SARVAM_API_KEY`, same env-var-only rule as
+  `GROQ_API_KEY`.
+- No change to `EntityCorrector`, `CorrectedSTT`, or either eval script.
+  `SarvamSTT` is a drop-in for the `stt` argument they already take. If
+  anything needs changing to accommodate it, the protocol was wrong, and
+  that is a design discussion rather than a patch.
+
+### What to re-run
+
+1. Svarah EER, same test split, same threshold, `SarvamSTT` as inner ASR.
+2. LAHAJA EER, same.
+3. The F1 ablation, `--languages english,hindi --n-per-language 40`.
+
+Report each beside the existing Whisper figure, never replacing it. The
+comparison is the result.
+
+### Reading the outcome
+
+All three possibilities are worth having, which is what makes this worth
+running rather than a risk to the narrative:
+
+- **Saaras already gets the entities right.** F2 is provider-dependent.
+  Say so plainly -- "choose an Indic ASR" is still the F1 thesis, and
+  demonstrating that a 10-point corrector gain evaporates against the
+  right model is a genuine finding about where effort belongs.
+- **Saaras still misses them.** F2 becomes unarguable: the failure
+  survives the strongest available Indic ASR.
+- **Saaras misses a different set.** The most interesting outcome -- it
+  would say entity errors are systematic to the task rather than to any
+  one model, and the error sets themselves become the finding.
+
+### The F1 reframe (free, no new code)
+
+Section 12 reports task-success loss in absolute points and then has to
+apologise for Hindi's 10.0% reading smaller than English's 27.5%. The
+cause is stated correctly there: Hindi's ground-truth ceiling is only
+17.5%, so there is less to lose.
+
+Report **share of achievable success lost to ASR** instead:
+
+| language | achievable | lost to ASR | share of achievable lost |
+|---|---|---|---|
+| english | 42.5% | 27.5% | **65%** |
+| hindi | 17.5% | 10.0% | **57%** |
+
+Same data, already collected. The two languages become comparable, the
+counterintuitive artifact dissolves, and the headline lands where the
+thesis actually is: ASR destroys roughly 60% of achievable task success.
+Keep the absolute figures alongside -- the point is a better denominator,
+not a better-looking number.
+
+### Definition of done
+
+- [ ] `SarvamSTT` satisfies `STTProvider` unchanged; `mypy --strict` clean
+- [ ] Unit tests against a mocked Sarvam response; integration test marked
+      `integration` and skipped without `SARVAM_API_KEY`
+- [ ] Svarah and LAHAJA EER re-run and tabulated beside the Whisper numbers
+- [ ] F1 ablation re-run and tabulated beside the Whisper numbers
+- [ ] Section 12 and section 16 updated with share-of-achievable framing
+- [ ] Whichever of the three outcomes occurred, written down as the finding
+      rather than worked around

@@ -2,10 +2,13 @@
 
     uv run python scripts/run_f1_ablation.py [--languages english,hindi] [--n-per-language 40]
     uv run python scripts/run_f1_ablation.py --with-corrected-stt   # ties F1 and F2 together
+    uv run python scripts/run_f1_ablation.py --stt sarvam           # phase-2b: Indic ASR baseline
 
 Needs `GROQ_API_KEY` (via `.env` or the environment, same as `dhvani.live`).
-Downloads faster-whisper's model on first run; set `DHVANI_WHISPER_MODEL`
-(default `small`) the same way `dhvani.live` does.
+`--stt whisper` (default) downloads faster-whisper's model on first run; set
+`DHVANI_WHISPER_MODEL` (default `small`) the same way `dhvani.live` does.
+`--stt sarvam` needs `SARVAM_API_KEY` -- see phase-2b spec section A. Per
+that spec, only the inner ASR changes; nothing else about this script does.
 
 `--with-corrected-stt` adds a third condition, `CorrectedSTT` wrapping
 `WhisperSTT`, so this measures whether `dhvani-entity` changes any real
@@ -29,14 +32,17 @@ import argparse
 import asyncio
 import os
 
-from dhvani.clock import RealClock
+from dhvani.clock import Clock, RealClock
 from dhvani.config import load_dotenv
 from dhvani.entity.corrector import EntityCorrector
 from dhvani.entity.lexicon import DEFAULT_LEXICON
 from dhvani.eval.datasets import load_voiceagentbench_subset
 from dhvani.eval.task_success import run_ablation
+from dhvani.providers.base import STTProvider
 from dhvani.providers.corrected_stt import CorrectedSTT
 from dhvani.providers.groq_llm import GroqLLM
+from dhvani.providers.sarvam_stt import DEFAULT_MODEL as DEFAULT_SARVAM_MODEL
+from dhvani.providers.sarvam_stt import SarvamSTT
 from dhvani.providers.whisper_stt import WhisperSTT
 
 
@@ -45,7 +51,17 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--languages", default="english,hindi")
     parser.add_argument("--n-per-language", type=int, default=40)
     parser.add_argument("--with-corrected-stt", action="store_true")
+    parser.add_argument("--stt", choices=["whisper", "sarvam"], default="whisper")
     return parser.parse_args()
+
+
+def _make_stt(stt_choice: str, clock: Clock) -> STTProvider:
+    """The one thing phase-2b spec section A changes about this script --
+    same ablation logic, only the inner ASR differs."""
+    if stt_choice == "sarvam":
+        return SarvamSTT(DEFAULT_SARVAM_MODEL, clock)
+    whisper_model_size = os.environ.get("DHVANI_WHISPER_MODEL", "small")
+    return WhisperSTT(whisper_model_size, clock)
 
 
 async def main() -> None:
@@ -71,20 +87,17 @@ async def main() -> None:
         )
 
     clock = RealClock()
-    whisper_model_size = os.environ.get("DHVANI_WHISPER_MODEL", "small")
     llm = GroqLLM(clock)
 
     make_corrected_stt = None
     if args.with_corrected_stt:
 
         def make_corrected_stt() -> CorrectedSTT:
-            return CorrectedSTT(
-                WhisperSTT(whisper_model_size, clock), EntityCorrector(DEFAULT_LEXICON)
-            )
+            return CorrectedSTT(_make_stt(args.stt, clock), EntityCorrector(DEFAULT_LEXICON))
 
     report = await run_ablation(
         examples,
-        make_real_stt=lambda: WhisperSTT(whisper_model_size, clock),
+        make_real_stt=lambda: _make_stt(args.stt, clock),
         llm=llm,
         clock=clock,
         make_corrected_stt=make_corrected_stt,
@@ -95,6 +108,7 @@ async def main() -> None:
     print("so this measures a LOWER BOUND on the real-world ASR penalty, not an")
     print("estimate of it -- see docs/specs/phase-2.md section 2.")
     print()
+    print(f"stt={args.stt}")
     header = f"{'language':<10}{'n':>5}{'ground_truth':>15}{'real_asr':>12}{'loss':>10}"
     if args.with_corrected_stt:
         header += f"{'corrected_asr':>16}{'recovered':>12}"

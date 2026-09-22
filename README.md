@@ -1,5 +1,7 @@
 # Dhvani
 
+[![CI](https://github.com/Chgauravpc/Dhvani/actions/workflows/ci.yml/badge.svg)](https://github.com/Chgauravpc/Dhvani/actions/workflows/ci.yml)
+
 Indic voice-agent research project. See [`ROADMAP.md`](ROADMAP.md) for the
 thesis and phase plan, and [`docs/specs/`](docs/specs/) for per-phase
 implementation specs.
@@ -50,6 +52,19 @@ uv run python scripts/run_f2_entity_eval.py --dataset lahaja  # F2 dev sweep + t
 Svarah and LAHAJA are gated Hugging Face datasets — accept each dataset's
 terms on huggingface.co with your account, then `huggingface-cli login`
 (or set `HF_TOKEN`) before the last two commands above will work.
+
+## Phase 2B — Indic ASR baseline, model sweep, CI
+
+See [`docs/specs/phase-2b.md`](docs/specs/phase-2b.md). `SarvamSTT` (Saaras)
+is a drop-in `STTProvider` for `WhisperSTT`, so the same F1/F2 eval scripts
+re-run against it via `--stt sarvam`; needs a free
+[Sarvam API key](https://dashboard.sarvam.ai/) exported as `SARVAM_API_KEY`.
+
+```
+uv run python scripts/run_f2_entity_eval.py --dataset svarah --stt sarvam
+uv run python scripts/run_f1_ablation.py --stt sarvam
+uv run python scripts/run_model_sweep.py --dataset svarah --n-examples 30
+```
 
 ## Running the live demo
 

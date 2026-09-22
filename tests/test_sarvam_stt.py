@@ -57,7 +57,13 @@ async def _two_chunks() -> AsyncIterator[AudioChunk]:
     yield AudioChunk(pcm=b"\x02\x00" * 160, sample_rate=16000, seq=1, is_last=True)
 
 
-def test_sarvam_stt_requires_api_key() -> None:
+def test_sarvam_stt_requires_api_key(monkeypatch: pytest.MonkeyPatch) -> None:
+    # Explicitly cleared rather than assumed absent: `test_sarvam_stt_integration.py`
+    # calls `load_dotenv()` at module level (needed there to pick up a real key for
+    # its own integration tests), which -- once a real `.env` with `SARVAM_API_KEY`
+    # exists -- otherwise leaks that key into this test via process-wide `os.environ`,
+    # regardless of collection order.
+    monkeypatch.delenv("SARVAM_API_KEY", raising=False)
     clock = FakeClock()
     with pytest.raises(ProviderError, match="SARVAM_API_KEY"):
         SarvamSTT(DEFAULT_MODEL, clock, api_key=None)

@@ -43,17 +43,30 @@ class EndpointerLike(Protocol):
 
 
 class ConversationSession:
-    """Runs one continuous conversation: audio in, turns out."""
+    """Runs one continuous conversation: audio in, turns out.
+
+    `on_barge_in`, if given, fires the instant a barge-in is detected (the
+    same moment `_on_speech_started` sets the barge-in event for the active
+    turn) -- before that turn has finished cancelling. Added for
+    `transport.mediastreams.MediaStreamsTransport` (phase-3 spec section
+    7.4): Twilio barge-in is a `clear` message flushing the platform's own
+    playback buffer, which has to be sent the moment speech is detected, not
+    after `OverlappedRunner` unwinds and raises `BargeInError`. The browser
+    transport doesn't need this -- local cancellation already stops
+    `TTSAudioTrack` from being pushed further audio -- so it's optional and
+    unused there."""
 
     def __init__(
         self,
         runner: OverlappedRunner,
         endpointer: EndpointerLike,
         audio_sink: Callable[[AudioChunk], None],
+        on_barge_in: Callable[[], None] | None = None,
     ) -> None:
         self._runner = runner
         self._endpointer = endpointer
         self._audio_sink = audio_sink
+        self._on_barge_in = on_barge_in
         self.session_trace = SessionTrace()
 
         self._recording_queue: _Queue | None = None
@@ -99,6 +112,8 @@ class ConversationSession:
         if self._active_turn_queue is not None:
             assert self._barge_in is not None
             self._barge_in.set()
+            if self._on_barge_in is not None:
+                self._on_barge_in()
         else:
             self._start_turn(self._recording_queue)
 

@@ -453,10 +453,13 @@ larger finding.
 
 ## 9. Definition of done
 
-- [x] `uv run pytest -m "not integration"` green (195 passed); CI runs on
-      push (badge in README, per phase-2b) but a real green Actions run on
-      *this* phase's new files hasn't been separately observed -- same
-      honest caveat phase-2b's own DoD recorded about its own CI workflow
+- [x] `uv run pytest -m "not integration"` green (195 passed) locally; **and**
+      pushed to `origin/main` and watched via `gh run watch` -- run
+      [35762078976](https://github.com/Chgauravpc/Dhvani/actions/runs/35762078976),
+      all three jobs green: `Test (ubuntu-latest)` 17s, `Lint and
+      type-check` 21s, `Test (windows-latest)` 37s. Genuinely observed,
+      not assumed -- an earlier draft of this checklist marked this done
+      before main had ever been pushed, which was wrong and was corrected.
 - [x] `uv run mypy --strict src/dhvani` clean; `ruff check`/`ruff format
       --check` clean, across the whole package, not just the new files
 - [ ] `src/dhvani/audio/` imports nothing outside the standard library --

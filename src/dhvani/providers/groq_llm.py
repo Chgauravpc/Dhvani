@@ -7,15 +7,17 @@ the environment; never hardcode or log a key.
 
 from __future__ import annotations
 
+import json
 import os
 from collections.abc import AsyncIterator, Mapping, Sequence
+from dataclasses import dataclass, field
 
 from groq import AsyncGroq, AsyncStream
 from groq.types.chat import ChatCompletionChunk
 
 from dhvani.clock import Clock
 from dhvani.telemetry.span import FIRST_LLM_TOKEN, TurnTrace
-from dhvani.types import LLMDelta, Message, Stage
+from dhvani.types import LLMDelta, Message, Stage, ToolCall
 
 DEFAULT_MODEL = "openai/gpt-oss-20b"
 """Verified available and working against the account's actual key (Groq's
@@ -35,12 +37,41 @@ Pass `reasoning_effort=None` to omit the parameter entirely for a model
 that doesn't accept it."""
 
 
+@dataclass
+class _PendingToolCall:
+    """Accumulates one tool call's streamed fragments.
+
+    Verified directly against a real streaming tool-call response (phase-2
+    spec, F1 groundwork): `openai/gpt-oss-20b` on Groq sent this model's one
+    tool call as a single chunk with `id`/`function.name` already complete
+    and the full `function.arguments` JSON string in one piece -- but
+    `id`/`name` are documented as present only on a tool call's *first*
+    fragment in the general streaming tool-call convention this mirrors
+    (OpenAI-compatible), and `arguments` can arrive over several chunks for
+    other models. Accumulating by `index` and concatenating `arguments`
+    handles both the observed single-chunk case and the general one.
+    """
+
+    id: str | None = None
+    name: str | None = None
+    arguments_json: str = field(default="")
+
+    def to_tool_call(self, index: int) -> ToolCall:
+        try:
+            arguments: Mapping[str, object] = json.loads(self.arguments_json or "{}")
+        except json.JSONDecodeError:
+            arguments = {}
+        return ToolCall(id=self.id or f"call_{index}", name=self.name or "", arguments=arguments)
+
+
 class GroqLLM:
     """Streams a Groq chat completion, mapping deltas to `LLMDelta`.
 
-    Tool-calling is accepted for protocol conformance but not mapped back
-    into `LLMDelta.tool_call` -- out of scope for the phase-1 milestone
-    (a spoken conversation demo, not agentic tool use).
+    Text and tool-call deltas are both mapped -- `ToolCall`s are emitted
+    once fully accumulated, immediately before the final delta, matching
+    `MockLLM`'s existing tool-call-then-final ordering (phase-0
+    `providers/mock.py`) so callers like the F1 ablation harness don't need
+    two different tool-call conventions to handle.
     """
 
     name = "groq"
@@ -71,19 +102,35 @@ class GroqLLM:
                 model=self._model,
                 stream=True,
                 reasoning_effort=self._reasoning_effort,  # type: ignore[arg-type]
+                tools=list(tools) if tools else None,  # type: ignore[arg-type]
             )
             assert isinstance(response, AsyncStream)
             groq_stream: AsyncStream[ChatCompletionChunk] = response
             first_token = True
+            pending_calls: dict[int, _PendingToolCall] = {}
             try:
                 async for chunk in groq_stream:
-                    text = chunk.choices[0].delta.content or ""
-                    if not text:
-                        continue
-                    if first_token:
-                        trace.mark(FIRST_LLM_TOKEN)
-                        first_token = False
-                    yield LLMDelta(text=text)
+                    delta = chunk.choices[0].delta
+                    text = delta.content or ""
+                    if text:
+                        if first_token:
+                            trace.mark(FIRST_LLM_TOKEN)
+                            first_token = False
+                        yield LLMDelta(text=text)
+                    for tool_call_delta in delta.tool_calls or ():
+                        pending = pending_calls.setdefault(
+                            tool_call_delta.index, _PendingToolCall()
+                        )
+                        if tool_call_delta.id:
+                            pending.id = tool_call_delta.id
+                        function = tool_call_delta.function
+                        if function is not None:
+                            if function.name:
+                                pending.name = function.name
+                            if function.arguments:
+                                pending.arguments_json += function.arguments
             finally:
                 await groq_stream.close()
+            for index, pending in pending_calls.items():
+                yield LLMDelta(tool_call=pending.to_tool_call(index))
             yield LLMDelta(is_final=True)

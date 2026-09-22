@@ -12,6 +12,10 @@ section 7's milestone verification is manual for that reason). Everything
 this wires together -- the overlapped runner, barge-in, the WebRTC audio
 path -- is unit- or integration-tested elsewhere against mocks or a
 Python-only loopback; this module is the assembly, not new logic.
+
+Since phase 2, STT output also passes through `CorrectedSTT` (F2's
+`dhvani-entity` post-ASR corrector) before reaching the LLM -- a drop-in
+`STTProvider` wrap, so this is still assembly, not new logic here either.
 """
 
 from __future__ import annotations
@@ -26,8 +30,11 @@ from aiortc.mediastreams import MediaStreamTrack
 
 from dhvani.clock import RealClock
 from dhvani.config import LatencyBudget, load_dotenv
+from dhvani.entity.corrector import EntityCorrector
+from dhvani.entity.lexicon import DEFAULT_LEXICON
 from dhvani.pipeline.overlapped import OverlappedRunner
 from dhvani.pipeline.session import ConversationSession
+from dhvani.providers.corrected_stt import CorrectedSTT
 from dhvani.providers.groq_llm import GroqLLM
 from dhvani.providers.piper_tts import DEFAULT_VOICE, PiperTTS, ensure_voice_downloaded
 from dhvani.providers.whisper_stt import WhisperSTT
@@ -102,7 +109,7 @@ def main() -> None:
 
     logger.info("loading models (faster-whisper, Piper voice) -- once, at startup...")
     clock = RealClock()
-    stt = WhisperSTT(WHISPER_MODEL_SIZE, clock)
+    stt = CorrectedSTT(WhisperSTT(WHISPER_MODEL_SIZE, clock), EntityCorrector(DEFAULT_LEXICON))
     llm = GroqLLM(clock)
     model_path, config_path = ensure_voice_downloaded(DEFAULT_VOICE)
     tts = PiperTTS(model_path, clock, voice_config_path=config_path)

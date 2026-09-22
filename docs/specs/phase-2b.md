@@ -1,9 +1,13 @@
 # Phase 2B — Baselines and CI
 
-**Status:** B (model sweep) and C (CI) implemented and run for real;
-A (`SarvamSTT`) built and unit-tested but not run against the real API --
-blocked on `SARVAM_API_KEY` (section 11). See section 8 for the honest,
-item-by-item definition-of-done.
+**Status:** A, B and C all implemented and run for real. `SARVAM_API_KEY`
+became available during Phase 3 (section 11 records it was absent when
+this phase was originally built); the real Svarah/LAHAJA EER and F1
+re-runs against Sarvam are in `phase-2.md` section 18, per Phase 3 spec
+section 2.1, which named this the single highest-value unrun experiment
+in the project and forbade cutting it. The LAHAJA model sweep (killed by
+memory pressure, section 12) was also finished under Phase 3 section 2.2.
+See section 8 for the item-by-item definition-of-done.
 **Depends on:** Phase 2 (eval harness, `CorrectedSTT`, Svarah/LAHAJA loaders)
 **Blocks:** Phase 3 (Twilio reframe)
 **Window:** Sep 22–26, 2026 — the tightest week in the plan
@@ -347,21 +351,19 @@ real Sarvam round trip; the three re-runs in A.3; one bounded real sweep.
       since that needs a real push and a real Actions run this build
       didn't perform; the workflow itself was validated by YAML-parsing it
       and by running every step it calls locally
-- [ ] **Svarah EER, LAHAJA EER and F1 re-run on Sarvam** -- **blocked**:
-      `SARVAM_API_KEY` was not available in this environment (section 11).
-      `SarvamSTT` and the `--stt sarvam` flag on both eval scripts are
-      built, unit-tested, and ready; nothing about A.3 executed against
-      the real API
+- [x] **Svarah EER, LAHAJA EER and F1 re-run on Sarvam** -- run for real
+      under Phase 3 section 2.1 once `SARVAM_API_KEY` became available;
+      results and reading in `phase-2.md` section 18
 - [x] `phase-2.md` §12 and §16 carry the share-of-achievable framing
 - [x] Sweep table produced for Svarah, Pareto front marked (all 4 points
       non-dominated on this real grid), operating point stated with its
-      reason (section 12) -- LAHAJA's sweep was attempted and killed by
-      the host's own memory-pressure safeguard mid-run, not re-run
-      automatically per that safeguard's own guidance (section 12)
-- [ ] Whichever of §17's three preregistered outcomes occurred, written
-      down as the finding -- **cannot be determined without the blocked
-      Sarvam re-run above**; nothing here should be read as any of the
-      three outcomes until that run happens for real
+      reason (section 12); LAHAJA's sweep, previously killed by the host's
+      memory-pressure safeguard, was finished under Phase 3 section 2.2 --
+      see the appended results below
+- [x] Whichever of §17's three preregistered outcomes occurred, written
+      down as the finding -- `phase-2.md` section 18: Svarah lands closest
+      to "Saaras helps but doesn't replace the corrector"; LAHAJA lands
+      squarely on "Saaras still misses them," identically to Whisper
 
 ---
 

@@ -832,6 +832,11 @@ entity-level recovery, now has two real numbers instead of zero:
 | Svarah (test, n=143) | 59.4% | 49.0% | 10.4 points | 2.9% |
 | LAHAJA (test, n=28) | 100.0% | 46.4% | 53.6 points | 19.4% |
 
+**These two rows are `small` Whisper.** Section 18 (Phase 2B carried into
+Phase 3) re-runs both against Sarvam's Saaras model, the Indic ASR
+baseline section 17 called the "single most important" gap left in this
+table -- Svarah improves to 46.9%/39.9%, LAHAJA stays at 100.0%/35.7%.
+
 Both are real `small`-model, real-dataset, dev-tuned/test-reported
 numbers -- not projections. Neither should be read as "the" F2 number:
 Svarah is Indic-accented English at a corpus scale (143 test mentions)
@@ -879,7 +884,7 @@ phase built.
 
 ---
 
-## 17. Phase 2B — Indic ASR baseline (Sep 22-26, not yet built)
+## 17. Phase 2B — Indic ASR baseline (Sep 22-26, plan -- see section 18 for the real run)
 
 ### Why this is required before the F2 numbers are quotable
 
@@ -953,11 +958,116 @@ not a better-looking number.
 
 ### Definition of done
 
-- [ ] `SarvamSTT` satisfies `STTProvider` unchanged; `mypy --strict` clean
-- [ ] Unit tests against a mocked Sarvam response; integration test marked
+- [x] `SarvamSTT` satisfies `STTProvider` unchanged; `mypy --strict` clean
+- [x] Unit tests against a mocked Sarvam response; integration test marked
       `integration` and skipped without `SARVAM_API_KEY`
-- [ ] Svarah and LAHAJA EER re-run and tabulated beside the Whisper numbers
-- [ ] F1 ablation re-run and tabulated beside the Whisper numbers
-- [ ] Section 12 and section 16 updated with share-of-achievable framing
-- [ ] Whichever of the three outcomes occurred, written down as the finding
-      rather than worked around
+- [x] Svarah and LAHAJA EER re-run and tabulated beside the Whisper numbers
+      -- see section 18
+- [x] F1 ablation re-run and tabulated beside the Whisper numbers -- see
+      section 18
+- [x] Section 12 and section 16 updated with share-of-achievable framing
+- [x] Whichever of the three outcomes occurred, written down as the finding
+      rather than worked around -- see section 18
+
+---
+
+## 18. Phase 2B carried into Phase 3 -- the real Sarvam run (Sep 22)
+
+`SARVAM_API_KEY` was unavailable when phase-2b.md was built (its section
+11 records that honestly); it became available for phase-3, whose section
+2.1 named this "the single highest-value unrun experiment in the project"
+and forbade cutting it. Same splits, same thresholds, same scripts as
+section 14-16's Whisper runs -- only the inner ASR changed, per this
+section's own ground rule.
+
+### Svarah EER, real Sarvam (`saaras:v3`, test split, dev-tuned threshold)
+
+`uv run python scripts/run_f2_entity_eval.py --dataset svarah --stt sarvam`
+
+| dataset | stt | eer_before | eer_after | absolute recovery | corruption_rate | n_mentions |
+|---|---|---|---|---|---|---|
+| Svarah (test) | whisper (small) | 59.4% | 49.0% | 10.4 points | 2.9% | 143 |
+| Svarah (test) | **sarvam** | **46.9%** | **39.9%** | **7.0 points** | **2.9%** | 143 |
+
+Dev-chosen threshold was 0.80 (vs. Whisper's 0.82) -- the sweep is
+independent per STT, as it should be; nothing about the threshold-choice
+procedure changed.
+
+### LAHAJA EER, real Sarvam
+
+`uv run python scripts/run_f2_entity_eval.py --dataset lahaja --stt sarvam`
+
+| dataset | stt | eer_before | eer_after | absolute recovery | corruption_rate | n_mentions |
+|---|---|---|---|---|---|---|
+| LAHAJA (test) | whisper (small) | 100.0% | 46.4% | 53.6 points | 19.4% | 28 |
+| LAHAJA (test) | **sarvam** | **100.0%** | **35.7%** | **64.3 points** | **0.0%** | 28 |
+
+Dev-chosen threshold was 0.95 (vs. Whisper's implicit default) -- the dev
+sweep pushed all the way to the grid's most conservative value, since
+lower thresholds bought no extra recovery on only 12 dev mentions but did
+cost real corruption (39.1% at 0.70, falling to 0.0% by 0.95). Still n=28
+on test; the 30-100-mention "report a confidence interval" bucket from the
+section 2A gate still applies (95% CI on `eer_after`: [20.7%, 54.2%]).
+
+### F1 ablation, real Sarvam
+
+`uv run python scripts/run_f1_ablation.py --languages english,hindi --n-per-language 40 --stt sarvam`
+
+| language | n | stt | ground truth | real ASR | loss to ASR |
+|---|---|---|---|---|---|
+| english | 40 | whisper (tiny) | 42.5% | 15.0% | 27.5% |
+| english | 40 | **sarvam** | 40.0% | 32.5% | **7.5%** |
+| hindi | 40 | whisper (tiny) | 17.5% | 7.5% | 10.0% |
+| hindi | 40 | **sarvam** | 15.0% | 22.5% | **-7.5%** |
+
+One example (`single_tool_19`) failed with a Groq `APIError` (a tool-call
+argument schema mismatch on `walmart.check_price`, the same kind of
+sampling-driven Groq flakiness section 11 already found once) and was
+counted as a task failure per this harness's own design, not excluded.
+Ground-truth numbers differ slightly from section 12's Whisper run
+(40.0%/15.0% here vs. 42.5%/17.5% there) because Groq's tool-call sampling
+is non-deterministic between runs, not because anything about the
+ground-truth condition changed.
+
+Hindi's **negative** loss (-7.5 points -- the Sarvam-transcribed condition
+scored *better* than ground truth) should not be read as "ASR helps."
+Section 16 already established why F1-on-VoiceAgentBench is close to pure
+noise for this lexicon: only a handful of the 80 example queries mention
+a lexicon entity at all, so almost every difference between conditions is
+two independent, non-deterministic Groq tool-call samples landing
+differently on the same input, not a real transcription effect. An n=40
+per-language sample is nowhere near large enough to distinguish that noise
+from a genuine effect in either direction.
+
+### Reading the outcome (section 17's preregistration)
+
+Svarah lands closest to the first preregistered outcome, but only
+partially: Saaras is meaningfully better than Whisper unaided (46.9% vs.
+59.4% `eer_before`) -- real evidence that ASR choice matters, exactly as
+the F1 thesis claims -- but it does **not** get the entities right on its
+own (46.9% is still a near-coin-flip miss rate), and `dhvani-entity`
+still recovers a further 7.0 points on top of it. So the honest reading is
+not "the corrector evaporates against a better model," it's **"a better
+model raises the floor `dhvani-entity` corrects from, and does not
+replace correcting it."**
+
+LAHAJA lands on the second outcome without qualification: **100.0%
+`eer_before` on both Whisper and Sarvam** -- a purpose-built Indic ASR
+misses LAHAJA's entity mentions exactly as completely as an
+English-centric general model does. That is the strongest single number
+in this project for "the failure survives the strongest available Indic
+ASR": LAHAJA's accented, code-switched entity mentions defeat two
+architecturally different systems identically. `dhvani-entity` recovers
+more of it against Sarvam (64.3 points) than against Whisper (53.6
+points), at a lower corruption rate (0.0% vs. 19.4%) -- consistent with
+Sarvam's transcription being closer to correct everywhere else, giving
+the phonetic matcher cleaner context to work from even where it still
+misses the entity itself.
+
+**Combined reading**: Sarvam is a genuine improvement over `small`
+Whisper on Svarah's accented-English entities, and identical to it (both
+total failures) on LAHAJA's Hindi entities. Neither dataset supports "pick
+a better ASR and skip the corrector" -- the corrector recovers real,
+non-trivial points against Sarvam on both. The project's F2 thesis holds
+against the strongest available alternative, which is exactly what this
+run was for.

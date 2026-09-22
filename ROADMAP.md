@@ -114,14 +114,16 @@ Three things that all fit the same week because they share a harness.
 follow-up question.
 
 - [x] Add `SarvamSTT` (Saaras — hosted, free credits, no GPU needed) behind
-      the unchanged Phase 0 `STTProvider` protocol -- built, unit-tested
-      (mocked), real API round trip **not yet run**: `SARVAM_API_KEY` is
-      not available in this environment. See `docs/specs/phase-2b.md` §11.
-- [ ] Re-run Svarah and LAHAJA EER with it as the inner ASR -- **blocked**
-      on the API key above; `--stt sarvam` is wired into
-      `scripts/run_f2_entity_eval.py` and ready
-- [ ] Re-run the F1 ablation with it -- same block; `--stt sarvam` is wired
-      into `scripts/run_f1_ablation.py` and ready
+      the unchanged Phase 0 `STTProvider` protocol -- built, unit-tested,
+      and run for real against the API once `SARVAM_API_KEY` became
+      available under Phase 3 §2.1. See `docs/specs/phase-2b.md` §11.
+- [x] Re-run Svarah and LAHAJA EER with it as the inner ASR -- real numbers
+      in `docs/specs/phase-2.md` §18: Svarah improves (59.4% → 46.9%
+      `eer_before`); LAHAJA doesn't (100.0% on both) — a purpose-built
+      Indic ASR misses LAHAJA's entities exactly as completely as Whisper.
+- [x] Re-run the F1 ablation with it -- `docs/specs/phase-2.md` §18; noisy
+      as expected given the same 2-of-80 lexicon-overlap issue section 16
+      already found, not a new problem.
 - [x] Re-express F1 loss as **share of achievable**, not absolute points:
       English 27.5/42.5 = **65%**, Hindi 10.0/17.5 = **57%**. Same data,
       comparable across languages, and it dissolves the counterintuitive
@@ -176,21 +178,28 @@ not the weakest.
 ## Phase 3 · Twilio reframe — Sep 28 to Oct 9
 
 Retargets the project from browser audio to the audio a phone call actually
-delivers. Partially drafted already on the `worktree-twilio-reframe` branch
-(mu-law codec, resampler, channel simulator) — unreviewed, needs tests.
+delivers. The `worktree-twilio-reframe` branch's draft (mu-law codec,
+resampler, channel simulator) was read, tested, and one real bug fixed
+(the resampler's downsampling pre-filter didn't carry state across frames,
+reintroducing the exact click the module exists to prevent) before being
+ported in.
 
-- [ ] **mu-law codec**, zero-dependency (`audioop` was removed in Python 3.13
+- [x] **mu-law codec**, zero-dependency (`audioop` was removed in Python 3.13
       under PEP 594, and this sits on the hot path of every 20ms frame)
-- [ ] **Stateful resampler** — 8k/16k/22.05k, carrying interpolation state
+- [x] **Stateful resampler** — 8k/16k/22.05k, carrying interpolation state
       across frames so boundaries do not click
-- [ ] **Channel simulator**: narrowband, G.711 companding, packet loss, jitter,
+- [x] **Channel simulator**: narrowband, G.711 companding, packet loss, jitter,
       delay — each parameterized, seeded, and swept
-- [ ] **Twilio Media Streams transport**: bidirectional WebSocket, base64
-      `audio/x-mulaw` at 8kHz, `mark`/`clear` barge-in
-- [ ] **Mock Media Streams server** so the whole path is testable with no
-      Twilio account
+- [x] **Twilio Media Streams transport**: bidirectional WebSocket, base64
+      `audio/x-mulaw` at 8kHz, `mark`/`clear` barge-in — protocol verified
+      against Twilio's own published reference before coding, per
+      `docs/specs/phase-3.md` §7.4
+- [x] **Mock Media Streams server** so the whole path is testable with no
+      Twilio account — full loopback over a real localhost WebSocket
 - [ ] **Degradation sweep → robustness curve**: Hindi and Hinglish WER, plus
-      end-to-end latency, against impairment level
+      end-to-end latency, against impairment level — `eval/degradation.py`
+      and `scripts/run_degradation_sweep.py` built and unit-tested; the
+      real sweep against Svarah/LAHAJA audio has not been run yet
 
 *A simulator rather than a live line because impairment has to be
 controllable to produce a curve. A real PSTN call gives one uncontrolled

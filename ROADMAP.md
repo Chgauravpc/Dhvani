@@ -142,15 +142,17 @@ harness is already being re-run.
       skipped -- not cached locally and not worth a cold download for this
       grid; `tiny`/`small` already spans the fast/accurate tradeoff)
 - [x] Record WER and stage latency for each, from the existing telemetry
-      -- real run against Svarah (n=20); LAHAJA's run was killed by a host
-      memory-pressure safeguard mid-run, **attempted again under Phase 3
-      and killed a second time** by the same constraint, not re-run a
-      third time automatically per that safeguard's own guidance
-      (`docs/specs/phase-2b.md` §12, `docs/specs/phase-3.md` §2.2)
+      -- real run against Svarah (n=20) and, after two memory-pressure
+      kills running the full grid in one process, LAHAJA too (n=20), fixed
+      by running each grid cell as its own process instead of a bigger
+      machine (`docs/specs/phase-2b.md` §12, `docs/specs/phase-3.md` §2.2)
 - [x] Plot the Pareto curve and state which point the live demo runs at,
       and why -- all 4 Svarah grid points are Pareto-optimal (a real
-      tradeoff, no dominated point); the shipped `small`/`int8` default
-      measured at p50=7.46s STT latency against ~8.6s-average utterances,
+      tradeoff, no dominated point); LAHAJA's grid has 3 of 4 Pareto-optimal
+      (`tiny`/`float32` is dominated outright there -- worse WER *and*
+      worse latency than `tiny`/`int8`, not a tradeoff). The shipped
+      default was `small`/`int8`, measured at p50=7.46s STT latency against
+      ~8.6s-average utterances on Svarah and 13.7s on LAHAJA,
       ~6-40x this project's own 200ms STT stage budget across the grid --
       see `docs/specs/phase-2b.md` §12 for the full reasoning
 
@@ -204,8 +206,8 @@ ported in.
       noisy at this sample size; the real, robust finding is on latency:
       40ms of jitter alone pushes STT p50 from ~1.3s to **4.8s** and p90 to
       **11.0s** — jitter can cost more end-to-end latency than the model
-      choice does. LAHAJA not covered — the model sweep for it (below) was
-      killed twice by host memory pressure and was not re-run a third time.
+      choice does. (LAHAJA is covered separately by the model sweep above,
+      not by this particular degradation curve.)
 
 *A simulator rather than a live line because impairment has to be
 controllable to produce a curve. A real PSTN call gives one uncontrolled

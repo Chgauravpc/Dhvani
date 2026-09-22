@@ -65,14 +65,27 @@ memory-pressure safeguard** (this time it was the harness's own background-
 shell reaper: the run was moved to the background after exceeding a
 foreground timeout, then stopped because the machine was critically low on
 memory while idle -- confirmed via `Get-Process`: the interpreter was
-genuinely still computing, ~30 CPU-minutes in, not hung). No partial output
-reached the point of printing a table before the kill, same as the first
-attempt -- nothing to report from this run beyond "still blocked by the
-same constraint." Per the reaper's own guidance, it is not re-run
-automatically a third time; whoever has a machine with more headroom should
-run the command above. This is the one item in section 2 that stays
-undone, and it is being recorded honestly rather than worked around, the
-same ethos `phase-2b.md` §11 applied to the (then-)missing Sarvam key.
+genuinely still computing, ~30 CPU-minutes in, not hung).
+
+**Completed on the third attempt, by fixing the actual cause instead of
+re-running the same command and hoping for a bigger machine.** The
+command above runs the whole `(model_size, compute_type)` grid
+sequentially inside one process; free memory recovered from ~560MB to
+~1.25GB the moment the small-model cells ran in their own fresh processes
+instead, which means the sequential-in-one-process design -- not the
+absolute amount of RAM available -- was what two prior attempts actually
+hit. Run as four separate invocations instead, one grid cell each:
+
+```
+uv run python scripts/run_model_sweep.py --dataset lahaja --n-examples 20 --model-sizes tiny  --compute-types int8    --seed 0
+uv run python scripts/run_model_sweep.py --dataset lahaja --n-examples 20 --model-sizes tiny  --compute-types float32 --seed 0
+uv run python scripts/run_model_sweep.py --dataset lahaja --n-examples 20 --model-sizes small --compute-types int8    --seed 0
+uv run python scripts/run_model_sweep.py --dataset lahaja --n-examples 20 --model-sizes small --compute-types float32 --seed 0
+```
+
+All four completed without incident. Real results and reading in
+`phase-2b.md` §12 (updated in place, since it's the same sweep the
+original attempt lives in, not a new section).
 
 ### 2.3 Decide the live-demo operating point
 
@@ -81,39 +94,46 @@ change `dhvani.live`'s shipped default (`small`/`int8`). That decision is
 owed before the demo is recorded in Phase 4. Decide it, write down why, and
 if Sarvam lands per 2.1 it may make the whole question moot.
 
-**Decision, made from what §2.1 actually found (§2.2's re-run blocked, so
-this is decided on the Svarah grid alone, same as the original sweep):**
-Sarvam does **not** make this question moot -- it improves entity
-handling (§18) but was never measured for latency in this pass (both F2
-re-runs used it purely for its EER/WER numbers; no timing sweep was run
-against it, and running one risks the same memory-pressure kill §2.2 just
-hit twice).
+**Decision, made from §2.1 and (once completed) §2.2:** Sarvam does
+**not** make this question moot -- it improves entity handling (§18) but
+was never measured for latency (both F2 re-runs used it purely for its
+EER/WER numbers).
 
-**`dhvani.live`'s shipped default is changed to `tiny`/`float32`.** Not a
+**`dhvani.live`'s shipped default is changed to `tiny`/`int8`.** Not a
 recommendation for someone else to apply later -- `src/dhvani/live.py`'s
 `WHISPER_MODEL_SIZE`/`WHISPER_COMPUTE_TYPE` module constants (both still
 overridable via `DHVANI_WHISPER_MODEL`/`DHVANI_WHISPER_COMPUTE_TYPE`) now
-default to `tiny`/`float32`, and the module's own docstring records the
-reasoning inline. `small`/`int8` measured p50=7.46s STT latency (phase-2b
-§12), roughly **9x** Phase 0's 800ms end-to-end target from the STT stage
-alone, before LLM/TTS latency is even added -- not viable for a live
-conversation. `tiny`/`float32` (WER 27.9%, p50=1.55s) accepts a real
-accuracy cost for latency a caller can actually sit through, which is the
-honest tradeoff this phase's own measurements argue for.
+default to `tiny`/`int8`, and the module's own docstring records the
+reasoning inline. `small`/`int8` measured p50=7.46s STT latency on
+Svarah and **13.7s on LAHAJA** (phase-2b §12) -- not viable for a live
+conversation on either dataset.
+
+**This went through one real revision, not a single pass.** The first
+version of this decision (written before §2.2 completed) picked
+`tiny`/`float32`, from the Svarah grid alone: WER 27.9% vs. `tiny`/`int8`'s
+33.7%, a genuine tradeoff worth ~0.4s of extra latency. Once §2.2's LAHAJA
+sweep completed, that reasoning didn't hold up -- on LAHAJA,
+`tiny`/`float32` is **dominated outright** by `tiny`/`int8` (WER 109.7%
+vs. 104.0% *and* p50 6.3s vs. 3.4s, worse on both axes, not a tradeoff at
+all). `int8` never loses badly on either dataset measured; `float32`
+sometimes does. Revised to `tiny`/`int8` for that reason, not because the
+first pick was careless -- it was the correct read of the data available
+at the time, and the data changed.
 
 **What was and wasn't re-verified.** `WhisperSTT("tiny", clock,
-compute_type="float32")` was exercised repeatedly and successfully in this
-phase's own real runs (the degradation sweep, §12 below, and the new
-`test_degradation_integration.py`) -- constructing it, loading the model,
-and transcribing real audio all work. What was **not** repeated is
-phase-1 spec section 7's real-browser-and-microphone manual verification
-of the full live WebRTC path end-to-end with this specific config; this
-sandboxed environment has no browser or microphone, the same limitation
-`dhvani.live`'s own module docstring already states. Whoever next runs
-`dhvani.live` interactively is the first real check of this exact
-default -- worth doing before Phase 4 records the demo from it, not
-because the config is expected to fail, but because it hasn't been
-watched succeed with a human on the other end yet.
+compute_type="int8")` -- `int8` being `WhisperSTT`'s own default, taken
+without overriding it -- is exactly the configuration the degradation
+sweep (§12 below) and `test_degradation_integration.py` already exercised
+repeatedly against real Svarah and LAHAJA audio: constructing it, loading
+the model, and transcribing real audio all demonstrably work, not just in
+the model sweep's own harness but in this exact code path. What was
+**not** repeated is phase-1 spec section 7's real-browser-and-microphone
+manual verification of the full live WebRTC path end-to-end with this
+specific config; this sandboxed environment has no browser or microphone,
+the same limitation `dhvani.live`'s own module docstring already states.
+Whoever next runs `dhvani.live` interactively is the first real check of
+this exact default in the actual live path -- worth doing before Phase 4
+records the demo from it.
 
 ---
 
@@ -478,9 +498,10 @@ larger finding.
       quietly marked done.
 - [x] Sarvam baseline (§2.1) **run**, with whichever preregistered outcome
       occurred written down -- `docs/specs/phase-2.md` §18
-- [ ] LAHAJA sweep (§2.2) -- **blocked**, killed twice now by the host's
-      own memory-pressure safeguard; not re-run a third time automatically,
-      per that safeguard's own guidance. See §2.2.
+- [x] LAHAJA sweep (§2.2) -- completed on the third attempt, after the
+      first two were killed by memory pressure running the grid
+      sequentially in one process. Fixed by running each grid cell as its
+      own process instead. Real results in `phase-2b.md` §12.
 - [x] Live-demo operating point (§2.3) decided and justified -- `dhvani.live`'s
       shipped default is changed in code to `tiny`/`float32` (was
       `small`/`int8`), not left as a recommendation. Decided from the

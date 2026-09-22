@@ -48,20 +48,23 @@ logger = logging.getLogger("dhvani.live")
 WHISPER_MODEL_SIZE = os.environ.get("DHVANI_WHISPER_MODEL", "tiny")
 """Live-demo operating point, decided in phase-3 spec section 2.3: this
 used to default to "small" on the reasoning that transcription quality is
-the project's whole point. Phase 2B's real model sweep against Svarah
-(`phase-2b.md` section 12) put a number on what that cost: `small`/`int8`
-measured at p50=7.46s STT latency, roughly 9x Phase 0's own 200ms STT
-stage budget, before LLM/TTS latency is even added -- not a viable choice
-for a live conversational demo where a caller is waiting on the line.
-`tiny`/`float32` (below) measured at p50=1.55s, WER 27.9% vs. `small`'s
-14.6% -- a real accuracy cost, accepted here for latency a caller can
-actually sit through. Override with DHVANI_WHISPER_MODEL for a different
-tradeoff."""
+the project's whole point. Phase 2B's real model sweep (`phase-2b.md`
+section 12) put a number on what that cost -- `small`/`int8` measured
+p50=7.46s STT latency on Svarah and **13.7s on LAHAJA**, both far past
+Phase 0's own 200ms STT stage budget before LLM/TTS latency is even
+added -- not viable for a live conversational demo. Override with
+DHVANI_WHISPER_MODEL for a different tradeoff."""
 
-WHISPER_COMPUTE_TYPE = os.environ.get("DHVANI_WHISPER_COMPUTE_TYPE", "float32")
-"""Paired with WHISPER_MODEL_SIZE above -- `tiny`/`float32` was the
-sweep's stated operating point, not `tiny`/`int8`, per phase-2b.md
-section 12's own reasoning."""
+WHISPER_COMPUTE_TYPE = os.environ.get("DHVANI_WHISPER_COMPUTE_TYPE", "int8")
+"""Paired with WHISPER_MODEL_SIZE above. First decided as `float32` from
+the Svarah sweep alone (WER 27.9% vs. `tiny`/`int8`'s 33.7%, a real
+tradeoff worth the extra ~0.4s there) -- revised to `int8` once the LAHAJA
+sweep (`phase-2b.md` section 12) also completed: on LAHAJA, `tiny`/`float32`
+is not a tradeoff at all, it's *strictly worse* than `tiny`/`int8` on both
+WER (109.7% vs. 104.0%) and latency (p50 6.3s vs. 3.4s) -- dominated on
+the sweep's own Pareto logic. `int8` never loses badly on either dataset;
+`float32` sometimes does. Override with DHVANI_WHISPER_COMPUTE_TYPE for a
+different tradeoff."""
 
 
 def _make_peer_handler(runner: OverlappedRunner, tts_sample_rate: int) -> OnPeerConnected:

@@ -1,15 +1,13 @@
 # Phase 2B — Baselines and CI
 
-**Status:** A and C fully done; B (model sweep) done for Svarah, still
-blocked for LAHAJA. `SARVAM_API_KEY` became available during Phase 3
-(section 11 records it was absent when this phase was originally built);
-the real Svarah/LAHAJA EER and F1 re-runs against Sarvam are in
-`phase-2.md` section 18, per Phase 3 spec section 2.1, which named this
-the single highest-value unrun experiment in the project and forbade
-cutting it. The LAHAJA model sweep (killed by memory pressure, section 12)
-was attempted again under Phase 3 section 2.2 and killed a second time by
-the same host-level memory constraint -- still not run; see Phase 3 spec
-section 2.2 for the honest record of that. See section 8 for the
+**Status:** A, B and C all fully done, including LAHAJA's model sweep,
+which took two failed attempts and a real fix (running each grid cell as
+its own OS process, not a bigger machine -- section 12 below) to complete.
+`SARVAM_API_KEY` became available during Phase 3 (section 11 records it
+was absent when this phase was originally built); the real Svarah/LAHAJA
+EER and F1 re-runs against Sarvam are in `phase-2.md` section 18, per
+Phase 3 spec section 2.1, which named this the single highest-value unrun
+experiment in the project and forbade cutting it. See section 8 for the
 item-by-item definition-of-done.
 **Depends on:** Phase 2 (eval harness, `CorrectedSTT`, Svarah/LAHAJA loaders)
 **Blocks:** Phase 3 (Twilio reframe)
@@ -358,12 +356,13 @@ real Sarvam round trip; the three re-runs in A.3; one bounded real sweep.
       under Phase 3 section 2.1 once `SARVAM_API_KEY` became available;
       results and reading in `phase-2.md` section 18
 - [x] `phase-2.md` §12 and §16 carry the share-of-achievable framing
-- [x] Sweep table produced for Svarah, Pareto front marked (all 4 points
-      non-dominated on this real grid), operating point stated with its
-      reason (section 12); LAHAJA's sweep was attempted again under Phase 3
-      section 2.2 and killed a second time by the same host-level
-      memory-pressure constraint -- still not completed, see that section
-      for the honest record rather than a claimed result
+- [x] Sweep table produced for Svarah (all 4 points Pareto-optimal) and
+      now LAHAJA too (section 12: `tiny`/`int8`, `small`/`int8`,
+      `small`/`float32` Pareto-optimal, `tiny`/`float32` dominated),
+      operating point stated with its reason. LAHAJA needed a real fix
+      (per-cell process isolation, not a bigger machine) after two
+      memory-pressure kills running the grid in one process -- see
+      section 12 for what actually worked.
 - [x] Whichever of §17's three preregistered outcomes occurred, written
       down as the finding -- `phase-2.md` section 18: Svarah lands closest
       to "Saaras helps but doesn't replace the corrector"; LAHAJA lands
@@ -487,18 +486,59 @@ made to `dhvani.live`'s shipped default -- that decision affects the live
 demo path and belongs to a deliberate choice by whoever owns that
 tradeoff, not a side effect of running this sweep.
 
-### Real sweep, LAHAJA -- attempted, not completed
+### Real sweep, LAHAJA (`n=20`, seed 0) -- completed
 
-The same grid (`n=20`, seed 0) was launched against LAHAJA and killed
-partway through by the host's own memory-pressure safeguard, not by a
-crash in this script -- the streaming `load_lahaja_filtered` loader used
-here is the same memory-safe path phase-2 spec section 14/15 already
-fixed for exactly this dataset's EER eval (batched `iter_batches`, audio
-decoded only for the bounded pool actually sampled, never the full
-~6,000-row shard). No output reached the point of printing a table before
-the kill, so there is nothing partial to report here, and per the kill
-notice's own guidance this was not re-run automatically. `--dataset
-lahaja` is otherwise identical code to the Svarah run above and should be
-re-run by whoever has headroom to let it finish --
-`uv run python scripts/run_model_sweep.py --dataset lahaja --n-examples 20
---model-sizes tiny,small --compute-types int8,float32 --seed 0`.
+Killed by the host's own memory-pressure safeguard on the first two
+attempts (once originally, once again under Phase 3 -- see phase-3 spec
+§2.2 for that second attempt), both times with the full grid run
+sequentially inside one long-lived process, the same way `run_sweep`
+already ran the Svarah grid above. **The actual fix wasn't more memory --
+it was running each `(model_size, compute_type)` grid cell as its own
+separate OS process** (four separate `uv run python scripts/
+run_model_sweep.py ... --model-sizes X --compute-types Y` invocations,
+each with a single cell) rather than one process working through all four
+sequentially. `faster-whisper`/`ctranslate2` evidently doesn't release
+every native allocation back to the OS between model loads within one
+process, so peak memory climbed across the sequential grid until the host
+killed it; a fresh process per cell gets that memory back unconditionally
+on exit, regardless of anything the library itself does or doesn't free.
+Confirmed directly: free memory recovered from ~560MB to ~1.25GB between
+the tiny-model cells and the small-model cells once each ran in its own
+process. This is a real, generalizable finding for running this sweep
+(or any repeated real-model eval) on a memory-constrained host, not
+specific to LAHAJA.
+
+| model_size | compute_type | wer | stt_p50_ms | stt_p90_ms | realtime_factor | n | pareto |
+|---|---|---|---|---|---|---|---|
+| tiny | int8 | 104.0% | 3447.6 | 16970.0 | 0.76 | 20 | yes |
+| tiny | float32 | 109.7% | 6326.9 | 19496.3 | 0.95 | 20 | |
+| small | int8 | 65.7% | 13739.2 | 49442.2 | 2.34 | 20 | yes |
+| small | float32 | 64.5% | 17463.5 | 47939.5 | 2.57 | 20 | yes |
+
+**Read honestly:**
+
+- **WER is far worse across the board than Svarah's.** Even `small`
+  (this project's shipped model family) only reaches 64.5%-65.7% WER on
+  LAHAJA, against 14.3%-14.6% on Svarah. This is consistent with
+  everything else this project has found about LAHAJA (100% `eer_before`
+  on both Whisper and Sarvam, phase-2.md §15/§18) -- its accented,
+  code-switched Hindi is a harder recognition problem than Svarah's
+  accented English, for every ASR measured against it so far, not just
+  for the entity-mention subset F2 scores.
+- **`tiny` is not just less accurate here, it's badly worse**: WER over
+  100% (more edits than reference words -- consistent with the model
+  frequently mis-transcribing entire utterances rather than making a few
+  word-level errors). `tiny`/`float32` is dominated outright by
+  `tiny`/`int8` on both axes -- the one clearly bad grid point in the
+  whole sweep, Svarah included.
+- **Latency is far worse than Svarah's too, at every grid point** --
+  `small`/`int8`'s own p50 here (13.7s) is nearly double its Svarah figure
+  (7.46s), and p90 reaches 49.4s. LAHAJA's utterances running longer on
+  average than Svarah's is the most likely explanation, consistent with
+  buffer-then-transcribe latency scaling with utterance length (phase-3
+  spec §3).
+- **Pareto front**: `tiny`/`int8`, `small`/`int8`, `small`/`float32` --
+  three real tradeoff points, `tiny`/`float32` dominated. `small`/`int8`
+  vs. `small`/`float32` is a real, close tradeoff (0.9s p50 for 1.2 WER
+  points more accuracy at `int8`), unlike Svarah where all four points
+  were Pareto-optimal.

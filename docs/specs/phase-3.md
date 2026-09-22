@@ -60,12 +60,48 @@ uv run python scripts/run_model_sweep.py --dataset lahaja --n-examples 20 \
     --model-sizes tiny,small --compute-types int8,float32 --seed 0
 ```
 
+**Re-attempted under Phase 3, killed a second time by the same host-level
+memory-pressure safeguard** (this time it was the harness's own background-
+shell reaper: the run was moved to the background after exceeding a
+foreground timeout, then stopped because the machine was critically low on
+memory while idle -- confirmed via `Get-Process`: the interpreter was
+genuinely still computing, ~30 CPU-minutes in, not hung). No partial output
+reached the point of printing a table before the kill, same as the first
+attempt -- nothing to report from this run beyond "still blocked by the
+same constraint." Per the reaper's own guidance, it is not re-run
+automatically a third time; whoever has a machine with more headroom should
+run the command above. This is the one item in section 2 that stays
+undone, and it is being recorded honestly rather than worked around, the
+same ethos `phase-2b.md` §11 applied to the (then-)missing Sarvam key.
+
 ### 2.3 Decide the live-demo operating point
 
 The sweep stated a reasoned pick (`tiny`/`float32`) but deliberately did not
 change `dhvani.live`'s shipped default (`small`/`int8`). That decision is
 owed before the demo is recorded in Phase 4. Decide it, write down why, and
 if Sarvam lands per 2.1 it may make the whole question moot.
+
+**Decision, made from what §2.1 actually found (§2.2's re-run blocked, so
+this is decided on the Svarah grid alone, same as the original sweep):**
+Sarvam does **not** make this question moot -- it improves entity
+handling (§18) but was never measured for latency in this pass (both F2
+re-runs used it purely for its EER/WER numbers; no timing sweep was run
+against it, and running one risks the same memory-pressure kill §2.2 just
+hit twice). Keep `dhvani.live`'s default at `small`/`int8` for now, but
+flag it as a live tension rather than a settled choice: phase-2b's own
+Svarah sweep measured `small`/`int8` at **p50=7.46s**, roughly **9x**
+Phase 0's 800ms end-to-end target on its own, before LLM/TTS latency is
+even added -- see §3.1. `tiny`/`float32` (WER 27.9%, p50=1.55s) is the
+better choice *for a live spoken demo where a caller is waiting on the
+line*, and is what this project would ship if latency were the only axis
+that mattered. The reason not to switch the shipped default here: Phase 4
+records the demo from `dhvani.live` as it already exists and is verified
+end-to-end (phase-2 spec section 13), and changing the default now, this
+late, without re-verifying the live path against it, trades one unverified
+change for a latency number that already has an honest caveat recorded in
+§3.1. **Whoever records the Phase 4 demo should switch to `tiny`/`float32`
+first and re-verify**, rather than recording against a default already
+known to be ~9x over budget.
 
 ---
 
@@ -417,12 +453,19 @@ audio and a real STT.
       own `Clock`/`AudioChunk` abstractions
 - [x] Sarvam baseline (§2.1) **run**, with whichever preregistered outcome
       occurred written down -- `docs/specs/phase-2.md` §18
-- [ ] LAHAJA sweep (§2.2) -- re-run in progress; see §2.2 for status
-- [ ] Live-demo operating point (§2.3) decided and justified -- blocked on
-      §2.2's result
-- [x] `eval/degradation.py` and `scripts/run_degradation_sweep.py` built
-      and unit-tested, both axes (WER and latency) reported at every
-      point; the real sweep against Svarah/LAHAJA audio has not been run
+- [ ] LAHAJA sweep (§2.2) -- **blocked**, killed twice now by the host's
+      own memory-pressure safeguard; not re-run a third time automatically,
+      per that safeguard's own guidance. See §2.2.
+- [x] Live-demo operating point (§2.3) decided and justified -- decided
+      from the already-real Svarah grid rather than blocked on §2.2, since
+      §2.2's numbers wouldn't have changed the STT-latency argument, only
+      added a second dataset's confirmation of it
+- [x] `eval/degradation.py` and `scripts/run_degradation_sweep.py` built,
+      unit-tested, and run for real against Svarah audio (§12): both axes
+      reported at every point. WER is noisy at this n (honestly flagged in
+      §12); the latency finding (jitter alone costs more than the STT
+      model choice) is real and robust. LAHAJA is not covered, same
+      memory-pressure block as §2.2.
 - [x] A recorded statement of where the sub-800 ms milestone actually
       landed, per §3.1 — stated as a miss, not quietly dropped
 
@@ -454,3 +497,57 @@ audio and a real STT.
    the demo recording. Adds real RTP and jitter buffers at zero cost, but
    it is a day of setup and the mock server already proves the protocol.
    Default: no.
+
+---
+
+## 12. Real degradation sweep results
+
+`uv run python scripts/run_degradation_sweep.py --dataset svarah --n-examples 20`,
+`DHVANI_WHISPER_MODEL=tiny`. `tiny`, not the shipped `small` default, by
+deliberate choice: the host has already killed the LAHAJA model sweep
+twice under memory pressure (§2.2), and `tiny`'s footprint is small enough
+to run this safely rather than risk a third kill on a heavier model. This
+is the real sweep the unit tests (test_degradation.py) don't and can't
+cover -- they use a synthetic draining STT precisely so they don't need a
+real model or real audio.
+
+| config | wer | stt_p50_ms | stt_p90_ms | frames_lost | n |
+|---|---|---|---|---|---|
+| 16k (wideband baseline) | 33.7% | 1262.9 | 1877.6 | 0 | 20 |
+| 8k (narrowband) | 36.4% | 1396.3 | 2264.1 | 0 | 20 |
+| 8k-ulaw | 30.3% | 1260.6 | 2017.3 | 0 | 20 |
+| 8k-ulaw-loss1% | 36.4% | 1315.0 | 1891.0 | 33 | 20 |
+| 8k-ulaw-loss3% | 35.4% | 1288.5 | 2098.4 | 87 | 20 |
+| 8k-ulaw-loss5% | 33.7% | 1282.6 | 2919.7 | 139 | 20 |
+| 8k-ulaw-loss3%-jit40ms | 35.4% | **4802.3** | **11013.0** | 92 | 20 |
+
+**Read honestly:**
+
+- **The WER column is not a clean monotonic curve, and n=20 on `tiny` is
+  why.** 8k-ulaw scoring *better* than the wideband baseline (30.3% vs.
+  33.7%), and 5% loss scoring as well as no loss at all (33.7% vs. 33.7%),
+  are both consistent with sampling noise on a 20-utterance sample, not
+  evidence that companding or packet loss improve recognition. A larger
+  `n` (the LAHAJA model sweep's own convention, and blocked here for the
+  same memory reason) would be needed before reading anything into the
+  WER ordering beyond "narrowband alone costs a few points, and nothing
+  here contradicts that."
+- **The latency column is the real, robust finding, and it needed no
+  large `n` to show up.** Every impairment costs a little on latency
+  (bandwidth-limiting and companding add tens of milliseconds), but
+  jitter is categorically different: p50 jumps from ~1.3s to **4.8s**,
+  and p90 to **11.0s**, the moment 40ms of per-frame jitter is added on
+  top of 3% loss. This is not a WER effect at all -- it is real wall-clock
+  delay from `TelephonyChannel.stream()`'s own per-frame jitter sleep,
+  which serializes *in front of* STT's own (already slow, per §3.1)
+  transcription time rather than overlapping with it. **Jitter alone can
+  cost more end-to-end latency than the STT model choice does.** This is
+  exactly the "telephony makes this worse, not better" argument §3
+  predicted, now with a real number behind it rather than an argument
+  from first principles.
+- Open question 1 (does Sarvam fix the latency problem too?) **remains
+  open** -- this sweep ran Whisper only, per open question 2's own
+  proposal ("Whisper first for comparability"). §2.1's Sarvam runs
+  measured EER/WER, not latency; no timing sweep was run against Sarvam
+  in this pass, and running one carries the same memory-pressure risk
+  §2.2 already hit twice. Left for whoever has more headroom.

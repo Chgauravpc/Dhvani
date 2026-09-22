@@ -143,8 +143,10 @@ harness is already being re-run.
       grid; `tiny`/`small` already spans the fast/accurate tradeoff)
 - [x] Record WER and stage latency for each, from the existing telemetry
       -- real run against Svarah (n=20); LAHAJA's run was killed by a host
-      memory-pressure safeguard mid-run, not re-run automatically per that
-      safeguard's own guidance (`docs/specs/phase-2b.md` §12)
+      memory-pressure safeguard mid-run, **attempted again under Phase 3
+      and killed a second time** by the same constraint, not re-run a
+      third time automatically per that safeguard's own guidance
+      (`docs/specs/phase-2b.md` §12, `docs/specs/phase-3.md` §2.2)
 - [x] Plot the Pareto curve and state which point the live demo runs at,
       and why -- all 4 Svarah grid points are Pareto-optimal (a real
       tradeoff, no dominated point); the shipped `small`/`int8` default
@@ -196,10 +198,14 @@ ported in.
       `docs/specs/phase-3.md` §7.4
 - [x] **Mock Media Streams server** so the whole path is testable with no
       Twilio account — full loopback over a real localhost WebSocket
-- [ ] **Degradation sweep → robustness curve**: Hindi and Hinglish WER, plus
-      end-to-end latency, against impairment level — `eval/degradation.py`
-      and `scripts/run_degradation_sweep.py` built and unit-tested; the
-      real sweep against Svarah/LAHAJA audio has not been run yet
+- [x] **Degradation sweep → robustness curve**: WER, plus end-to-end
+      latency, against impairment level, run for real against Svarah
+      (n=20, `tiny` Whisper — memory-constrained host, see below). WER is
+      noisy at this sample size; the real, robust finding is on latency:
+      40ms of jitter alone pushes STT p50 from ~1.3s to **4.8s** and p90 to
+      **11.0s** — jitter can cost more end-to-end latency than the model
+      choice does. LAHAJA not covered — the model sweep for it (below) was
+      killed twice by host memory pressure and was not re-run a third time.
 
 *A simulator rather than a live line because impairment has to be
 controllable to produce a curve. A real PSTN call gives one uncontrolled

@@ -1,13 +1,16 @@
 # Phase 2B — Baselines and CI
 
-**Status:** A, B and C all implemented and run for real. `SARVAM_API_KEY`
-became available during Phase 3 (section 11 records it was absent when
-this phase was originally built); the real Svarah/LAHAJA EER and F1
-re-runs against Sarvam are in `phase-2.md` section 18, per Phase 3 spec
-section 2.1, which named this the single highest-value unrun experiment
-in the project and forbade cutting it. The LAHAJA model sweep (killed by
-memory pressure, section 12) was also finished under Phase 3 section 2.2.
-See section 8 for the item-by-item definition-of-done.
+**Status:** A and C fully done; B (model sweep) done for Svarah, still
+blocked for LAHAJA. `SARVAM_API_KEY` became available during Phase 3
+(section 11 records it was absent when this phase was originally built);
+the real Svarah/LAHAJA EER and F1 re-runs against Sarvam are in
+`phase-2.md` section 18, per Phase 3 spec section 2.1, which named this
+the single highest-value unrun experiment in the project and forbade
+cutting it. The LAHAJA model sweep (killed by memory pressure, section 12)
+was attempted again under Phase 3 section 2.2 and killed a second time by
+the same host-level memory constraint -- still not run; see Phase 3 spec
+section 2.2 for the honest record of that. See section 8 for the
+item-by-item definition-of-done.
 **Depends on:** Phase 2 (eval harness, `CorrectedSTT`, Svarah/LAHAJA loaders)
 **Blocks:** Phase 3 (Twilio reframe)
 **Window:** Sep 22–26, 2026 — the tightest week in the plan
@@ -357,9 +360,10 @@ real Sarvam round trip; the three re-runs in A.3; one bounded real sweep.
 - [x] `phase-2.md` §12 and §16 carry the share-of-achievable framing
 - [x] Sweep table produced for Svarah, Pareto front marked (all 4 points
       non-dominated on this real grid), operating point stated with its
-      reason (section 12); LAHAJA's sweep, previously killed by the host's
-      memory-pressure safeguard, was finished under Phase 3 section 2.2 --
-      see the appended results below
+      reason (section 12); LAHAJA's sweep was attempted again under Phase 3
+      section 2.2 and killed a second time by the same host-level
+      memory-pressure constraint -- still not completed, see that section
+      for the honest record rather than a claimed result
 - [x] Whichever of §17's three preregistered outcomes occurred, written
       down as the finding -- `phase-2.md` section 18: Svarah lands closest
       to "Saaras helps but doesn't replace the corrector"; LAHAJA lands

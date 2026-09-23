@@ -552,6 +552,10 @@ larger finding.
 
 ## 12. Real degradation sweep results
 
+> **Audit note (Sep 23 2026).** The jitter row below is invalidated: `TelephonyChannel` sleeps
+> `uniform(0, jitter_ms)` per frame in series, which is cumulative slowdown, not jitter, and the
+> rows are not paced at real time. The no-jitter rows stand. See `phase-3b.md` §4; re-run as 3B-6.
+
 `uv run python scripts/run_degradation_sweep.py --dataset svarah --n-examples 20`,
 `DHVANI_WHISPER_MODEL=tiny` (this run predates the §2.3 default change
 below -- at the time this ran, `tiny` still had to be requested explicitly;

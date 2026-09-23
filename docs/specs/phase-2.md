@@ -684,6 +684,11 @@ diagnostic was removed.
 
 ## 14. F2 real numbers -- the entity-density gate and EER (real run)
 
+> **Audit note (Sep 23 2026) — invalidated, kept for the record.** The entity counts and EER
+> numbers in this section were produced by substring mention matching and a scorer that only
+> accepts the Latin canonical form. See `phase-3b.md` §2–3 and §5; superseding numbers will be
+> added by item 3B-4, not written over these.
+
 **Hugging Face access**: granted (both `ai4bharat/Svarah` and
 `ai4bharat/Lahaja` accepted). Worth recording precisely what that took,
 since it tripped up the first attempt: a valid token is not the same as
@@ -763,6 +768,11 @@ bucket -- section 6.7's own warning, not an excuse added after the fact).
 
 ## 15. F2 real numbers -- LAHAJA
 
+> **Audit note (Sep 23 2026) — invalidated, kept for the record.** The entity counts and EER
+> numbers in this section were produced by substring mention matching and a scorer that only
+> accepts the Latin canonical form. See `phase-3b.md` §2–3 and §5; superseding numbers will be
+> added by item 3B-4, not written over these.
+
 40 entity-bearing rows (all of them; the gate found no more) + 50 clean
 sample; 30/70 split gave dev 12 entity-bearing/16 clean, test 28 entity-
 bearing/36 clean. First attempt at this run was killed twice for system
@@ -813,6 +823,11 @@ this project's own evaluation ethos (paired corruption metrics, honest
 lower bounds) exists to prevent.
 
 ## 16. Milestone, both datasets
+
+> **Audit note (Sep 23 2026) — invalidated, kept for the record.** The entity counts and EER
+> numbers in this section were produced by substring mention matching and a scorer that only
+> accepts the Latin canonical form. See `phase-3b.md` §2–3 and §5; superseding numbers will be
+> added by item 3B-4, not written over these.
 
 Per `ROADMAP.md`'s framing ("the agent loses X% of task success to
 transcription alone, and `dhvani-entity` recovers Y% of it"): X is F1's
@@ -972,6 +987,11 @@ not a better-looking number.
 ---
 
 ## 18. Phase 2B carried into Phase 3 -- the real Sarvam run (Sep 22)
+
+> **Audit note (Sep 23 2026) — invalidated, kept for the record.** The entity counts and EER
+> numbers in this section were produced by substring mention matching and a scorer that only
+> accepts the Latin canonical form. See `phase-3b.md` §2–3 and §5; superseding numbers will be
+> added by item 3B-4, not written over these.
 
 `SARVAM_API_KEY` was unavailable when phase-2b.md was built (its section
 11 records that honestly); it became available for phase-3, whose section

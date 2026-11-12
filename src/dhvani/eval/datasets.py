@@ -366,9 +366,44 @@ class IndicVoicesTextRow:
     task_name: str
 
 
-def _indicvoices_cache_path(language: str, cache_dir: Path | None) -> Path:
+def _indicvoices_cache_dir(language: str, cache_dir: Path | None) -> Path:
     base = cache_dir if cache_dir is not None else Path.home() / ".cache" / "dhvani"
-    return base / f"indicvoices_{language}_text.jsonl"
+    return base / f"indicvoices_{language}_text"
+
+
+def _fetch_indicvoices_shard(fs: HfFileSystem, shard: str, out: Path) -> None:
+    """Text/metadata columns of one shard to `out` (JSONL), one parquet row
+    group at a time so only a single row group's text is ever in memory.
+    Written to a temp file and renamed, so a killed run leaves no partial
+    shard behind and a rerun resumes at the first missing shard."""
+    split = shard.split("/")[1].split("-")[0]
+    tmp = out.with_suffix(".tmp")
+    row = 0
+    with (
+        fs.open(f"datasets/{_INDICVOICES_REPO}/{shard}", "rb") as f,
+        tmp.open("w", encoding="utf-8") as w,
+    ):
+        parquet = pq.ParquetFile(f)
+        for rg in range(parquet.num_row_groups):
+            table = parquet.read_row_group(rg, columns=list(_INDICVOICES_COLUMNS))
+            for text, scenario, task in zip(
+                table["text"].to_pylist(),
+                table["scenario"].to_pylist(),
+                table["task_name"].to_pylist(),
+                strict=True,
+            ):
+                record = {
+                    "split": split,
+                    "shard": shard,
+                    "row": row,
+                    "text": str(text or ""),
+                    "scenario": str(scenario or ""),
+                    "task_name": str(task or ""),
+                }
+                w.write(json.dumps(record, ensure_ascii=False) + "\n")
+                row += 1
+            del table
+    tmp.replace(out)
 
 
 def load_indicvoices_text_rows(
@@ -382,58 +417,26 @@ def load_indicvoices_text_rows(
     Unlike `_load_hf_audio_parquet_transcripts` this never downloads a
     shard: IndicVoices Hindi is ~50 GB, nearly all of it audio, so it opens
     each parquet file through `HfFileSystem` and reads only the
-    `text`/`scenario`/`task_name` column chunks via HTTP range requests.
-    The result is cached as JSONL (outside the repo) so the gate and later
-    runs don't refetch it. `max_shards` is for smoke tests only; a cache is
-    written only for full reads.
+    `text`/`scenario`/`task_name` column chunks via HTTP range requests,
+    one row group at a time. Each shard is cached as its own JSONL file
+    (outside the repo), so an interrupted fetch resumes instead of
+    restarting. `max_shards` limits how many shards are fetched/returned
+    (smoke tests).
     """
-    cache = _indicvoices_cache_path(language, cache_dir)
-    if max_shards is None and cache.exists():
-        with cache.open(encoding="utf-8") as f:
-            return [IndicVoicesTextRow(**json.loads(line)) for line in f]
-
-    fs = HfFileSystem()
+    out_dir = _indicvoices_cache_dir(language, cache_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
     shards = [f for f in _repo_parquet_files(_INDICVOICES_REPO) if f.startswith(f"{language}/")]
     if max_shards is not None:
         shards = shards[:max_shards]
-    rows: list[IndicVoicesTextRow] = []
-    for shard in shards:
-        split = shard.split("/")[1].split("-")[0]
-        with fs.open(f"datasets/{_INDICVOICES_REPO}/{shard}", "rb") as f:
-            table = pq.ParquetFile(f).read(columns=list(_INDICVOICES_COLUMNS))
-        columns = {c: table[c].to_pylist() for c in _INDICVOICES_COLUMNS}
-        for i, (text, scenario, task) in enumerate(
-            zip(columns["text"], columns["scenario"], columns["task_name"], strict=True)
-        ):
-            rows.append(
-                IndicVoicesTextRow(
-                    split=split,
-                    shard=shard,
-                    row=i,
-                    text=str(text or ""),
-                    scenario=str(scenario or ""),
-                    task_name=str(task or ""),
-                )
-            )
 
-    if max_shards is None:
-        cache.parent.mkdir(parents=True, exist_ok=True)
-        tmp = cache.with_suffix(".tmp")
-        with tmp.open("w", encoding="utf-8") as f:
-            for r in rows:
-                f.write(
-                    json.dumps(
-                        {
-                            "split": r.split,
-                            "shard": r.shard,
-                            "row": r.row,
-                            "text": r.text,
-                            "scenario": r.scenario,
-                            "task_name": r.task_name,
-                        },
-                        ensure_ascii=False,
-                    )
-                    + "\n"
-                )
-        tmp.replace(cache)
+    fs: HfFileSystem | None = None
+    rows: list[IndicVoicesTextRow] = []
+    for n, shard in enumerate(shards, start=1):
+        cached = out_dir / (shard.replace("/", "__") + ".jsonl")
+        if not cached.exists():
+            fs = fs or HfFileSystem()
+            print(f"  fetching {shard} ({n}/{len(shards)})", flush=True)
+            _fetch_indicvoices_shard(fs, shard, cached)
+        with cached.open(encoding="utf-8") as f:
+            rows.extend(IndicVoicesTextRow(**json.loads(line)) for line in f)
     return rows

@@ -261,8 +261,14 @@ as their own problem.
 
 **Priority 0 — make the existing numbers true** (all must be `[x]` before Phase 4's `RESULTS.md` items can start)
 
-- [ ] 3B-1 **GATE** — word-boundary, deduplicated mention counting shared by
+- [~] 3B-1 **GATE** — word-boundary, deduplicated mention counting shared by
       gate and scorer; re-run the gate; restate the decision from it
+      status: code done (`dhvani.entity.mentions`, one function now used by
+      gate, scorer and dataset filter; `tests/test_mentions.py` covers every
+      audit false hit). Real gate run not yet done -- needs a Hugging Face
+      token with Svarah/LAHAJA gated access (`GatedRepoError` on Nov 12, no
+      local token or cached shards). Run: `uv run python
+      scripts/entity_density_gate.py` -> `results/entity_density_gate.json`.
 - [ ] 3B-2 — two-rate scorer: **recognition EER** (any curated variant, any
       script) and **canonicalization rate**, both paired with corruption
 - [ ] 3B-3 — cache every raw transcript to committed JSONL so rescoring never

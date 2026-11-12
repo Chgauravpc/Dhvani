@@ -18,6 +18,7 @@ from dataclasses import dataclass
 from dhvani.clock import Clock
 from dhvani.entity.corrector import EntityCorrector
 from dhvani.entity.lexicon import DomainLexicon
+from dhvani.entity.mentions import mentioned_entities
 from dhvani.eval.audio_io import iter_chunks
 from dhvani.eval.datasets import TranscriptExample
 from dhvani.providers.base import STTProvider
@@ -40,18 +41,12 @@ class EerReport:
 
 
 def _mentioned_entities(text: str, lexicon: DomainLexicon) -> set[str]:
-    """Every canonical entity with at least one lexicon variant appearing
-    as a case-insensitive substring of `text`. An entity mentioned more
-    than once in the same example still counts once -- this mirrors the
-    section 2A entity-density gate's own per-example counting, and keeps
-    "how many mentions" answering "how many (example, entity) pairs",
-    not "how many raw string occurrences"."""
-    lowered = text.lower()
-    return {
-        canonical
-        for canonical, _script, variant in lexicon.all_variants()
-        if variant.lower() in lowered
-    }
+    """Every canonical entity the ground truth mentions, word-bounded and
+    deduplicated per example -- the shared definition in
+    `dhvani.entity.mentions` (phase-3b item 3B-1), the same one the
+    entity-density gate counts with. Before 3B-1 this was a substring test,
+    so "company" counted as a PAN card mention."""
+    return mentioned_entities(text, lexicon)
 
 
 async def _transcribe(example: TranscriptExample, stt: STTProvider, clock: Clock) -> str:

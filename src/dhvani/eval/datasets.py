@@ -43,6 +43,7 @@ import pyarrow.parquet as pq
 from huggingface_hub import hf_hub_download, list_repo_files
 
 from dhvani.entity.lexicon import DomainLexicon
+from dhvani.entity.mentions import find_mentions
 from dhvani.eval.audio_io import decode_audio_bytes_to_chunks
 from dhvani.types import AudioChunk
 
@@ -215,8 +216,9 @@ class FilteredExamples:
 
 
 def _has_lexicon_mention(text: str, lexicon: DomainLexicon) -> bool:
-    lowered = text.lower()
-    return any(variant.lower() in lowered for _, _, variant in lexicon.all_variants())
+    """Word-bounded, via the shared `dhvani.entity.mentions` definition
+    (phase-3b 3B-1) -- the same test the gate and the EER scorer use."""
+    return bool(find_mentions(text, lexicon))
 
 
 _STREAM_BATCH_ROWS = 64

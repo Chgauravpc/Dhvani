@@ -210,7 +210,7 @@ Priority 2 is only if time remains; none of it may displace Phase 4.
 
 ### Priority 0 — make the existing numbers true
 
-- [ ] **3B-1 GATE — reproduce the audit.** Word-boundary, deduplicated
+- [~] **3B-1 GATE — reproduce the audit.** Word-boundary, deduplicated
       (example, entity) counting, shared by the gate script and the scorer
       (one function, not two copies that can drift). Longest-variant-wins so
       "aadhaar card" and "aadhaar" do not double count. Re-run the gate on
@@ -219,6 +219,12 @@ Priority 2 is only if time remains; none of it may displace Phase 4.
       counts for both datasets, and the gate decision is restated from it.
       If Svarah < 100, follow the 30–100 rule literally (CI + lexicon
       expansion from what the data contains — ESIC/EPFO/CoWIN/UPI dominate).
+      status: code done (`dhvani.entity.mentions`, one function now used by
+      gate, scorer and dataset filter; `tests/test_mentions.py` covers every
+      audit false hit). Real gate run not yet done -- needs a Hugging Face
+      token with Svarah/LAHAJA gated access (`GatedRepoError` on Nov 12, no
+      local token or cached shards). Run: `uv run python
+      scripts/entity_density_gate.py` -> `results/entity_density_gate.json`.
 - [ ] **3B-2 — two-rate scorer.** Recognition EER and canonicalization rate
       (section 3), both exact-match on curated variants, both paired with
       `corruption_rate`. Unit tests must include: Devanagari-correct output

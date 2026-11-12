@@ -1,13 +1,26 @@
 """F2 -- Entity Error Rate: does `dhvani-entity` recover ASR's mangling of
 lexicon entity mentions, and at what cost to text it should leave alone?
 
-Scored with exact (case-folded) match on the *canonical* form, never with
-`phonetic_key` (phase-2 spec section 6.7): the corrector matches by
-phonetic key, so a scorer using the same key would let a weak key pass its
-own test. `corruption_rate` is always reported alongside the EER, on a
-disjoint "clean" arm (examples with no lexicon entity at all) -- an EER
-number alone only measures recall, and can't see a corrector that recovers
-entities while also mangling clean text.
+Two rates per entity mention (phase-3b item 3B-2), both by word-bounded
+exact match on the hand-curated lexicon strings -- never `phonetic_key`
+(phase-2 spec section 6.7): the corrector matches by phonetic key, so a
+scorer using the same key would let a weak key pass its own test.
+
+- **Recognition EER** -- a mention is correct if *any* curated variant of
+  that entity, in any script, appears in the output. The ASR claim: a
+  transcript reading `आधार कार्ड` recognised the entity even though it is
+  not the Latin canonical `Aadhaar`.
+- **Canonical miss rate** -- a mention is correct only if the canonical
+  form itself appears. The downstream claim: a tool call needs `Aadhaar`.
+
+Before 3B-2 only the second existed, under the name "EER", which scored
+every correct Devanagari transcript as an ASR failure (the Sep 23 audit's
+finding A2). Keeping the two apart stops a transliteration step from being
+reported as entity *recovery*.
+
+`corruption_rate` is always reported alongside, on a disjoint "clean" arm
+(examples with no lexicon entity at all) -- a recovery number alone can't
+see a corrector that also mangles clean text.
 """
 
 from __future__ import annotations
@@ -18,7 +31,7 @@ from dataclasses import dataclass
 from dhvani.clock import Clock
 from dhvani.entity.corrector import EntityCorrector
 from dhvani.entity.lexicon import DomainLexicon
-from dhvani.entity.mentions import mentioned_entities
+from dhvani.entity.mentions import contains_variant, mentioned_entities
 from dhvani.eval.audio_io import iter_chunks
 from dhvani.eval.datasets import TranscriptExample
 from dhvani.providers.base import STTProvider
@@ -33,8 +46,10 @@ class EerReport:
     threshold: float
 
     n_entity_mentions: int
-    eer_before: float
-    eer_after: float
+    recognition_eer_before: float
+    recognition_eer_after: float
+    canonical_miss_before: float
+    canonical_miss_after: float
 
     n_clean_examples: int
     corruption_rate: float
@@ -95,8 +110,10 @@ def score_transcripts(
     again -- what a threshold sweep should call per threshold.
     """
     n_mentions = 0
-    n_wrong_before = 0
-    n_wrong_after = 0
+    n_unrecognised_before = 0
+    n_unrecognised_after = 0
+    n_noncanonical_before = 0
+    n_noncanonical_after = 0
     n_clean = 0
     n_corrupted = 0
 
@@ -106,32 +123,32 @@ def score_transcripts(
         corrected_text = corrector.correct(raw_text).text
 
         if mentioned:
-            raw_lower = raw_text.lower()
-            corrected_lower = corrected_text.lower()
+            recognised_before = mentioned_entities(raw_text, lexicon)
+            recognised_after = mentioned_entities(corrected_text, lexicon)
             for canonical in mentioned:
                 n_mentions += 1
-                canonical_lower = canonical.lower()
-                if canonical_lower not in raw_lower:
-                    n_wrong_before += 1
-                if canonical_lower not in corrected_lower:
-                    n_wrong_after += 1
+                n_unrecognised_before += canonical not in recognised_before
+                n_unrecognised_after += canonical not in recognised_after
+                n_noncanonical_before += not contains_variant(raw_text, canonical)
+                n_noncanonical_after += not contains_variant(corrected_text, canonical)
         else:
             n_clean += 1
             if corrected_text != raw_text:
                 n_corrupted += 1
 
-    eer_before = n_wrong_before / n_mentions if n_mentions else 0.0
-    eer_after = n_wrong_after / n_mentions if n_mentions else 0.0
-    corruption_rate = n_corrupted / n_clean if n_clean else 0.0
+    def rate(n: int) -> float:
+        return n / n_mentions if n_mentions else 0.0
 
     return EerReport(
         split=split,
         threshold=corrector.threshold,
         n_entity_mentions=n_mentions,
-        eer_before=eer_before,
-        eer_after=eer_after,
+        recognition_eer_before=rate(n_unrecognised_before),
+        recognition_eer_after=rate(n_unrecognised_after),
+        canonical_miss_before=rate(n_noncanonical_before),
+        canonical_miss_after=rate(n_noncanonical_after),
         n_clean_examples=n_clean,
-        corruption_rate=corruption_rate,
+        corruption_rate=n_corrupted / n_clean if n_clean else 0.0,
     )
 
 

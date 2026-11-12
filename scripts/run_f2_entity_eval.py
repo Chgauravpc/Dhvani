@@ -22,7 +22,8 @@ turn a few-minute eval into a multi-hour one for no signal this eval uses.
 Implements the spec's "tune on dev, report on test" rule (section 6.7):
 splits the entity-bearing examples 30/70 dev/test, transcribes dev and
 test once each (not once per threshold), sweeps a fixed threshold grid on
-dev, picks the threshold minimizing `eer_after + corruption_rate` (ties
+dev, picks the threshold minimizing `canonical_miss_after + corruption_rate`
+(canonicalizing is the corrector's job; phase-3b 3B-2) (ties
 broken toward the higher, more conservative threshold), then reports a
 single test-split run at that threshold -- never re-running test to chase
 a better number.
@@ -104,14 +105,21 @@ def _wilson_interval(successes: int, n: int, z: float = 1.96) -> tuple[float, fl
     return (max(0.0, center - margin), min(1.0, center + margin))
 
 
+def _ci(rate: float, n: int) -> str:
+    lo, hi = _wilson_interval(round(rate * n), n)
+    return f"[{lo:.1%}, {hi:.1%}]"
+
+
 def _print_report(label: str, report: EerReport) -> None:
-    n_wrong_after = round(report.eer_after * report.n_entity_mentions)
-    lo, hi = _wilson_interval(n_wrong_after, report.n_entity_mentions)
+    n = report.n_entity_mentions
     print(
-        f"{label}: threshold={report.threshold} n_mentions={report.n_entity_mentions} "
-        f"eer_before={report.eer_before:.1%} eer_after={report.eer_after:.1%} "
-        f"(95% CI [{lo:.1%}, {hi:.1%}]) "
-        f"n_clean={report.n_clean_examples} corruption_rate={report.corruption_rate:.1%}"
+        f"{label}: threshold={report.threshold} n_mentions={n} "
+        f"recognition_eer {report.recognition_eer_before:.1%} -> "
+        f"{report.recognition_eer_after:.1%} {_ci(report.recognition_eer_after, n)} | "
+        f"canonical_miss {report.canonical_miss_before:.1%} -> "
+        f"{report.canonical_miss_after:.1%} {_ci(report.canonical_miss_after, n)} | "
+        f"n_clean={report.n_clean_examples} corruption_rate={report.corruption_rate:.1%} "
+        f"{_ci(report.corruption_rate, report.n_clean_examples)}"
     )
 
 
@@ -126,13 +134,16 @@ async def _sweep_dev(
         corrector = EntityCorrector(DEFAULT_LEXICON, threshold=threshold)
         report = score_transcripts(dev_transcribed, DEFAULT_LEXICON, corrector, split="dev")
         _print_report("  dev", report)
-        cost = report.eer_after + report.corruption_rate
+        cost = report.canonical_miss_after + report.corruption_rate
         if cost <= best_cost:  # <= : ties prefer the later (higher) threshold
             best_cost = cost
             best_threshold = threshold
             best_report = report
     assert best_report is not None
-    print(f"chosen threshold: {best_threshold} (minimizes eer_after + corruption_rate on dev)")
+    print(
+        f"chosen threshold: {best_threshold} "
+        "(minimizes canonical_miss_after + corruption_rate on dev)"
+    )
     return best_threshold, best_report
 
 

@@ -1,0 +1,1496 @@
+{
+  "item": "3B-1",
+  "code_commit": "f66476a6980206e123950837a6909bb193c86439",
+  "datasets": [
+    {
+      "dataset": "Svarah",
+      "n_transcripts": 6656,
+      "transcripts_sha256": "19648f08816ba5bea27ca9af770085d9cf015147fb6cea5acb065f738119ce5c",
+      "totals": {
+        "legacy_raw_occurrences": 143,
+        "substring_pairs": 136,
+        "word_boundary_pairs": 94
+      },
+      "examples_with_word_boundary_mention": 93,
+      "decision": "PROCEED_WITH_CI_AND_LEXICON_EXPANSION (30-100)",
+      "per_entity": [
+        {
+          "entity": "ESIC",
+          "legacy_raw_occurrences": 35,
+          "substring_pairs": 35,
+          "word_boundary_pairs": 35
+        },
+        {
+          "entity": "EPFO",
+          "legacy_raw_occurrences": 23,
+          "substring_pairs": 22,
+          "word_boundary_pairs": 22
+        },
+        {
+          "entity": "CoWIN",
+          "legacy_raw_occurrences": 15,
+          "substring_pairs": 15,
+          "word_boundary_pairs": 15
+        },
+        {
+          "entity": "UPI",
+          "legacy_raw_occurrences": 14,
+          "substring_pairs": 13,
+          "word_boundary_pairs": 10
+        },
+        {
+          "entity": "Provident Fund",
+          "legacy_raw_occurrences": 31,
+          "substring_pairs": 29,
+          "word_boundary_pairs": 5
+        },
+        {
+          "entity": "Jan Dhan Yojana",
+          "legacy_raw_occurrences": 3,
+          "substring_pairs": 3,
+          "word_boundary_pairs": 3
+        },
+        {
+          "entity": "Voter ID",
+          "legacy_raw_occurrences": 7,
+          "substring_pairs": 7,
+          "word_boundary_pairs": 2
+        },
+        {
+          "entity": "Aadhaar",
+          "legacy_raw_occurrences": 2,
+          "substring_pairs": 1,
+          "word_boundary_pairs": 1
+        },
+        {
+          "entity": "Ayushman Bharat",
+          "legacy_raw_occurrences": 2,
+          "substring_pairs": 1,
+          "word_boundary_pairs": 1
+        },
+        {
+          "entity": "GST",
+          "legacy_raw_occurrences": 11,
+          "substring_pairs": 10,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "DigiLocker",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "IFSC code",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Kisan Credit Card",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Mudra Yojana",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "PAN card",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Passport Seva",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Pradhan Mantri Awas Yojana",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Ration card",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Sukanya Samriddhi Yojana",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Ujjwala Yojana",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        }
+      ],
+      "word_boundary_variant_hits": {
+        "ESIC :: esic": 35,
+        "EPFO :: epfo": 23,
+        "CoWIN :: co-win": 15,
+        "UPI :: upi": 11,
+        "Provident Fund :: provident fund": 4,
+        "Jan Dhan Yojana :: jan dhan yojana": 3,
+        "Voter ID :: voter id": 2,
+        "Aadhaar :: aadhar card": 1,
+        "Provident Fund :: pf": 1,
+        "Ayushman Bharat :: ayushman bharat": 1
+      },
+      "substring_only_hits": [
+        {
+          "row": 259,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "I used, it is very much helpful"
+        },
+        {
+          "row": 812,
+          "entity": "GST",
+          "variant": "gst",
+          "context": " impactful sound systems. Youngster are seen making reels"
+        },
+        {
+          "row": 864,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "and fetch my balance of EPFO passbook with UAN number"
+        },
+        {
+          "row": 971,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "I want EPFO passbook statement for accou"
+        },
+        {
+          "row": 1049,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "What is the status of my EPFO claim having tracking ID 995"
+        },
+        {
+          "row": 1332,
+          "entity": "GST",
+          "variant": "gst",
+          "context": "ourts have been built for youngsters to learn the sport."
+        },
+        {
+          "row": 1412,
+          "entity": "GST",
+          "variant": "gst",
+          "context": "by the youngsters is increasing day by day."
+        },
+        {
+          "row": 1562,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "Resend OTP to my EPFO registered mobile number 967"
+        },
+        {
+          "row": 1746,
+          "entity": "UPI",
+          "variant": "upi",
+          "context": "akshina Kannada, Kundapura, Udupi and so on"
+        },
+        {
+          "row": 1808,
+          "entity": "GST",
+          "variant": "gst",
+          "context": "hey cannot drive like the youngsters."
+        },
+        {
+          "row": 1836,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": " all rejected claims from my EPFO account with UAN number 3171"
+        },
+        {
+          "row": 1892,
+          "entity": "GST",
+          "variant": "gst",
+          "context": "de employment to a lot of youngsters"
+        },
+        {
+          "row": 2125,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "I want EPFO passbook statement for accou"
+        },
+        {
+          "row": 2386,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "tement, please login with my EPFO registered mobile number and"
+        },
+        {
+          "row": 2607,
+          "entity": "GST",
+          "variant": "gst",
+          "context": "youngsters or on the outskirts like y"
+        },
+        {
+          "row": 2652,
+          "entity": "GST",
+          "variant": "gst",
+          "context": "to youngsters who like to play indoor an"
+        },
+        {
+          "row": 2889,
+          "entity": "Voter ID",
+          "variant": "epic",
+          "context": "It's a wonderful story which depicts the unsatisfactory life of "
+        },
+        {
+          "row": 3061,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "Resend OTP to my EPFO registered mobile number 604"
+        },
+        {
+          "row": 3233,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "Login to EPFO portal using mobile number"
+        },
+        {
+          "row": 3412,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "Can I login to EPFO portal with another mobile n"
+        },
+        {
+          "row": 3414,
+          "entity": "Voter ID",
+          "variant": "epic",
+          "context": "rite classic books are Indian epics, Ramayana and Mahabharata. I"
+        },
+        {
+          "row": 3609,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "Can I login to EPFO portal with another mobile n"
+        },
+        {
+          "row": 3650,
+          "entity": "UPI",
+          "variant": "upi",
+          "context": "was the capital of British occupied India."
+        },
+        {
+          "row": 3720,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "aking a rough structure is helpful."
+        },
+        {
+          "row": 3835,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "Can I login to EPFO portal with another mobile n"
+        },
+        {
+          "row": 4008,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "e six-digit OTP sent to your EPFO registered mobile number 616"
+        },
+        {
+          "row": 4294,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "What is the status of my EPFO claim having tracking ID 773"
+        },
+        {
+          "row": 4499,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "Login to EPFO portal using mobile number 8"
+        },
+        {
+          "row": 4529,
+          "entity": "GST",
+          "variant": "gst",
+          "context": "opment institutes for the youngsters of the region."
+        },
+        {
+          "row": 4557,
+          "entity": "GST",
+          "variant": "gst",
+          "context": "l, etc, are played by the youngsters"
+        },
+        {
+          "row": 4783,
+          "entity": "Voter ID",
+          "variant": "epic",
+          "context": "so most of the arts are made depicting the life history of her."
+        },
+        {
+          "row": 5011,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "ber 721478288833 to check my EPFO passbook balance"
+        },
+        {
+          "row": 5135,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": " small tasks can really be helpful in keeping the spirits high"
+        },
+        {
+          "row": 5273,
+          "entity": "Voter ID",
+          "variant": "epic",
+          "context": "as most of the art depicts the"
+        },
+        {
+          "row": 5288,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "ber 116195929553 to generate EPFO passbook statement"
+        },
+        {
+          "row": 5913,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "Resend OTP to my EPFO registered mobile number 860"
+        },
+        {
+          "row": 6022,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "Can I login to EPFO portal with another mobile n"
+        },
+        {
+          "row": 6082,
+          "entity": "UPI",
+          "variant": "upi",
+          "context": "The pupils are active participants in "
+        },
+        {
+          "row": 6215,
+          "entity": "Voter ID",
+          "variant": "epic",
+          "context": "The novel depicts the life of Najib, name of "
+        },
+        {
+          "row": 6242,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "alance, please login with my EPFO registered mobile number"
+        },
+        {
+          "row": 6388,
+          "entity": "GST",
+          "variant": "gst",
+          "context": "younger generation or the youngsters are getting involved in uh"
+        },
+        {
+          "row": 6468,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "ber 387775845565 to generate EPFO passbook statement"
+        }
+      ],
+      "breakdowns": {}
+    },
+    {
+      "dataset": "LAHAJA",
+      "n_transcripts": 6152,
+      "transcripts_sha256": "ed4cbf233f34f1682dd9b2d21d40ecabba1575f5a6fb787dbef6a12f1a164631",
+      "totals": {
+        "legacy_raw_occurrences": 17,
+        "substring_pairs": 17,
+        "word_boundary_pairs": 17
+      },
+      "examples_with_word_boundary_mention": 17,
+      "decision": "STOP_CHANGE_CORPUS (<30)",
+      "per_entity": [
+        {
+          "entity": "CoWIN",
+          "legacy_raw_occurrences": 17,
+          "substring_pairs": 17,
+          "word_boundary_pairs": 17
+        },
+        {
+          "entity": "Aadhaar",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Ayushman Bharat",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "DigiLocker",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "EPFO",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "ESIC",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "GST",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "IFSC code",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Jan Dhan Yojana",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Kisan Credit Card",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Mudra Yojana",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "PAN card",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Passport Seva",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Pradhan Mantri Awas Yojana",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Provident Fund",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Ration card",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Sukanya Samriddhi Yojana",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "UPI",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Ujjwala Yojana",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Voter ID",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        }
+      ],
+      "word_boundary_variant_hits": {
+        "CoWIN :: कोविन": 17
+      },
+      "substring_only_hits": [],
+      "breakdowns": {}
+    },
+    {
+      "dataset": "IndicVoices-Hindi",
+      "n_transcripts": 450690,
+      "transcripts_sha256": "b10097954058f1933a024555fad39503aa0a093daaefa23c6b7da77383088a78",
+      "totals": {
+        "legacy_raw_occurrences": 2426,
+        "substring_pairs": 2098,
+        "word_boundary_pairs": 2097
+      },
+      "examples_with_word_boundary_mention": 1925,
+      "decision": "PROCEED (>=100)",
+      "per_entity": [
+        {
+          "entity": "Aadhaar",
+          "legacy_raw_occurrences": 1074,
+          "substring_pairs": 929,
+          "word_boundary_pairs": 929
+        },
+        {
+          "entity": "PAN card",
+          "legacy_raw_occurrences": 577,
+          "substring_pairs": 485,
+          "word_boundary_pairs": 485
+        },
+        {
+          "entity": "CoWIN",
+          "legacy_raw_occurrences": 202,
+          "substring_pairs": 201,
+          "word_boundary_pairs": 201
+        },
+        {
+          "entity": "DigiLocker",
+          "legacy_raw_occurrences": 240,
+          "substring_pairs": 164,
+          "word_boundary_pairs": 164
+        },
+        {
+          "entity": "Ration card",
+          "legacy_raw_occurrences": 109,
+          "substring_pairs": 97,
+          "word_boundary_pairs": 96
+        },
+        {
+          "entity": "Ayushman Bharat",
+          "legacy_raw_occurrences": 87,
+          "substring_pairs": 86,
+          "word_boundary_pairs": 86
+        },
+        {
+          "entity": "Passport Seva",
+          "legacy_raw_occurrences": 39,
+          "substring_pairs": 39,
+          "word_boundary_pairs": 39
+        },
+        {
+          "entity": "Voter ID",
+          "legacy_raw_occurrences": 40,
+          "substring_pairs": 39,
+          "word_boundary_pairs": 39
+        },
+        {
+          "entity": "Pradhan Mantri Awas Yojana",
+          "legacy_raw_occurrences": 24,
+          "substring_pairs": 24,
+          "word_boundary_pairs": 24
+        },
+        {
+          "entity": "Jan Dhan Yojana",
+          "legacy_raw_occurrences": 10,
+          "substring_pairs": 10,
+          "word_boundary_pairs": 10
+        },
+        {
+          "entity": "Kisan Credit Card",
+          "legacy_raw_occurrences": 9,
+          "substring_pairs": 9,
+          "word_boundary_pairs": 9
+        },
+        {
+          "entity": "ESIC",
+          "legacy_raw_occurrences": 4,
+          "substring_pairs": 4,
+          "word_boundary_pairs": 4
+        },
+        {
+          "entity": "Mudra Yojana",
+          "legacy_raw_occurrences": 4,
+          "substring_pairs": 4,
+          "word_boundary_pairs": 4
+        },
+        {
+          "entity": "Sukanya Samriddhi Yojana",
+          "legacy_raw_occurrences": 3,
+          "substring_pairs": 3,
+          "word_boundary_pairs": 3
+        },
+        {
+          "entity": "Ujjwala Yojana",
+          "legacy_raw_occurrences": 2,
+          "substring_pairs": 2,
+          "word_boundary_pairs": 2
+        },
+        {
+          "entity": "GST",
+          "legacy_raw_occurrences": 1,
+          "substring_pairs": 1,
+          "word_boundary_pairs": 1
+        },
+        {
+          "entity": "UPI",
+          "legacy_raw_occurrences": 1,
+          "substring_pairs": 1,
+          "word_boundary_pairs": 1
+        },
+        {
+          "entity": "EPFO",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "IFSC code",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Provident Fund",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        }
+      ],
+      "word_boundary_variant_hits": {
+        "Aadhaar :: आधार कार्ड": 772,
+        "PAN card :: पैन कार्ड": 574,
+        "DigiLocker :: डिजिलॉकर": 240,
+        "CoWIN :: कोविन": 202,
+        "Aadhaar :: आधार नंबर": 154,
+        "Aadhaar :: आधार नम्बर": 148,
+        "Ration card :: राशन कार्ड": 108,
+        "Ayushman Bharat :: आयुष्मान भारत": 87,
+        "Voter ID :: मतदाता पहचान पत्र": 40,
+        "Passport Seva :: पासपोर्ट सेवा": 39,
+        "Pradhan Mantri Awas Yojana :: प्रधानमंत्री आवास योजना": 24,
+        "Jan Dhan Yojana :: जन धन योजना": 10,
+        "Kisan Credit Card :: किसान क्रेडिट कार्ड": 9,
+        "Mudra Yojana :: मुद्रा योजना": 4,
+        "ESIC :: ईएसआईसी": 4,
+        "Sukanya Samriddhi Yojana :: सुकन्या समृद्धि योजना": 3,
+        "PAN card :: पैन नम्बर": 2,
+        "Ujjwala Yojana :: उज्ज्वला योजना": 2,
+        "PAN card :: पैन नंबर": 1,
+        "GST :: जीएसटी": 1,
+        "UPI :: यूपीआई": 1
+      },
+      "substring_only_hits": [
+        {
+          "row": 247122,
+          "entity": "Ration card",
+          "variant": "राशन कार्ड",
+          "context": "में नाम होता है या जिन के पास राशन कार्ड्स होते हैं तो उस में ये है कि"
+        }
+      ],
+      "breakdowns": {
+        "split": [
+          {
+            "value": "train",
+            "n_rows": 445160,
+            "word_boundary_pairs": 2069,
+            "by_entity": {
+              "Aadhaar": 912,
+              "PAN card": 478,
+              "CoWIN": 200,
+              "DigiLocker": 164,
+              "Ration card": 94,
+              "Ayushman Bharat": 86,
+              "Voter ID": 39,
+              "Passport Seva": 38,
+              "Pradhan Mantri Awas Yojana": 24,
+              "Jan Dhan Yojana": 10,
+              "Kisan Credit Card": 9,
+              "Mudra Yojana": 4,
+              "ESIC": 4,
+              "Sukanya Samriddhi Yojana": 3,
+              "Ujjwala Yojana": 2,
+              "GST": 1,
+              "UPI": 1
+            }
+          },
+          {
+            "value": "valid",
+            "n_rows": 5530,
+            "word_boundary_pairs": 28,
+            "by_entity": {
+              "Aadhaar": 17,
+              "PAN card": 7,
+              "Ration card": 2,
+              "CoWIN": 1,
+              "Passport Seva": 1
+            }
+          }
+        ],
+        "scenario": [
+          {
+            "value": "Read",
+            "n_rows": 38614,
+            "word_boundary_pairs": 1314,
+            "by_entity": {
+              "Aadhaar": 464,
+              "PAN card": 323,
+              "CoWIN": 197,
+              "DigiLocker": 164,
+              "Ayushman Bharat": 64,
+              "Voter ID": 39,
+              "Passport Seva": 36,
+              "Ration card": 18,
+              "ESIC": 4,
+              "Jan Dhan Yojana": 3,
+              "Sukanya Samriddhi Yojana": 2
+            }
+          },
+          {
+            "value": "Conversation",
+            "n_rows": 174523,
+            "word_boundary_pairs": 492,
+            "by_entity": {
+              "Aadhaar": 345,
+              "PAN card": 109,
+              "Ration card": 30,
+              "Ayushman Bharat": 5,
+              "Kisan Credit Card": 2,
+              "GST": 1
+            }
+          },
+          {
+            "value": "Extempore",
+            "n_rows": 237553,
+            "word_boundary_pairs": 291,
+            "by_entity": {
+              "Aadhaar": 120,
+              "PAN card": 53,
+              "Ration card": 48,
+              "Pradhan Mantri Awas Yojana": 24,
+              "Ayushman Bharat": 17,
+              "Jan Dhan Yojana": 7,
+              "Kisan Credit Card": 7,
+              "Mudra Yojana": 4,
+              "CoWIN": 4,
+              "Passport Seva": 3,
+              "Ujjwala Yojana": 2,
+              "UPI": 1,
+              "Sukanya Samriddhi Yojana": 1
+            }
+          }
+        ],
+        "task_name": [
+          {
+            "value": "Conversation",
+            "n_rows": 174523,
+            "word_boundary_pairs": 492,
+            "by_entity": {
+              "Aadhaar": 345,
+              "PAN card": 109,
+              "Ration card": 30,
+              "Ayushman Bharat": 5,
+              "Kisan Credit Card": 2,
+              "GST": 1
+            }
+          },
+          {
+            "value": "Aadhaar",
+            "n_rows": 562,
+            "word_boundary_pairs": 364,
+            "by_entity": {
+              "Aadhaar": 364
+            }
+          },
+          {
+            "value": "PAN",
+            "n_rows": 518,
+            "word_boundary_pairs": 312,
+            "by_entity": {
+              "PAN card": 253,
+              "Aadhaar": 32,
+              "Voter ID": 20,
+              "Ration card": 7
+            }
+          },
+          {
+            "value": "Umang Commands",
+            "n_rows": 2864,
+            "word_boundary_pairs": 209,
+            "by_entity": {
+              "CoWIN": 197,
+              "PAN card": 4,
+              "ESIC": 4,
+              "Ration card": 3,
+              "Aadhaar": 1
+            }
+          },
+          {
+            "value": "Digilocker",
+            "n_rows": 494,
+            "word_boundary_pairs": 189,
+            "by_entity": {
+              "DigiLocker": 164,
+              "Voter ID": 9,
+              "Aadhaar": 9,
+              "PAN card": 7
+            }
+          },
+          {
+            "value": "Health Services",
+            "n_rows": 434,
+            "word_boundary_pairs": 65,
+            "by_entity": {
+              "Ayushman Bharat": 64,
+              "CoWIN": 1
+            }
+          },
+          {
+            "value": "Passport Seva",
+            "n_rows": 487,
+            "word_boundary_pairs": 59,
+            "by_entity": {
+              "Passport Seva": 39,
+              "Aadhaar": 8,
+              "Ration card": 6,
+              "PAN card": 4,
+              "Voter ID": 2
+            }
+          },
+          {
+            "value": "ITR Services",
+            "n_rows": 163,
+            "word_boundary_pairs": 54,
+            "by_entity": {
+              "PAN card": 52,
+              "Aadhaar": 2
+            }
+          },
+          {
+            "value": "DOI - Government",
+            "n_rows": 4731,
+            "word_boundary_pairs": 47,
+            "by_entity": {
+              "Pradhan Mantri Awas Yojana": 19,
+              "Ration card": 14,
+              "Jan Dhan Yojana": 4,
+              "Kisan Credit Card": 3,
+              "Ayushman Bharat": 2,
+              "Mudra Yojana": 2,
+              "Aadhaar": 2,
+              "Ujjwala Yojana": 1
+            }
+          },
+          {
+            "value": "DOI - Legal",
+            "n_rows": 2815,
+            "word_boundary_pairs": 44,
+            "by_entity": {
+              "Aadhaar": 22,
+              "PAN card": 12,
+              "Ration card": 10
+            }
+          },
+          {
+            "value": "Gas Booking",
+            "n_rows": 610,
+            "word_boundary_pairs": 40,
+            "by_entity": {
+              "Aadhaar": 40
+            }
+          },
+          {
+            "value": "Crop Insurance",
+            "n_rows": 484,
+            "word_boundary_pairs": 23,
+            "by_entity": {
+              "Voter ID": 7,
+              "Aadhaar": 7,
+              "PAN card": 5,
+              "Ration card": 4
+            }
+          },
+          {
+            "value": "DOI - Education",
+            "n_rows": 5533,
+            "word_boundary_pairs": 22,
+            "by_entity": {
+              "Aadhaar": 16,
+              "Ration card": 3,
+              "PAN card": 2,
+              "CoWIN": 1
+            }
+          },
+          {
+            "value": "DOI - Banking And Insurance",
+            "n_rows": 2923,
+            "word_boundary_pairs": 18,
+            "by_entity": {
+              "Aadhaar": 5,
+              "Ayushman Bharat": 5,
+              "PAN card": 2,
+              "Kisan Credit Card": 2,
+              "Jan Dhan Yojana": 1,
+              "Pradhan Mantri Awas Yojana": 1,
+              "Sukanya Samriddhi Yojana": 1,
+              "Ration card": 1
+            }
+          },
+          {
+            "value": "Digital Payment Commands",
+            "n_rows": 2857,
+            "word_boundary_pairs": 18,
+            "by_entity": {
+              "PAN card": 8,
+              "Aadhaar": 5,
+              "Jan Dhan Yojana": 3,
+              "Sukanya Samriddhi Yojana": 2
+            }
+          },
+          {
+            "value": "EPFO",
+            "n_rows": 319,
+            "word_boundary_pairs": 18,
+            "by_entity": {
+              "PAN card": 10,
+              "Aadhaar": 7,
+              "Voter ID": 1
+            }
+          },
+          {
+            "value": "NPS",
+            "n_rows": 243,
+            "word_boundary_pairs": 17,
+            "by_entity": {
+              "Aadhaar": 17
+            }
+          },
+          {
+            "value": "GK Questions",
+            "n_rows": 10972,
+            "word_boundary_pairs": 16,
+            "by_entity": {
+              "Ayushman Bharat": 6,
+              "Aadhaar": 6,
+              "Pradhan Mantri Awas Yojana": 1,
+              "Jan Dhan Yojana": 1,
+              "CoWIN": 1,
+              "PAN card": 1
+            }
+          },
+          {
+            "value": "DOI - Health",
+            "n_rows": 6517,
+            "word_boundary_pairs": 15,
+            "by_entity": {
+              "Aadhaar": 6,
+              "Ration card": 6,
+              "Ayushman Bharat": 3
+            }
+          },
+          {
+            "value": "Electricity Bill Payments",
+            "n_rows": 651,
+            "word_boundary_pairs": 11,
+            "by_entity": {
+              "Ration card": 6,
+              "Aadhaar": 5
+            }
+          },
+          {
+            "value": "District Specific",
+            "n_rows": 9772,
+            "word_boundary_pairs": 10,
+            "by_entity": {
+              "Pradhan Mantri Awas Yojana": 3,
+              "Aadhaar": 2,
+              "Jan Dhan Yojana": 1,
+              "Ayushman Bharat": 1,
+              "Kisan Credit Card": 1,
+              "Ration card": 1,
+              "CoWIN": 1
+            }
+          },
+          {
+            "value": "DOI - Technology",
+            "n_rows": 5298,
+            "word_boundary_pairs": 9,
+            "by_entity": {
+              "Aadhaar": 3,
+              "PAN card": 3,
+              "Ration card": 3
+            }
+          },
+          {
+            "value": "Ola/Uber Prompts",
+            "n_rows": 5518,
+            "word_boundary_pairs": 7,
+            "by_entity": {
+              "Aadhaar": 4,
+              "PAN card": 2,
+              "UPI": 1
+            }
+          },
+          {
+            "value": "GST Services",
+            "n_rows": 91,
+            "word_boundary_pairs": 5,
+            "by_entity": {
+              "PAN card": 5
+            }
+          },
+          {
+            "value": "KYP - Biking",
+            "n_rows": 3165,
+            "word_boundary_pairs": 5,
+            "by_entity": {
+              "Aadhaar": 4,
+              "PAN card": 1
+            }
+          },
+          {
+            "value": "KYP - Photography",
+            "n_rows": 3144,
+            "word_boundary_pairs": 4,
+            "by_entity": {
+              "Aadhaar": 2,
+              "PAN card": 1,
+              "Ration card": 1
+            }
+          },
+          {
+            "value": "KYP - Technology",
+            "n_rows": 2979,
+            "word_boundary_pairs": 4,
+            "by_entity": {
+              "Aadhaar": 3,
+              "PAN card": 1
+            }
+          },
+          {
+            "value": "DOI - Business",
+            "n_rows": 4842,
+            "word_boundary_pairs": 3,
+            "by_entity": {
+              "Mudra Yojana": 2,
+              "Aadhaar": 1
+            }
+          },
+          {
+            "value": "KYP - Traveling",
+            "n_rows": 5924,
+            "word_boundary_pairs": 3,
+            "by_entity": {
+              "Aadhaar": 2,
+              "PAN card": 1
+            }
+          },
+          {
+            "value": "PMKVY",
+            "n_rows": 211,
+            "word_boundary_pairs": 3,
+            "by_entity": {
+              "Aadhaar": 2,
+              "PAN card": 1
+            }
+          },
+          {
+            "value": "DOI - Agriculture",
+            "n_rows": 5361,
+            "word_boundary_pairs": 2,
+            "by_entity": {
+              "Aadhaar": 1,
+              "Kisan Credit Card": 1
+            }
+          },
+          {
+            "value": "DOI - History",
+            "n_rows": 3316,
+            "word_boundary_pairs": 2,
+            "by_entity": {
+              "Aadhaar": 1,
+              "Ujjwala Yojana": 1
+            }
+          },
+          {
+            "value": "Language Specific",
+            "n_rows": 8773,
+            "word_boundary_pairs": 2,
+            "by_entity": {
+              "Aadhaar": 2
+            }
+          },
+          {
+            "value": "Product Review",
+            "n_rows": 6791,
+            "word_boundary_pairs": 2,
+            "by_entity": {
+              "Aadhaar": 1,
+              "PAN card": 1
+            }
+          },
+          {
+            "value": "DOI - Animal Husbandry",
+            "n_rows": 4779,
+            "word_boundary_pairs": 1,
+            "by_entity": {
+              "Aadhaar": 1
+            }
+          },
+          {
+            "value": "DOI - News Media",
+            "n_rows": 4397,
+            "word_boundary_pairs": 1,
+            "by_entity": {
+              "Ration card": 1
+            }
+          },
+          {
+            "value": "KYP - Writing",
+            "n_rows": 1688,
+            "word_boundary_pairs": 1,
+            "by_entity": {
+              "Aadhaar": 1
+            }
+          },
+          {
+            "value": "Alexa Commands",
+            "n_rows": 3674,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Bigbasket Commands",
+            "n_rows": 2858,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Cloth Shopping",
+            "n_rows": 874,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Coordinator Section",
+            "n_rows": 91,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "DOI - Art & Craft",
+            "n_rows": 3408,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "DOI - Culture",
+            "n_rows": 5452,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "DOI - Entertainment",
+            "n_rows": 5198,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "DOI - Geography",
+            "n_rows": 2946,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "DOI - Poultry",
+            "n_rows": 3002,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "DOI - Religion",
+            "n_rows": 5246,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "DOI - Sports",
+            "n_rows": 3245,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "DOI - Stem",
+            "n_rows": 1925,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "DOI - Tourism",
+            "n_rows": 3393,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Daily Life",
+            "n_rows": 10916,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Electronic Shopping",
+            "n_rows": 730,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Flight Booking",
+            "n_rows": 303,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Garbage Services",
+            "n_rows": 120,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Astronomy",
+            "n_rows": 461,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Basic",
+            "n_rows": 6460,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Birdwatching",
+            "n_rows": 3558,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Collecting",
+            "n_rows": 297,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Cooking",
+            "n_rows": 7799,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Dancing",
+            "n_rows": 3034,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Drawing",
+            "n_rows": 3406,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Fishing",
+            "n_rows": 3581,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Games",
+            "n_rows": 5585,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Gardening",
+            "n_rows": 5083,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Hiking/Trekking",
+            "n_rows": 2470,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Horse riding",
+            "n_rows": 199,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Knitting and Stitchings",
+            "n_rows": 3294,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Martial arts",
+            "n_rows": 240,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Painting",
+            "n_rows": 3356,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Reading",
+            "n_rows": 3979,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Rock climbing",
+            "n_rows": 814,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Running",
+            "n_rows": 2710,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Sculpting (creating 3D art)",
+            "n_rows": 827,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Singing",
+            "n_rows": 2743,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Star gazing",
+            "n_rows": 627,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Surfing",
+            "n_rows": 137,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Swimming",
+            "n_rows": 3086,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Yoga",
+            "n_rows": 3439,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Keywords Spotting",
+            "n_rows": 13988,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Landline Bill Payment",
+            "n_rows": 331,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Mobile and Bill Payment",
+            "n_rows": 210,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Movie and Show Booking",
+            "n_rows": 325,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "ORS",
+            "n_rows": 133,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Parivahan",
+            "n_rows": 171,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Railway Booking",
+            "n_rows": 175,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Startup",
+            "n_rows": 94,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Swiggy Prompts",
+            "n_rows": 4693,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Task of Fives",
+            "n_rows": 10022,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Water Services",
+            "n_rows": 126,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Wikipedia Sentences",
+            "n_rows": 5107,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          }
+        ]
+      }
+    }
+  ]
+}

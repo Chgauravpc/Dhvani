@@ -86,6 +86,19 @@ def find_mentions(text: str, lexicon: DomainLexicon) -> list[Mention]:
     return claimed
 
 
+def contains_variant(text: str, variant: str) -> bool:
+    """Whether `variant` occurs word-bounded in `text` (case-folded) -- the
+    canonical-form check of the 3B-2 scorer."""
+    folded = text.casefold() if len(text.casefold()) == len(text) else text.lower()
+    needle = variant.casefold()
+    start = folded.find(needle)
+    while start != -1:
+        if _bounded(folded, start, start + len(needle)):
+            return True
+        start = folded.find(needle, start + 1)
+    return False
+
+
 def mentioned_entities(text: str, lexicon: DomainLexicon) -> set[str]:
     """Canonical names of every entity `text` mentions (deduplicated)."""
     return {m.canonical for m in find_mentions(text, lexicon)}

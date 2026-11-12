@@ -4,9 +4,11 @@ import pytest
 
 from dhvani.clock import FakeClock
 from dhvani.entity.corrector import EntityCorrector
-from dhvani.entity.lexicon import LATIN, DomainLexicon, LexiconEntry
+from dhvani.entity.lexicon import DEVANAGARI, LATIN, DomainLexicon, LexiconEntry
 from dhvani.eval.datasets import TranscriptExample
 from dhvani.eval.entity_error_rate import (
+    EerReport,
+    TranscribedExample,
     compute_entity_error_rate,
     score_transcripts,
     transcribe_examples,
@@ -18,8 +20,15 @@ pytestmark = pytest.mark.asyncio
 
 _LEXICON = DomainLexicon(
     [
-        LexiconEntry(canonical="Aadhaar", variants={LATIN: ("aadhaar", "aadhar", "adhaar")}),
+        LexiconEntry(
+            canonical="Aadhaar",
+            variants={
+                LATIN: ("aadhaar", "aadhar", "adhaar"),
+                DEVANAGARI: ("आधार कार्ड",),
+            },
+        ),
         LexiconEntry(canonical="UPI", variants={LATIN: ("upi",)}),
+        LexiconEntry(canonical="PAN card", variants={LATIN: ("pan card",)}),
     ]
 )
 _SILENCE = (AudioChunk(pcm=b"\x00\x00" * 160, sample_rate=16000, seq=0, is_last=True),)
@@ -47,8 +56,8 @@ async def test_eer_zero_when_asr_gets_the_entity_right() -> None:
         split="test",
     )
     assert report.n_entity_mentions == 1
-    assert report.eer_before == pytest.approx(0.0)
-    assert report.eer_after == pytest.approx(0.0)
+    assert report.canonical_miss_before == pytest.approx(0.0)
+    assert report.canonical_miss_after == pytest.approx(0.0)
 
 
 async def test_eer_before_counts_a_mangled_entity_asr_missed() -> None:
@@ -62,8 +71,8 @@ async def test_eer_before_counts_a_mangled_entity_asr_missed() -> None:
         clock,
         split="test",
     )
-    assert report.eer_before == pytest.approx(1.0)
-    assert report.eer_after == pytest.approx(0.0)  # the corrector recovers it
+    assert report.canonical_miss_before == pytest.approx(1.0)
+    assert report.canonical_miss_after == pytest.approx(0.0)  # the corrector recovers it
 
 
 async def test_eer_after_stays_wrong_when_correction_is_too_weak() -> None:
@@ -80,8 +89,8 @@ async def test_eer_after_stays_wrong_when_correction_is_too_weak() -> None:
         clock,
         split="test",
     )
-    assert report.eer_before == pytest.approx(1.0)
-    assert report.eer_after == pytest.approx(1.0)
+    assert report.canonical_miss_before == pytest.approx(1.0)
+    assert report.canonical_miss_after == pytest.approx(1.0)
 
 
 async def test_multiple_entities_in_one_example_count_as_multiple_mentions() -> None:
@@ -187,5 +196,59 @@ async def test_score_transcripts_reused_across_thresholds() -> None:
         transcribed, _LEXICON, EntityCorrector(_LEXICON, threshold=0.95), "dev"
     )
 
-    assert lenient.eer_after == pytest.approx(0.0)
-    assert strict.eer_after == pytest.approx(1.0)
+    assert lenient.canonical_miss_after == pytest.approx(0.0)
+    assert strict.canonical_miss_after == pytest.approx(1.0)
+
+
+# --- phase-3b 3B-2: recognition vs canonicalization -------------------------
+
+
+def _score(ground_truth: str, asr_output: str, threshold: float = 0.99) -> EerReport:
+    """Scores one already-transcribed example. Threshold 0.99 makes the
+    corrector all but inert, so before/after differences come from it only
+    where a test wants them."""
+    return score_transcripts(
+        [TranscribedExample(ground_truth_text=ground_truth, raw_text=asr_output)],
+        _LEXICON,
+        EntityCorrector(_LEXICON, threshold=threshold),
+        split="test",
+    )
+
+
+async def test_correct_devanagari_output_is_recognised_but_not_canonical() -> None:
+    """Sep 23 audit A2: the old scorer marked this an ASR failure."""
+    report = _score("मेरा आधार कार्ड खो गया", "मेरा आधार कार्ड खो गया")
+    assert report.n_entity_mentions == 1
+    assert report.recognition_eer_before == pytest.approx(0.0)
+    assert report.canonical_miss_before == pytest.approx(1.0)
+
+
+async def test_variant_spelling_is_recognised_but_not_canonical() -> None:
+    report = _score("check my aadhar status", "check my aadhar status")
+    assert report.recognition_eer_before == pytest.approx(0.0)
+    assert report.canonical_miss_before == pytest.approx(1.0)
+
+
+async def test_company_is_not_a_pan_mention() -> None:
+    """Sep 23 audit A1: "company" fired the PAN variant as a substring."""
+    report = _score("i work at a software company", "i work at a software company")
+    assert report.n_entity_mentions == 0
+    assert report.n_clean_examples == 1
+
+
+async def test_canonical_inside_a_longer_word_does_not_count() -> None:
+    report = _score("pay by upi", "pay by upipay")
+    assert report.recognition_eer_before == pytest.approx(1.0)
+    assert report.canonical_miss_before == pytest.approx(1.0)
+
+
+async def test_canonical_output_is_both_recognised_and_canonical() -> None:
+    report = _score("check my aadhar status", "check my Aadhaar status")
+    assert report.recognition_eer_before == pytest.approx(0.0)
+    assert report.canonical_miss_before == pytest.approx(0.0)
+
+
+async def test_unrecognised_mention_counts_against_both_rates() -> None:
+    report = _score("check my aadhaar status", "check my adar status")
+    assert report.recognition_eer_before == pytest.approx(1.0)
+    assert report.canonical_miss_before == pytest.approx(1.0)

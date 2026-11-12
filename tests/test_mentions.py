@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import pytest
 
-from dhvani.entity.lexicon import DEFAULT_LEXICON
+from dhvani.entity.lexicon import DEFAULT_LEXICON, DEVANAGARI, LATIN, DomainLexicon, LexiconEntry
 from dhvani.entity.mentions import (
     find_mentions,
     is_word_char,
@@ -16,6 +16,21 @@ from dhvani.entity.mentions import (
     substring_mentioned_entities,
 )
 from dhvani.eval.entity_error_rate import _mentioned_entities
+
+# The short/bare variants that produced the audit's false hits, frozen as
+# they were in the lexicon at 3B-1 time. 3B-2 later dropped bare आधार/पैन/pan
+# from DEFAULT_LEXICON, so the word-boundary rule is tested here against the
+# variants that actually caused the problem, not only the current lexicon.
+_AUDIT_LEXICON = DomainLexicon(
+    [
+        LexiconEntry("Aadhaar", {DEVANAGARI: ("आधार",)}),
+        LexiconEntry("PAN card", {LATIN: ("pan",)}),
+        LexiconEntry("GST", {LATIN: ("gst",)}),
+        LexiconEntry("Provident Fund", {LATIN: ("pf",)}),
+        LexiconEntry("Voter ID", {LATIN: ("epic",)}),
+        LexiconEntry("UPI", {LATIN: ("upi",)}),
+    ]
+)
 
 
 @pytest.mark.parametrize(
@@ -35,9 +50,10 @@ from dhvani.eval.entity_error_rate import _mentioned_entities
     ],
 )
 def test_no_mention_inside_a_longer_word(text: str) -> None:
+    assert mentioned_entities(text, _AUDIT_LEXICON) == set()
     assert mentioned_entities(text, DEFAULT_LEXICON) == set()
     # and the legacy substring rule did fire on every one of these
-    assert substring_mentioned_entities(text, DEFAULT_LEXICON) != set()
+    assert substring_mentioned_entities(text, _AUDIT_LEXICON) != set()
 
 
 @pytest.mark.parametrize(
@@ -65,7 +81,25 @@ def test_devanagari_vowel_sign_is_a_word_character() -> None:
     # boundary and let "पैन" match inside "पैनी" ("sharp").
     assert is_word_char("ी")
     assert mentioned_entities("चाकू पैनी है", DEFAULT_LEXICON) == set()
-    assert mentioned_entities("मेरा पैन खो गया", DEFAULT_LEXICON) == {"PAN card"}
+    assert mentioned_entities("मेरा पैन कार्ड खो गया", DEFAULT_LEXICON) == {"PAN card"}
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "जाति के आधार पर भेदभाव",  # LAHAJA / IndicVoices: "on the basis of"
+        "एक पैन किलर दीजिए",  # IndicVoices: "pain killer"
+        "heat the pan first",
+    ],
+)
+def test_bare_homonym_variants_are_not_in_the_lexicon(text: str) -> None:
+    """3B-2 dropped bare आधार / पैन / pan: homonyms of everyday words."""
+    assert mentioned_entities(text, DEFAULT_LEXICON) == set()
+
+
+def test_compound_forms_still_name_the_id() -> None:
+    assert mentioned_entities("मेरा आधार नंबर बताइए", DEFAULT_LEXICON) == {"Aadhaar"}
+    assert mentioned_entities("मेरा पैन नंबर बताइए", DEFAULT_LEXICON) == {"PAN card"}
 
 
 def test_longest_variant_wins_and_dedup_per_entity() -> None:

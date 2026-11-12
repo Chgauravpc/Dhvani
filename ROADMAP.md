@@ -271,7 +271,7 @@ as their own problem.
       for LAHAJA** (<30). The audit's own LAHAJA recount (38) was also inflated:
       its `\w` regex let `आधारित` ("based on") through. Awaiting owner review;
       Reviewed and accepted by owner 2026-11-12.
-- [?] 3B-1a — LAHAJA pivot required by the failed gate. Owner decision
+- [x] 3B-1a — LAHAJA pivot required by the failed gate. Owner decision
       2026-11-12: switch the Hindi arm to IndicVoices' use-case split (not
       lexicon widening). Gate must be re-run on IndicVoices Hindi first. Also:
       bare `आधार` is a homonym -- the lexicon needs a context rule or must drop
@@ -286,9 +286,22 @@ as their own problem.
       Caveats carried with every number: the gov subset is 94% read speech
       (lower bound); only 9 gov pairs in `valid` (eval samples `train`, which
       Saaras may have trained on); bare `आधार`/`पैन` are false outside gov
-      tasks (286 "के आधार पर" pairs, "पैन किलर"). Awaiting owner review.
-- [ ] 3B-2 — two-rate scorer: **recognition EER** (any curated variant, any
+      tasks (286 "के आधार पर" pairs, "पैन किलर"). Reviewed and accepted by
+      owner 2026-11-13.
+- [?] 3B-2 — two-rate scorer: **recognition EER** (any curated variant, any
       script) and **canonicalization rate**, both paired with corruption
+      evidence: <this commit> · `uv run pytest -m "not integration"` (226 passed) ·
+      `tests/test_entity_error_rate.py` (Devanagari-correct output recognised but
+      not canonical; "company" not a PAN mention; variant spelling recognised
+      but not canonical) · implementation item, no headline number. Decisions
+      made with it: (1) per owner 2026-11-13, bare `आधार`/`पैन`/`pan` dropped
+      from the lexicon instead of restricting Hindi to gov-task rows; compound
+      forms `आधार नंबर`/`पैन नंबर`/`pan number` added; (2) the dev threshold
+      sweep now minimises `canonical_miss_after + corruption_rate` (3B-4 must
+      preregister this before its run). Gate re-run under the new lexicon,
+      beside the old rows: `results/entity_density_gate_lexicon_v2.json` --
+      Svarah 94, LAHAJA 17 (= the manual review), IndicVoices Hindi 2,097.
+      Awaiting owner review.
 - [ ] 3B-3 — cache every raw transcript to committed JSONL so rescoring never
       needs re-transcription or API credits
 - [ ] 3B-4 — preregister, then re-run F2 EER, 2 datasets × 2 ASRs; old rows

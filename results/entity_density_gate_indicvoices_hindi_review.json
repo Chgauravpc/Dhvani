@@ -1,0 +1,35 @@
+{
+  "item": "3B-1a",
+  "reviews": "results/entity_density_gate_indicvoices_hindi.json",
+  "method": "Read on 2026-11-13 from the per-shard text cache (~/.cache/dhvani/indicvoices_hindi_text/, built by load_indicvoices_text_rows at df63af1). Aadhaar/PAN pairs supported only by the bare Devanagari variants आधार / पैन were split by context; 20 random contexts per class were read by Claude. Government use-case tasks = task_name in {Aadhaar, PAN, Digilocker, Umang Commands, Health Services, Passport Seva, ITR Services, Gas Booking, NPS}. Awaiting owner confirmation.",
+  "n_transcripts": 450690,
+  "counts": {
+    "matcher_word_boundary_pairs": 2677,
+    "lower_bound_excluding_bare_homonym_only_pairs": 1890,
+    "gov_usecase_tasks": {"rows": 6375, "pairs": 1386}
+  },
+  "decision": "PROCEED (>=100) under all three counts",
+  "homonyms": {
+    "Aadhaar": {
+      "explicit_form_pairs": {"gov_tasks": 271, "other_tasks": 452},
+      "bare_aadhaar_basis_pattern_pairs": {"gov_tasks": 0, "other_tasks": 286, "verdict": "false: every match is followed by ' पर' or preceded by 'के ' ('on the basis of'); all 20 samples read were the noun 'basis'"},
+      "bare_aadhaar_other_pairs": {"gov_tasks": 273, "other_tasks": 164, "verdict": "gov-task samples all genuine ('मेरा आधार नंबर', 'आधार बायोमेट्रिक्स'); other-task samples mixed: some genuine ('आधार कार्', 'आधार पैन कार्ड चाहिए'), some 'basis' outside the pattern ('उसी आधार', 'आधार बनाना'), one 'उद्योग आधार' (a different government ID)"}
+    },
+    "PAN card": {
+      "explicit_form_pairs": {"gov_tasks": 320, "other_tasks": 164},
+      "bare_pan_pairs": {"gov_tasks": 6, "other_tasks": 58, "verdict": "almost all false: 'पैन किलर' (pain killer), frying pan, pen; genuine only in ITR Services"}
+    }
+  },
+  "gov_usecase_by_scenario_split": [
+    {"scenario": "Read", "split": "train", "rows": 5768, "pairs": 1304},
+    {"scenario": "Read", "split": "valid", "rows": 31, "pairs": 6},
+    {"scenario": "Extempore", "split": "train", "rows": 572, "pairs": 73},
+    {"scenario": "Extempore", "split": "valid", "rows": 4, "pairs": 3}
+  ],
+  "caveats": [
+    "The government use-case subset is 94% read speech (1304/1386 pairs). Read prompts are easier for ASR than spontaneous speech, so any EER measured on it is a lower bound on real-call error, and must be reported as such.",
+    "Only 9 government pairs are in the valid split; the eval must sample from train. Nothing is trained here, so that is legitimate, but IndicVoices train may be in Sarvam Saaras' training data: Saaras numbers on it are potentially in-distribution / contaminated and must carry that caveat. Whisper has no such exposure we know of.",
+    "Bare आधार and पैन are unusable outside government-task context. 3B-2 must either restrict the eval to government tasks, drop the bare variants, or add a context rule; the lexicon as it stands would count 'के आधार पर' as an Aadhaar mention."
+  ],
+  "recommendation": "Use the government use-case tasks (6375 rows, 1386 pairs) as the Hindi entity arm, dev/test split by speaker_id; draw the clean (corruption) arm from non-government tasks."
+}

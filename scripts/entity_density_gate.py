@@ -24,8 +24,8 @@ Every substring-only (example, entity) hit is written out with its
 surrounding text, so each false hit can be checked by eye.
 
 Downloads manifests only (text columns), never audio. Needs a Hugging Face
-login that has accepted both datasets' gated-access terms (`HF_TOKEN` or
-`huggingface-cli login`).
+login that has accepted both datasets' gated-access terms (`HF_TOKEN` in
+the environment or in `.env`, or `hf auth login`).
 
 Decision rule (spec section 2A), applied per dataset:
 - >=100 word-boundary pairs: proceed as planned.
@@ -44,6 +44,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
+from dhvani.config import load_dotenv
 from dhvani.entity.lexicon import DEFAULT_LEXICON
 from dhvani.entity.mentions import find_mentions, mentioned_entities, substring_mentioned_entities
 from dhvani.eval.datasets import load_lahaja_ground_truth_texts, load_svarah_ground_truth_texts
@@ -161,6 +162,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--out", type=Path, default=Path("results/entity_density_gate.json"))
     args = parser.parse_args()
+    load_dotenv()  # HF_TOKEN may live in the gitignored .env
 
     results = []
     for name, loader in (

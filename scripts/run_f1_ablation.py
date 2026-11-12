@@ -31,13 +31,21 @@ from __future__ import annotations
 import argparse
 import asyncio
 import os
+from pathlib import Path
 
 from dhvani.clock import Clock, RealClock
 from dhvani.config import load_dotenv
 from dhvani.entity.corrector import EntityCorrector
 from dhvani.entity.lexicon import DEFAULT_LEXICON
+from dhvani.entity.mentions import mentioned_entities
 from dhvani.eval.datasets import load_voiceagentbench_subset
 from dhvani.eval.task_success import run_ablation
+from dhvani.eval.transcript_log import (
+    TranscriptLog,
+    default_log_path,
+    run_label,
+    stt_model_label,
+)
 from dhvani.providers.base import STTProvider
 from dhvani.providers.corrected_stt import CorrectedSTT
 from dhvani.providers.groq_llm import GroqLLM
@@ -52,6 +60,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--n-per-language", type=int, default=40)
     parser.add_argument("--with-corrected-stt", action="store_true")
     parser.add_argument("--stt", choices=["whisper", "sarvam"], default="whisper")
+    parser.add_argument("--transcripts", type=Path, default=None)
     return parser.parse_args()
 
 
@@ -62,6 +71,12 @@ def _make_stt(stt_choice: str, clock: Clock) -> STTProvider:
         return SarvamSTT(DEFAULT_SARVAM_MODEL, clock)
     whisper_model_size = os.environ.get("DHVANI_WHISPER_MODEL", "small")
     return WhisperSTT(whisper_model_size, clock)
+
+
+def _make_stt_name(stt_choice: str) -> str:
+    """The `stt` field logged for the real-ASR arm, without loading a model
+    just to read its `.name`."""
+    return "sarvam" if stt_choice == "sarvam" else "faster-whisper"
 
 
 async def main() -> None:
@@ -76,11 +91,7 @@ async def main() -> None:
     print(f"loaded {len(examples)} examples total")
 
     if args.with_corrected_stt:
-        n_mentioning = sum(
-            1
-            for e in examples
-            if any(v.lower() in e.query.lower() for _, _, v in DEFAULT_LEXICON.all_variants())
-        )
+        n_mentioning = sum(1 for e in examples if mentioned_entities(e.query, DEFAULT_LEXICON))
         print(
             f"{n_mentioning}/{len(examples)} example queries mention a lexicon entity at all "
             "-- expect most of the delta (if any) to come from just these."
@@ -95,13 +106,22 @@ async def main() -> None:
         def make_corrected_stt() -> CorrectedSTT:
             return CorrectedSTT(_make_stt(args.stt, clock), EntityCorrector(DEFAULT_LEXICON))
 
+    log = TranscriptLog(
+        args.transcripts or default_log_path("f1", "voiceagentbench", args.stt),
+        stt=_make_stt_name(args.stt),
+        model=stt_model_label(args.stt, DEFAULT_SARVAM_MODEL),
+        run=run_label("f1", "voiceagentbench"),
+    )
+    print(f"transcript log: {log.path}")
     report = await run_ablation(
         examples,
         make_real_stt=lambda: _make_stt(args.stt, clock),
         llm=llm,
         clock=clock,
         make_corrected_stt=make_corrected_stt,
+        log=log,
     )
+    log.close()
 
     print()
     print("Note: VoiceAgentBench audio is synthesized (TTS over text queries),")

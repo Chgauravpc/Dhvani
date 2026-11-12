@@ -34,6 +34,7 @@ from dhvani.entity.lexicon import DomainLexicon
 from dhvani.entity.mentions import contains_variant, mentioned_entities
 from dhvani.eval.audio_io import iter_chunks
 from dhvani.eval.datasets import TranscriptExample
+from dhvani.eval.transcript_log import TranscriptLog
 from dhvani.providers.base import STTProvider
 from dhvani.telemetry.span import TurnTrace
 
@@ -80,7 +81,11 @@ class TranscribedExample:
 
 
 async def transcribe_examples(
-    examples: Sequence[TranscriptExample], stt: STTProvider, clock: Clock
+    examples: Sequence[TranscriptExample],
+    stt: STTProvider,
+    clock: Clock,
+    log: TranscriptLog | None = None,
+    split: str = "",
 ) -> list[TranscribedExample]:
     """Transcribes each example once with `stt`.
 
@@ -89,14 +94,30 @@ async def transcribe_examples(
     transcriptions across every threshold tried instead of re-running STT
     once per threshold -- the raw transcript doesn't depend on the
     correction threshold, only the scoring does.
+
+    With a `log` (3B-3), an example already logged for the same
+    (dataset, example_id, stt, model) is read from it instead of being
+    re-transcribed, and every new transcription is appended to it.
     """
-    return [
-        TranscribedExample(
-            ground_truth_text=example.ground_truth_text,
-            raw_text=await _transcribe(example, stt, clock),
+    out: list[TranscribedExample] = []
+    for example in examples:
+        raw_text = None
+        if log is not None:
+            raw_text = log.lookup(example.dataset, example.example_id)
+        if raw_text is None:
+            raw_text = await _transcribe(example, stt, clock)
+            if log is not None:
+                log.record(
+                    dataset=example.dataset,
+                    example_id=example.example_id,
+                    ground_truth_text=example.ground_truth_text,
+                    raw_text=raw_text,
+                    split=split,
+                )
+        out.append(
+            TranscribedExample(ground_truth_text=example.ground_truth_text, raw_text=raw_text)
         )
-        for example in examples
-    ]
+    return out
 
 
 def score_transcripts(

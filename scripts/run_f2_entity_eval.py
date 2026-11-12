@@ -36,6 +36,7 @@ import asyncio
 import math
 import os
 import random
+from pathlib import Path
 
 from dhvani.clock import Clock, RealClock
 from dhvani.config import load_dotenv
@@ -47,6 +48,12 @@ from dhvani.eval.entity_error_rate import (
     TranscribedExample,
     score_transcripts,
     transcribe_examples,
+)
+from dhvani.eval.transcript_log import (
+    TranscriptLog,
+    default_log_path,
+    run_label,
+    stt_model_label,
 )
 from dhvani.providers.base import STTProvider
 from dhvani.providers.sarvam_stt import DEFAULT_MODEL as DEFAULT_SARVAM_MODEL
@@ -64,6 +71,13 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--stt", choices=["whisper", "sarvam"], default="whisper")
     parser.add_argument("--n-clean-sample", type=int, default=150)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument(
+        "--transcripts",
+        type=Path,
+        default=None,
+        help="transcript log (3B-3); default results/transcripts/f2_<dataset>_<stt>.jsonl. "
+        "Already-logged examples are read from it instead of re-transcribed.",
+    )
     return parser.parse_args()
 
 
@@ -165,17 +179,25 @@ async def main() -> None:
 
     clock = RealClock()
     stt = _make_stt(args.stt, clock)
+    log = TranscriptLog(
+        args.transcripts or default_log_path("f2", args.dataset, args.stt),
+        stt=stt.name,
+        model=stt_model_label(args.stt, DEFAULT_SARVAM_MODEL),
+        run=run_label("f2", args.dataset),
+    )
+    print(f"transcript log: {log.path}")
 
     print("\ntranscribing dev split (once)...")
     dev_transcribed = await transcribe_examples(
-        list(dev.entity_bearing) + list(dev.clean_sample), stt, clock
+        list(dev.entity_bearing) + list(dev.clean_sample), stt, clock, log=log, split="dev"
     )
     chosen_threshold, _dev_report_at_chosen = await _sweep_dev(dev_transcribed)
 
     print("\ntranscribing test split (once)...")
     test_transcribed = await transcribe_examples(
-        list(test.entity_bearing) + list(test.clean_sample), stt, clock
+        list(test.entity_bearing) + list(test.clean_sample), stt, clock, log=log, split="test"
     )
+    log.close()
     final_corrector = EntityCorrector(DEFAULT_LEXICON, threshold=chosen_threshold)
     test_report = score_transcripts(
         test_transcribed, DEFAULT_LEXICON, final_corrector, split="test"

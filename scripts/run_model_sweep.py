@@ -31,11 +31,13 @@ from __future__ import annotations
 import argparse
 import asyncio
 import random
+from pathlib import Path
 
 from dhvani.clock import RealClock
 from dhvani.entity.lexicon import DEFAULT_LEXICON
 from dhvani.eval.datasets import TranscriptExample, load_lahaja_filtered, load_svarah_filtered
 from dhvani.eval.model_sweep import render_table, run_sweep
+from dhvani.eval.transcript_log import TranscriptLog, default_log_path, run_label
 
 _LOADERS = {"svarah": load_svarah_filtered, "lahaja": load_lahaja_filtered}
 
@@ -47,6 +49,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--model-sizes", default="tiny,small")
     parser.add_argument("--compute-types", default="int8")
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--transcripts", type=Path, default=None)
     return parser.parse_args()
 
 
@@ -72,7 +75,14 @@ async def main() -> None:
 
     clock = RealClock()
     print(f"sweeping model_sizes={model_sizes} x compute_types={compute_types}...")
-    points = await run_sweep(examples, model_sizes, compute_types, clock)
+    log = TranscriptLog(
+        args.transcripts or default_log_path("model_sweep", args.dataset, "whisper"),
+        stt="faster-whisper",
+        model="",
+        run=run_label("model_sweep", args.dataset),
+    )
+    print(f"transcript log: {log.path}")
+    points = await run_sweep(examples, model_sizes, compute_types, clock, log=log)
 
     print()
     print(render_table(points))

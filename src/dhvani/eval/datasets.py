@@ -144,6 +144,12 @@ def load_voiceagentbench_subset(
 class TranscriptExample:
     audio_chunks: Sequence[AudioChunk]
     ground_truth_text: str
+    dataset: str = ""
+    """Hugging Face repo id the row came from."""
+    example_id: str = ""
+    """`<parquet shard>#<row index in shard>` -- stable across runs, so a
+    logged transcript (`eval.transcript_log`, 3B-3) can be matched back to
+    its audio and ground truth."""
 
 
 def _pick_column(available: Sequence[str], candidates: Sequence[str], purpose: str) -> str:
@@ -190,12 +196,17 @@ def _load_hf_audio_parquet_examples(
         text_column = _pick_column(schema_names, _TEXT_COLUMN_CANDIDATES, "text")
         audio_column = _pick_column(schema_names, _AUDIO_COLUMN_CANDIDATES, "audio")
         table = pq.read_table(shard_path, columns=[text_column, audio_column])
-        for row in table.to_pylist():
+        for index, row in enumerate(table.to_pylist()):
             audio_value = row[audio_column]
             audio_bytes = audio_value["bytes"] if isinstance(audio_value, dict) else audio_value
             chunks = decode_audio_bytes_to_chunks(audio_bytes)
             examples.append(
-                TranscriptExample(audio_chunks=chunks, ground_truth_text=str(row[text_column]))
+                TranscriptExample(
+                    audio_chunks=chunks,
+                    ground_truth_text=str(row[text_column]),
+                    dataset=repo_id,
+                    example_id=f"{shard}#{index}",
+                )
             )
     return examples
 
@@ -288,14 +299,21 @@ def _load_hf_audio_parquet_filtered(
                 i - row_offset for i in wanted_indices if row_offset <= i < row_offset + batch_len
             ]
             if local_indices:
-                for row in batch.take(local_indices).to_pylist():
+                for local, row in zip(
+                    local_indices, batch.take(local_indices).to_pylist(), strict=True
+                ):
                     text = str(row[text_column])
                     audio_value = row[audio_column]
                     audio_bytes = (
                         audio_value["bytes"] if isinstance(audio_value, dict) else audio_value
                     )
                     chunks = decode_audio_bytes_to_chunks(audio_bytes)
-                    example = TranscriptExample(audio_chunks=chunks, ground_truth_text=text)
+                    example = TranscriptExample(
+                        audio_chunks=chunks,
+                        ground_truth_text=text,
+                        dataset=repo_id,
+                        example_id=f"{shard}#{row_offset + local}",
+                    )
                     if _has_lexicon_mention(text, lexicon):
                         entity_examples.append(example)
                     else:

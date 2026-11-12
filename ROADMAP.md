@@ -288,7 +288,7 @@ as their own problem.
       Saaras may have trained on); bare `आधार`/`पैन` are false outside gov
       tasks (286 "के आधार पर" pairs, "पैन किलर"). Reviewed and accepted by
       owner 2026-11-13.
-- [?] 3B-2 — two-rate scorer: **recognition EER** (any curated variant, any
+- [x] 3B-2 — two-rate scorer: **recognition EER** (any curated variant, any
       script) and **canonicalization rate**, both paired with corruption
       evidence: <this commit> · `uv run pytest -m "not integration"` (226 passed) ·
       `tests/test_entity_error_rate.py` (Devanagari-correct output recognised but
@@ -302,8 +302,20 @@ as their own problem.
       beside the old rows: `results/entity_density_gate_lexicon_v2.json` --
       Svarah 94, LAHAJA 17 (= the manual review), IndicVoices Hindi 2,097.
       Awaiting owner review.
-- [ ] 3B-3 — cache every raw transcript to committed JSONL so rescoring never
+- [?] 3B-3 — cache every raw transcript to committed JSONL so rescoring never
       needs re-transcription or API credits
+      evidence: <this commit> · `uv run pytest -m "not integration"` (233 passed) ·
+      `tests/test_transcript_log.py` · implementation item. New
+      `dhvani.eval.transcript_log.TranscriptLog`: append-only JSONL, flushed per
+      line, keyed (dataset, example_id, stt, model, condition), ground truth
+      stored beside each transcript. Wired into all four eval paths (F2 reads
+      back and skips re-transcription; model/degradation sweeps only record,
+      since a cached transcript has no latency; F1 logs `real`/`corrected`).
+      Loaders now give every row `example_id = <shard>#<row>`; every run script
+      takes `--transcripts`, default `results/transcripts/<script>_<dataset>_<stt>.jsonl`.
+      No real run has written a committed transcript file yet -- the first one
+      lands with 3B-4. Also fixed: `run_f1_ablation.py` still counted lexicon
+      mentions by substring (a fourth copy 3B-1 missed). Awaiting owner review.
 - [ ] 3B-4 — preregister, then re-run F2 EER, 2 datasets × 2 ASRs; old rows
       kept as superseded
 - [ ] 3B-5 — F1 noise floor: ground-truth A/A run, k≥3 repeats, paired

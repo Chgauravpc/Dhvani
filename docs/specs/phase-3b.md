@@ -244,7 +244,7 @@ Priority 2 is only if time remains; none of it may displace Phase 4.
       Saaras may have trained on); bare `आधार`/`पैन` are false outside gov
       tasks (286 "के आधार पर" pairs, "पैन किलर"). Reviewed and accepted by
       owner 2026-11-13.
-- [?] **3B-2 — two-rate scorer.** Recognition EER and canonicalization rate
+- [x] **3B-2 — two-rate scorer.** Recognition EER and canonicalization rate
       (section 3), both exact-match on curated variants, both paired with
       `corruption_rate`. Unit tests must include: Devanagari-correct output
       counted as recognized; "company" not counted as a PAN mention; a
@@ -261,10 +261,22 @@ Priority 2 is only if time remains; none of it may displace Phase 4.
       beside the old rows: `results/entity_density_gate_lexicon_v2.json` --
       Svarah 94, LAHAJA 17 (= the manual review), IndicVoices Hindi 2,097.
       Awaiting owner review.
-- [ ] **3B-3 — cache raw transcripts.** Every STT run writes
+- [?] **3B-3 — cache raw transcripts.** Every STT run writes
       `(dataset, split, example_id, stt, model, raw_text)` to a committed
       JSONL. Rescoring after a scorer fix must never need a re-transcription
       or Sarvam credits again. This is what made A1/A2 expensive to fix.
+      evidence: <this commit> · `uv run pytest -m "not integration"` (233 passed) ·
+      `tests/test_transcript_log.py` · implementation item. New
+      `dhvani.eval.transcript_log.TranscriptLog`: append-only JSONL, flushed per
+      line, keyed (dataset, example_id, stt, model, condition), ground truth
+      stored beside each transcript. Wired into all four eval paths (F2 reads
+      back and skips re-transcription; model/degradation sweeps only record,
+      since a cached transcript has no latency; F1 logs `real`/`corrected`).
+      Loaders now give every row `example_id = <shard>#<row>`; every run script
+      takes `--transcripts`, default `results/transcripts/<script>_<dataset>_<stt>.jsonl`.
+      No real run has written a committed transcript file yet -- the first one
+      lands with 3B-4. Also fixed: `run_f1_ablation.py` still counted lexicon
+      mentions by substring (a fourth copy 3B-1 missed). Awaiting owner review.
 - [ ] **3B-4 — re-run F2 EER on both datasets × both ASRs** with 3B-1..3B-3,
       same dev/test protocol, threshold re-tuned on dev per STT. Old rows
       stay, marked superseded. **Preregister first** (commit before the

@@ -150,6 +150,9 @@ class TranscriptExample:
     """`<parquet shard>#<row index in shard>` -- stable across runs, so a
     logged transcript (`eval.transcript_log`, 3B-3) can be matched back to
     its audio and ground truth."""
+    speaker_id: str = ""
+    """Where the dataset provides one (IndicVoices); dev/test splits by
+    speaker so no voice is tuned on and then reported on (3B-4)."""
 
 
 def _pick_column(available: Sequence[str], candidates: Sequence[str], purpose: str) -> str:
@@ -458,3 +461,139 @@ def load_indicvoices_text_rows(
         with cached.open(encoding="utf-8") as f:
             rows.extend(IndicVoicesTextRow(**json.loads(line)) for line in f)
     return rows
+
+
+@dataclass(frozen=True, slots=True)
+class IndicVoicesSelection:
+    """The rows a 3B-4 IndicVoices eval run uses, and how they were drawn."""
+
+    shards: list[str]
+    """Shards in the seeded order they were drawn, until enough entity rows."""
+    entity_rows: list[IndicVoicesTextRow]
+    clean_rows: list[IndicVoicesTextRow]
+
+
+def select_indicvoices_eval_rows(
+    rows: Sequence[IndicVoicesTextRow],
+    lexicon: DomainLexicon,
+    min_entity_rows: int = 300,
+    n_clean: int = 150,
+    seed: int = 0,
+) -> IndicVoicesSelection:
+    """Cluster sample by shard (preregistered in docs/specs/phase-3b.md 3B-4).
+
+    Random rows across IndicVoices would touch hundreds of ~91 MB audio row
+    groups; measured remote reads run at ~0.6 MB/s and full-shard downloads
+    at ~2 MB/s with 7 GB of disk free. So shards are shuffled with `seed` and
+    taken in order until their entity-bearing rows reach `min_entity_rows`;
+    *every* entity row in a drawn shard is used, and `n_clean` entity-free
+    rows are drawn uniformly from the same shards for the corruption arm.
+    Shards are the sampling unit, which the report must say.
+    """
+    rng = random.Random(seed)
+    by_shard: dict[str, list[IndicVoicesTextRow]] = {}
+    for r in rows:
+        by_shard.setdefault(r.shard, []).append(r)
+    order = sorted(by_shard)
+    rng.shuffle(order)
+
+    drawn: list[str] = []
+    entity: list[IndicVoicesTextRow] = []
+    clean_pool: list[IndicVoicesTextRow] = []
+    for shard in order:
+        drawn.append(shard)
+        for r in by_shard[shard]:
+            (entity if find_mentions(r.text, lexicon) else clean_pool).append(r)
+        if len(entity) >= min_entity_rows:
+            break
+    clean = rng.sample(clean_pool, min(n_clean, len(clean_pool)))
+    clean.sort(key=lambda r: (r.shard, r.row))
+    return IndicVoicesSelection(shards=drawn, entity_rows=entity, clean_rows=clean)
+
+
+def _indicvoices_audio_dir(language: str, cache_dir: Path | None) -> Path:
+    base = cache_dir if cache_dir is not None else Path.home() / ".cache" / "dhvani"
+    return base / f"indicvoices_{language}_audio"
+
+
+def _audio_cache_name(shard: str, row: int) -> str:
+    return f"{shard.replace('/', '__')}__{row}"
+
+
+def load_indicvoices_examples(
+    rows: Sequence[IndicVoicesTextRow],
+    language: str = "hindi",
+    cache_dir: Path | None = None,
+) -> list[TranscriptExample]:
+    """Audio for exactly `rows`, decoded into `TranscriptExample`s.
+
+    Per shard: if any wanted row's audio isn't cached yet, download the
+    whole shard, copy just the wanted rows' encoded audio bytes (plus
+    speaker id) into a small per-row cache, then **delete the shard** before
+    the next one -- disk never holds more than one ~600 MB shard. Each row's
+    text is checked against the text cache it was selected from, so a
+    row-index drift can't silently pair audio with the wrong transcript.
+    """
+    audio_dir = _indicvoices_audio_dir(language, cache_dir)
+    audio_dir.mkdir(parents=True, exist_ok=True)
+    by_shard: dict[str, list[IndicVoicesTextRow]] = {}
+    for r in rows:
+        by_shard.setdefault(r.shard, []).append(r)
+
+    for n, (shard, wanted) in enumerate(sorted(by_shard.items()), start=1):
+        missing = [
+            r
+            for r in wanted
+            if not (audio_dir / (_audio_cache_name(shard, r.row) + ".json")).exists()
+        ]
+        if not missing:
+            continue
+        print(f"  downloading {shard} for {len(missing)} rows ({n}/{len(by_shard)})", flush=True)
+        local = Path(hf_hub_download(_INDICVOICES_REPO, shard, repo_type="dataset"))
+        try:
+            parquet = pq.ParquetFile(local)
+            starts = []
+            offset = 0
+            for rg in range(parquet.num_row_groups):
+                starts.append(offset)
+                offset += parquet.metadata.row_group(rg).num_rows
+            wanted_by_rg: dict[int, list[IndicVoicesTextRow]] = {}
+            for r in missing:
+                rg = max(i for i, start in enumerate(starts) if start <= r.row)
+                wanted_by_rg.setdefault(rg, []).append(r)
+            for rg, rg_rows in sorted(wanted_by_rg.items()):
+                table = parquet.read_row_group(rg, columns=["audio_filepath", "speaker_id", "text"])
+                for r in rg_rows:
+                    rec = table.slice(r.row - starts[rg], 1).to_pylist()[0]
+                    if str(rec["text"] or "") != r.text:
+                        raise ValueError(f"text mismatch at {shard}#{r.row}: row index drifted")
+                    audio_value = rec["audio_filepath"]
+                    audio_bytes = (
+                        audio_value["bytes"] if isinstance(audio_value, dict) else audio_value
+                    )
+                    name = _audio_cache_name(shard, r.row)
+                    (audio_dir / (name + ".audio")).write_bytes(audio_bytes)
+                    meta = {"speaker_id": str(rec["speaker_id"] or ""), "text": r.text}
+                    (audio_dir / (name + ".json")).write_text(
+                        json.dumps(meta, ensure_ascii=False), encoding="utf-8"
+                    )
+                del table
+        finally:
+            local.unlink(missing_ok=True)
+
+    examples: list[TranscriptExample] = []
+    for r in rows:
+        name = _audio_cache_name(r.shard, r.row)
+        meta = json.loads((audio_dir / (name + ".json")).read_text(encoding="utf-8"))
+        examples.append(
+            TranscriptExample(
+                audio_chunks=decode_audio_bytes_to_chunks(
+                    (audio_dir / (name + ".audio")).read_bytes()
+                ),
+                ground_truth_text=r.text,
+                dataset=_INDICVOICES_REPO,
+                example_id=f"{r.shard}#{r.row}",
+                speaker_id=meta["speaker_id"],
+            )
+        )
+    return examples

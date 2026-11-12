@@ -252,3 +252,20 @@ async def test_unrecognised_mention_counts_against_both_rates() -> None:
     report = _score("check my aadhaar status", "check my adar status")
     assert report.recognition_eer_before == pytest.approx(1.0)
     assert report.canonical_miss_before == pytest.approx(1.0)
+
+
+async def test_paired_counts_record_what_the_corrector_fixed_and_broke() -> None:
+    transcribed = [
+        # wrong -> right: "adhar" is fixable at a permissive threshold
+        TranscribedExample(ground_truth_text="check my aadhaar", raw_text="check my adhar"),
+        # right before and after: untouched
+        TranscribedExample(ground_truth_text="pay by upi", raw_text="pay by UPI"),
+    ]
+    report = score_transcripts(
+        transcribed, _LEXICON, EntityCorrector(_LEXICON, threshold=0.82), split="test"
+    )
+    assert report.n_entity_mentions == 2
+    assert report.recognition_fixed == 1
+    assert report.recognition_broken == 0
+    assert report.canonical_fixed == 1
+    assert report.canonical_broken == 0

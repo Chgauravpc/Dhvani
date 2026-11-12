@@ -55,6 +55,16 @@ class EerReport:
     n_clean_examples: int
     corruption_rate: float
 
+    # Paired per-mention outcomes (3B-4): mentions the corrector turned from
+    # wrong to right ("fixed") and from right to wrong ("broken"). The
+    # discordant pairs an exact McNemar test needs -- before/after rates on
+    # the same mentions are not independent samples.
+    recognition_fixed: int = 0
+    recognition_broken: int = 0
+    canonical_fixed: int = 0
+    canonical_broken: int = 0
+    n_corrupted: int = 0
+
 
 def _mentioned_entities(text: str, lexicon: DomainLexicon) -> set[str]:
     """Every canonical entity the ground truth mentions, word-bounded and
@@ -137,6 +147,7 @@ def score_transcripts(
     n_noncanonical_after = 0
     n_clean = 0
     n_corrupted = 0
+    rec_fixed = rec_broken = can_fixed = can_broken = 0
 
     for item in transcribed:
         mentioned = _mentioned_entities(item.ground_truth_text, lexicon)
@@ -148,10 +159,18 @@ def score_transcripts(
             recognised_after = mentioned_entities(corrected_text, lexicon)
             for canonical in mentioned:
                 n_mentions += 1
-                n_unrecognised_before += canonical not in recognised_before
-                n_unrecognised_after += canonical not in recognised_after
-                n_noncanonical_before += not contains_variant(raw_text, canonical)
-                n_noncanonical_after += not contains_variant(corrected_text, canonical)
+                rec_b = canonical in recognised_before
+                rec_a = canonical in recognised_after
+                can_b = contains_variant(raw_text, canonical)
+                can_a = contains_variant(corrected_text, canonical)
+                n_unrecognised_before += not rec_b
+                n_unrecognised_after += not rec_a
+                n_noncanonical_before += not can_b
+                n_noncanonical_after += not can_a
+                rec_fixed += rec_a and not rec_b
+                rec_broken += rec_b and not rec_a
+                can_fixed += can_a and not can_b
+                can_broken += can_b and not can_a
         else:
             n_clean += 1
             if corrected_text != raw_text:
@@ -170,6 +189,11 @@ def score_transcripts(
         canonical_miss_after=rate(n_noncanonical_after),
         n_clean_examples=n_clean,
         corruption_rate=n_corrupted / n_clean if n_clean else 0.0,
+        recognition_fixed=rec_fixed,
+        recognition_broken=rec_broken,
+        canonical_fixed=can_fixed,
+        canonical_broken=can_broken,
+        n_corrupted=n_corrupted,
     )
 
 

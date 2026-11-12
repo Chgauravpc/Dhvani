@@ -225,7 +225,7 @@ Priority 2 is only if time remains; none of it may displace Phase 4.
       lexicon expansion; LAHAJA 40 / 40 / **29** matcher, **17 after review**
       (all 12 bare `आधार` hits are the noun "basis", not the ID) -> **GATE FAILED
       for LAHAJA** (<30). The audit's own LAHAJA recount (38) was also inflated:
-      its `\w` regex let `आधारित` ("based on") through. Awaiting owner review;
+      its `\w` regex let `आधारित` ("based on") through.
       Reviewed and accepted by owner 2026-11-12.
 - [x] 3B-1a — LAHAJA pivot required by the failed gate. Owner decision
       2026-11-12: switch the Hindi arm to IndicVoices' use-case split (not
@@ -260,8 +260,8 @@ Priority 2 is only if time remains; none of it may displace Phase 4.
       preregister this before its run). Gate re-run under the new lexicon,
       beside the old rows: `results/entity_density_gate_lexicon_v2.json` --
       Svarah 94, LAHAJA 17 (= the manual review), IndicVoices Hindi 2,097.
-      Awaiting owner review.
-- [?] **3B-3 — cache raw transcripts.** Every STT run writes
+      Reviewed and accepted by owner 2026-11-13.
+- [x] **3B-3 — cache raw transcripts.** Every STT run writes
       `(dataset, split, example_id, stt, model, raw_text)` to a committed
       JSONL. Rescoring after a scorer fix must never need a re-transcription
       or Sarvam credits again. This is what made A1/A2 expensive to fix.
@@ -276,8 +276,8 @@ Priority 2 is only if time remains; none of it may displace Phase 4.
       takes `--transcripts`, default `results/transcripts/<script>_<dataset>_<stt>.jsonl`.
       No real run has written a committed transcript file yet -- the first one
       lands with 3B-4. Also fixed: `run_f1_ablation.py` still counted lexicon
-      mentions by substring (a fourth copy 3B-1 missed). Awaiting owner review.
-- [ ] **3B-4 — re-run F2 EER on both datasets × both ASRs** with 3B-1..3B-3,
+      mentions by substring (a fourth copy 3B-1 missed). Accepted by owner 2026-11-13.
+- [~] **3B-4 — re-run F2 EER on both datasets × both ASRs** with 3B-1..3B-3,
       same dev/test protocol, threshold re-tuned on dev per STT. Old rows
       stay, marked superseded. **Preregister first** (commit before the
       run): what does it mean if recognition EER on LAHAJA is low for
@@ -382,3 +382,118 @@ credible signal in the whole project.
 2. Is a Twilio trial account acceptable under the "no paid infrastructure"
    rule (trial credit is free, but needs a phone number verification)?
 3. Which hosted streaming STT is acceptable for 3B-9 under the same rule?
+
+---
+
+## 9. 3B-4 preregistration — written and committed before any 3B-4 run
+
+Committed 2026-11-13 in its own commit, before the first transcription of
+any 3B-4 arm. Nothing below changes after that commit. A deviation forced
+by a run (crash, quota, a bug) is recorded as a numbered deviation in
+§9.7 with its reason; it is not edited into §9.1–9.6.
+
+### 9.1 Arms
+
+| dataset | ASR | model |
+|---|---|---|
+| Svarah (Indian-accented English) | faster-whisper | `small` / `int8` (the Phase 2 setting) |
+| Svarah | Sarvam Saaras | `saaras:v3` |
+| IndicVoices Hindi | faster-whisper | `small` / `int8` |
+| IndicVoices Hindi | Sarvam Saaras | `saaras:v3` |
+
+LAHAJA is **not** run: its gate failed (3B-1, 17 real pairs). IndicVoices
+Hindi replaces it (owner decision 2026-11-12, 3B-1a). The roadmap's "2 × 2"
+is these four arms. Language codes are left to each ASR's auto-detection,
+as in Phase 2.
+
+### 9.2 Data and sampling (fixed, seed 0)
+
+- **Lexicon v2** (commit 167c80e: bare `आधार` / `पैन` / `pan` removed;
+  `आधार नंबर`, `पैन नंबर`, `pan number` added). Mentions: the shared
+  word-bounded matcher from 3B-1.
+- **Svarah:** every entity-bearing row plus 150 entity-free rows
+  (`load_svarah_filtered`, seed 0). Dev/test 30/70 **by row** at random,
+  seed 0 — the Phase 2 protocol, kept for comparability. Speakers may
+  appear in both splits; that is a stated limitation, not fixed here.
+- **IndicVoices Hindi:** cluster sample by shard
+  (`select_indicvoices_eval_rows`, seed 0, `min_entity_rows=300`,
+  `n_clean=150`). Why shards and not rows: random rows would touch hundreds
+  of ~91 MB audio row groups (measured remote read ~0.6 MB/s, full-shard
+  download ~2 MB/s, 7 GB disk free). The dry run of this exact call draws
+  **14 shards** — train-00041, 00023, 00048, 00059, 00052, 00037, 00077,
+  00026, 00044, 00024, 00069, 00050, 00008, 00001 — giving **314
+  entity rows / 337 entity pairs** (Aadhaar 145, PAN card 78, CoWIN 32,
+  DigiLocker 32, Ayushman Bharat 25, Ration card 10, others 15), 228 of
+  them in government-service tasks, and 150 clean rows. Speech type of the
+  entity rows: 235 Read, 64 Conversation, 15 Extempore. Dev/test **by
+  speaker**: a speaker is dev iff `sha256(speaker_id) mod 100 < 30`.
+- The same rows, splits and audio go to both ASRs of a dataset. Only the
+  inner ASR differs between arms.
+
+### 9.3 Threshold and scoring
+
+- Grid `0.70 0.75 0.80 0.82 0.85 0.90 0.95`, tuned **per arm on dev** by
+  minimising `canonical_miss_after + corruption_rate` (ties → higher
+  threshold). Test is scored **once**, at that threshold.
+- Reported on test for every arm: recognition EER and canonical miss rate,
+  before and after correction, each with a 95% Wilson CI; paired
+  fixed/broken counts with an exact two-sided McNemar p for each; corruption
+  rate on the clean arm with its CI. The dev sweep is reported too.
+- Every transcript is logged (3B-3) and committed with the results file
+  `results/f2_eer_<dataset>_<stt>.json`.
+
+### 9.4 Decision rules
+
+1. **"The corrector improves canonicalization"** is claimed for an arm only
+   if, on test, `canonical_fixed > canonical_broken`, the canonical McNemar
+   p < 0.05, **and** corruption rate ≤ 5%. If corruption is above 5%, the
+   result is reported as a trade-off, not an improvement, whatever p is.
+2. **"The corrector repairs recognition"** (fixes entities the ASR got
+   wrong, not just spellings/scripts it got right) is claimed only if
+   `recognition_fixed > recognition_broken` and recognition McNemar
+   p < 0.05. *Prediction:* this will mostly fail — most of the corrector's
+   effect is expected to be canonicalization.
+3. **What Hindi recognition EER before correction means** (the question
+   §6 3B-4 asked of LAHAJA, now asked of IndicVoices):
+   - Saaras recognition EER ≤ 15% → the "entities fail on Hindi" headline
+     was mostly the A2 scoring artifact. F2's Hindi value is
+     canonicalization, and the README says exactly that.
+   - Saaras > 15% → Hindi entity recognition is a real failure even for a
+     purpose-built Indic ASR; F2's job there is genuine repair, judged by
+     rule 2.
+   - Whisper vs Saaras is reported as measured. A Saaras number below
+     Whisper's is **not** evidence that Saaras is better in general, see
+     §9.5 contamination.
+4. **Svarah prediction (A1):** recognition EER before correction will be
+   well below the superseded 59.4% (Whisper) / 46.9% (Sarvam) `eer_before`,
+   because those counted substring false hits and non-canonical spellings
+   as errors. Recorded as a prediction to check, not a decision rule.
+5. No test split is re-run to obtain a different number. A crashed run
+   resumes from the transcript log (same rows, same transcripts); the
+   sample is never redrawn.
+
+### 9.5 Caveats that travel with every 3B-4 number
+
+- **Read speech:** 235 of 314 IndicVoices entity rows are read prompts,
+  easier than spontaneous speech — recognition EER there is a lower bound.
+- **Contamination:** all IndicVoices rows are from `train`; Saaras may
+  have been trained on it. Saaras IndicVoices numbers are potentially
+  in-distribution and are flagged as such wherever quoted.
+- **Clustered sample:** shards (and speakers within them) are the sampling
+  unit; the Wilson CIs and McNemar tests assume independent mentions and
+  so understate the uncertainty.
+- **Small Svarah sample:** ~94 entity pairs in total, ~66 on test.
+- **Absolute numbers are not comparable to Phase 2's.** The old rows used
+  the substring matcher and the canonical-only scorer; they stay visible,
+  marked superseded by these four files.
+
+### 9.6 Cost
+
+Whisper arms run locally (one process per arm, as the model sweep had to).
+The two Saaras arms send roughly 700 utterances (Svarah ≈ 240 rows,
+IndicVoices 464 rows) to the Sarvam API on the owner's credits, authorised
+by the owner 2026-11-13.
+
+### 9.7 Deviations
+
+None yet.

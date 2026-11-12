@@ -269,7 +269,7 @@ as their own problem.
       lexicon expansion; LAHAJA 40 / 40 / **29** matcher, **17 after review**
       (all 12 bare `आधार` hits are the noun "basis", not the ID) -> **GATE FAILED
       for LAHAJA** (<30). The audit's own LAHAJA recount (38) was also inflated:
-      its `\w` regex let `आधारित` ("based on") through. Awaiting owner review;
+      its `\w` regex let `आधारित` ("based on") through.
       Reviewed and accepted by owner 2026-11-12.
 - [x] 3B-1a — LAHAJA pivot required by the failed gate. Owner decision
       2026-11-12: switch the Hindi arm to IndicVoices' use-case split (not
@@ -301,8 +301,8 @@ as their own problem.
       preregister this before its run). Gate re-run under the new lexicon,
       beside the old rows: `results/entity_density_gate_lexicon_v2.json` --
       Svarah 94, LAHAJA 17 (= the manual review), IndicVoices Hindi 2,097.
-      Awaiting owner review.
-- [?] 3B-3 — cache every raw transcript to committed JSONL so rescoring never
+      Reviewed and accepted by owner 2026-11-13.
+- [x] 3B-3 — cache every raw transcript to committed JSONL so rescoring never
       needs re-transcription or API credits
       evidence: <this commit> · `uv run pytest -m "not integration"` (233 passed) ·
       `tests/test_transcript_log.py` · implementation item. New
@@ -315,9 +315,11 @@ as their own problem.
       takes `--transcripts`, default `results/transcripts/<script>_<dataset>_<stt>.jsonl`.
       No real run has written a committed transcript file yet -- the first one
       lands with 3B-4. Also fixed: `run_f1_ablation.py` still counted lexicon
-      mentions by substring (a fourth copy 3B-1 missed). Awaiting owner review.
-- [ ] 3B-4 — preregister, then re-run F2 EER, 2 datasets × 2 ASRs; old rows
+      mentions by substring (a fourth copy 3B-1 missed). Accepted by owner 2026-11-13.
+- [~] 3B-4 — preregister, then re-run F2 EER, 2 datasets × 2 ASRs; old rows
       kept as superseded
+      preregistered: `docs/specs/phase-3b.md` §9 (own commit, before any run).
+      Arms: Svarah + IndicVoices Hindi (LAHAJA's gate failed) × Whisper + Saaras.
 - [ ] 3B-5 — F1 noise floor: ground-truth A/A run, k≥3 repeats, paired
       bootstrap CI + McNemar, full `single_tool` set
 - [ ] 3B-6 — real jitter model (arrival times + jitter buffer, real-time

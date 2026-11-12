@@ -1,54 +1,69 @@
-"""F2 -- run the real entity-error-rate eval against Svarah or LAHAJA.
+"""F2 -- the real entity-error-rate eval (phase-3b 3B-4 protocol).
 
-    uv run python scripts/run_f2_entity_eval.py --dataset svarah
-    uv run python scripts/run_f2_entity_eval.py --dataset lahaja
-    uv run python scripts/run_f2_entity_eval.py --dataset svarah --stt sarvam
+    uv run python scripts/run_f2_entity_eval.py --dataset svarah --stt whisper
+    uv run python scripts/run_f2_entity_eval.py --dataset indicvoices-hindi --stt sarvam
 
-Needs Hugging Face access to the chosen dataset (both are gated) -- see
-`scripts/entity_density_gate.py`'s docstring for how to set that up, and
-run that gate first (phase-2 spec section 2A: it's a go/no-go check, not
-optional -- it decides whether an EER computed on this corpus means
-anything). `--stt whisper` (default) downloads faster-whisper's model on
-first run; set `DHVANI_WHISPER_MODEL` (default `small`) the same way
-`dhvani.live` does. `--stt sarvam` needs `SARVAM_API_KEY` -- see
-phase-2b spec section A. Per that spec's ground rules, only the inner ASR
-changes; nothing else about this script's splits, thresholds, or flow does.
+The protocol is preregistered in `docs/specs/phase-3b.md` (3B-4) and must
+not change between that commit and the runs it governs.
 
-Only decodes/transcribes audio for entity-bearing rows plus a bounded
-random sample of entity-free rows (`eval.datasets.load_*_filtered`) --
-Svarah and LAHAJA are each 6,000+ rows, and transcribing all of them would
-turn a few-minute eval into a multi-hour one for no signal this eval uses.
+Datasets (both gated on Hugging Face -- `HF_TOKEN` in `.env`):
 
-Implements the spec's "tune on dev, report on test" rule (section 6.7):
-splits the entity-bearing examples 30/70 dev/test, transcribes dev and
-test once each (not once per threshold), sweeps a fixed threshold grid on
-dev, picks the threshold minimizing `canonical_miss_after + corruption_rate`
-(canonicalizing is the corrector's job; phase-3b 3B-2) (ties
-broken toward the higher, more conservative threshold), then reports a
-single test-split run at that threshold -- never re-running test to chase
-a better number.
+- `svarah`: every entity-bearing row (word-bounded, lexicon v2) plus
+  `--n-clean-sample` entity-free rows; dev/test split 30/70 at random by row
+  (`--seed`), the Phase 2 protocol.
+- `indicvoices-hindi`: cluster sample by shard
+  (`eval.datasets.select_indicvoices_eval_rows`): shards drawn in seeded
+  order until >= `--min-entity-rows` entity rows, all of them used, plus
+  `--n-clean-sample` entity-free rows from the same shards. Dev/test split
+  by **speaker** (a speaker is dev iff sha256(speaker_id) mod 100 < 30), so
+  no voice the threshold was tuned on is reported on. Replaces LAHAJA,
+  whose gate failed (3B-1). LAHAJA is not run.
+
+`--stt whisper` uses faster-whisper `DHVANI_WHISPER_MODEL` (default `small`,
+int8, the Phase 2 setting); `--stt sarvam` uses Saaras (`SARVAM_API_KEY`).
+Only the inner ASR changes between arms.
+
+Scoring (3B-2): recognition EER and canonical miss rate, before and after
+correction, each with a 95% Wilson CI and an exact two-sided McNemar test
+on the paired per-mention outcomes, always beside `corruption_rate` on the
+clean arm. The correction threshold is chosen on dev by minimising
+`canonical_miss_after + corruption_rate` (ties -> higher threshold), then
+test is scored once at that threshold. Every transcript goes to the 3B-3
+log; results go to `--out` (default `results/f2_eer_<dataset>_<stt>.json`).
 """
 
 from __future__ import annotations
 
 import argparse
 import asyncio
-import math
+import hashlib
+import json
 import os
 import random
+import subprocess
+from dataclasses import asdict
 from pathlib import Path
+from typing import Any
 
 from dhvani.clock import Clock, RealClock
 from dhvani.config import load_dotenv
 from dhvani.entity.corrector import EntityCorrector
 from dhvani.entity.lexicon import DEFAULT_LEXICON
-from dhvani.eval.datasets import FilteredExamples, load_lahaja_filtered, load_svarah_filtered
+from dhvani.eval.datasets import (
+    FilteredExamples,
+    TranscriptExample,
+    load_indicvoices_examples,
+    load_indicvoices_text_rows,
+    load_svarah_filtered,
+    select_indicvoices_eval_rows,
+)
 from dhvani.eval.entity_error_rate import (
     EerReport,
     TranscribedExample,
     score_transcripts,
     transcribe_examples,
 )
+from dhvani.eval.stats import mcnemar_exact_p, wilson_interval
 from dhvani.eval.transcript_log import (
     TranscriptLog,
     default_log_path,
@@ -60,37 +75,31 @@ from dhvani.providers.sarvam_stt import DEFAULT_MODEL as DEFAULT_SARVAM_MODEL
 from dhvani.providers.sarvam_stt import SarvamSTT
 from dhvani.providers.whisper_stt import WhisperSTT
 
-_LOADERS = {"svarah": load_svarah_filtered, "lahaja": load_lahaja_filtered}
+_DATASETS = ("svarah", "indicvoices-hindi")
 _THRESHOLD_GRID = (0.70, 0.75, 0.80, 0.82, 0.85, 0.90, 0.95)
 _DEV_FRACTION = 0.3
 
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--dataset", choices=sorted(_LOADERS), required=True)
+    parser.add_argument("--dataset", choices=_DATASETS, required=True)
     parser.add_argument("--stt", choices=["whisper", "sarvam"], default="whisper")
     parser.add_argument("--n-clean-sample", type=int, default=150)
+    parser.add_argument("--min-entity-rows", type=int, default=300)
     parser.add_argument("--seed", type=int, default=0)
-    parser.add_argument(
-        "--transcripts",
-        type=Path,
-        default=None,
-        help="transcript log (3B-3); default results/transcripts/f2_<dataset>_<stt>.jsonl. "
-        "Already-logged examples are read from it instead of re-transcribed.",
-    )
+    parser.add_argument("--transcripts", type=Path, default=None)
+    parser.add_argument("--out", type=Path, default=None)
     return parser.parse_args()
 
 
 def _make_stt(stt_choice: str, clock: Clock) -> STTProvider:
-    """The one thing phase-2b spec section A changes about this script --
-    same splits, same thresholds, same flow, only the inner ASR differs."""
     if stt_choice == "sarvam":
         return SarvamSTT(DEFAULT_SARVAM_MODEL, clock)
     whisper_model_size = os.environ.get("DHVANI_WHISPER_MODEL", "small")
     return WhisperSTT(whisper_model_size, clock)
 
 
-def _split_dev_test(
+def _split_by_row(
     filtered: FilteredExamples, seed: int
 ) -> tuple[FilteredExamples, FilteredExamples]:
     rng = random.Random(seed)
@@ -105,73 +114,116 @@ def _split_dev_test(
     return dev, test
 
 
-def _wilson_interval(successes: int, n: int, z: float = 1.96) -> tuple[float, float]:
-    """95% Wilson score interval for a binomial proportion -- no scipy
-    dependency needed for one formula. Used to give LAHAJA's EER (spec's
-    own 30-100 mention "report a confidence interval" bucket) an honest
-    uncertainty range instead of a bare point estimate."""
-    if n == 0:
-        return (0.0, 0.0)
-    phat = successes / n
-    denom = 1 + z**2 / n
-    center = (phat + z**2 / (2 * n)) / denom
-    margin = z * math.sqrt(phat * (1 - phat) / n + z**2 / (4 * n**2)) / denom
-    return (max(0.0, center - margin), min(1.0, center + margin))
+def is_dev_speaker(speaker_id: str) -> bool:
+    """Deterministic, seed-free speaker assignment: ~30% of speakers to dev."""
+    digest = hashlib.sha256(speaker_id.encode("utf-8")).hexdigest()
+    return int(digest, 16) % 100 < round(_DEV_FRACTION * 100)
 
 
-def _ci(rate: float, n: int) -> str:
-    lo, hi = _wilson_interval(round(rate * n), n)
-    return f"[{lo:.1%}, {hi:.1%}]"
+def _split_by_speaker(
+    filtered: FilteredExamples,
+) -> tuple[FilteredExamples, FilteredExamples]:
+    def part(examples: list[TranscriptExample], dev: bool) -> list[TranscriptExample]:
+        return [e for e in examples if is_dev_speaker(e.speaker_id) == dev]
+
+    dev = FilteredExamples(
+        entity_bearing=part(filtered.entity_bearing, True),
+        clean_sample=part(filtered.clean_sample, True),
+    )
+    test = FilteredExamples(
+        entity_bearing=part(filtered.entity_bearing, False),
+        clean_sample=part(filtered.clean_sample, False),
+    )
+    return dev, test
+
+
+def _load(args: argparse.Namespace) -> tuple[FilteredExamples, FilteredExamples, dict[str, Any]]:
+    if args.dataset == "svarah":
+        filtered = load_svarah_filtered(DEFAULT_LEXICON, n_clean_sample=args.n_clean_sample)
+        dev, test = _split_by_row(filtered, seed=args.seed)
+        return dev, test, {"split_unit": "row", "sampling": "all entity rows"}
+
+    selection = select_indicvoices_eval_rows(
+        load_indicvoices_text_rows("hindi"),
+        DEFAULT_LEXICON,
+        min_entity_rows=args.min_entity_rows,
+        n_clean=args.n_clean_sample,
+        seed=args.seed,
+    )
+    print(f"drew {len(selection.shards)} shards: {selection.shards}")
+    entity = load_indicvoices_examples(selection.entity_rows)
+    clean = load_indicvoices_examples(selection.clean_rows)
+    dev, test = _split_by_speaker(FilteredExamples(entity_bearing=entity, clean_sample=clean))
+    speakers = {e.speaker_id for e in entity + clean}
+    dev_speakers = {s for s in speakers if is_dev_speaker(s)}
+    meta = {
+        "split_unit": "speaker",
+        "sampling": "cluster sample by shard",
+        "shards": selection.shards,
+        "n_speakers": len(speakers),
+        "n_dev_speakers": len(dev_speakers),
+    }
+    return dev, test, meta
+
+
+def _summarise(report: EerReport) -> dict[str, Any]:
+    n = report.n_entity_mentions
+
+    def rate(value: float, denom: int) -> dict[str, Any]:
+        lo, hi = wilson_interval(round(value * denom), denom)
+        return {"rate": value, "ci95": [lo, hi]}
+
+    return {
+        **asdict(report),
+        "recognition_eer_before_ci": rate(report.recognition_eer_before, n)["ci95"],
+        "recognition_eer_after_ci": rate(report.recognition_eer_after, n)["ci95"],
+        "canonical_miss_before_ci": rate(report.canonical_miss_before, n)["ci95"],
+        "canonical_miss_after_ci": rate(report.canonical_miss_after, n)["ci95"],
+        "corruption_rate_ci": rate(report.corruption_rate, report.n_clean_examples)["ci95"],
+        "recognition_mcnemar_p": mcnemar_exact_p(
+            report.recognition_fixed, report.recognition_broken
+        ),
+        "canonical_mcnemar_p": mcnemar_exact_p(report.canonical_fixed, report.canonical_broken),
+    }
 
 
 def _print_report(label: str, report: EerReport) -> None:
-    n = report.n_entity_mentions
+    s = _summarise(report)
     print(
-        f"{label}: threshold={report.threshold} n_mentions={n} "
-        f"recognition_eer {report.recognition_eer_before:.1%} -> "
-        f"{report.recognition_eer_after:.1%} {_ci(report.recognition_eer_after, n)} | "
-        f"canonical_miss {report.canonical_miss_before:.1%} -> "
-        f"{report.canonical_miss_after:.1%} {_ci(report.canonical_miss_after, n)} | "
-        f"n_clean={report.n_clean_examples} corruption_rate={report.corruption_rate:.1%} "
-        f"{_ci(report.corruption_rate, report.n_clean_examples)}"
+        f"{label}: thr={report.threshold} n={report.n_entity_mentions} | "
+        f"recog {report.recognition_eer_before:.1%} -> {report.recognition_eer_after:.1%} "
+        f"(+{report.recognition_fixed}/-{report.recognition_broken}, "
+        f"p={s['recognition_mcnemar_p']:.3g}) | "
+        f"canon {report.canonical_miss_before:.1%} -> {report.canonical_miss_after:.1%} "
+        f"(+{report.canonical_fixed}/-{report.canonical_broken}, "
+        f"p={s['canonical_mcnemar_p']:.3g}) | "
+        f"corrupt {report.corruption_rate:.1%} of {report.n_clean_examples}"
     )
 
 
-async def _sweep_dev(
-    dev_transcribed: list[TranscribedExample],
-) -> tuple[float, EerReport]:
+def _sweep_dev(dev_transcribed: list[TranscribedExample]) -> tuple[float, list[EerReport]]:
     print("\nsweeping threshold on dev...")
     best_threshold = _THRESHOLD_GRID[0]
-    best_report: EerReport | None = None
     best_cost = float("inf")
+    reports: list[EerReport] = []
     for threshold in _THRESHOLD_GRID:
         corrector = EntityCorrector(DEFAULT_LEXICON, threshold=threshold)
         report = score_transcripts(dev_transcribed, DEFAULT_LEXICON, corrector, split="dev")
+        reports.append(report)
         _print_report("  dev", report)
         cost = report.canonical_miss_after + report.corruption_rate
         if cost <= best_cost:  # <= : ties prefer the later (higher) threshold
             best_cost = cost
             best_threshold = threshold
-            best_report = report
-    assert best_report is not None
-    print(
-        f"chosen threshold: {best_threshold} "
-        "(minimizes canonical_miss_after + corruption_rate on dev)"
-    )
-    return best_threshold, best_report
+    print(f"chosen threshold: {best_threshold} (min canonical_miss_after + corruption_rate)")
+    return best_threshold, reports
 
 
 async def main() -> None:
     args = _parse_args()
     load_dotenv()
 
-    print(f"loading {args.dataset} (entity-bearing rows + {args.n_clean_sample} clean sample)...")
-    filtered = _LOADERS[args.dataset](DEFAULT_LEXICON, n_clean_sample=args.n_clean_sample)
-    print(
-        f"loaded {len(filtered.entity_bearing)} entity-bearing rows, "
-        f"{len(filtered.clean_sample)} clean rows"
-    )
-    dev, test = _split_dev_test(filtered, seed=args.seed)
+    dev, test, sampling = _load(args)
     print(
         f"dev: {len(dev.entity_bearing)} entity-bearing, {len(dev.clean_sample)} clean | "
         f"test: {len(test.entity_bearing)} entity-bearing, {len(test.clean_sample)} clean"
@@ -179,10 +231,11 @@ async def main() -> None:
 
     clock = RealClock()
     stt = _make_stt(args.stt, clock)
+    model = stt_model_label(args.stt, DEFAULT_SARVAM_MODEL)
     log = TranscriptLog(
         args.transcripts or default_log_path("f2", args.dataset, args.stt),
         stt=stt.name,
-        model=stt_model_label(args.stt, DEFAULT_SARVAM_MODEL),
+        model=model,
         run=run_label("f2", args.dataset),
     )
     print(f"transcript log: {log.path}")
@@ -191,20 +244,46 @@ async def main() -> None:
     dev_transcribed = await transcribe_examples(
         list(dev.entity_bearing) + list(dev.clean_sample), stt, clock, log=log, split="dev"
     )
-    chosen_threshold, _dev_report_at_chosen = await _sweep_dev(dev_transcribed)
+    chosen_threshold, dev_reports = _sweep_dev(dev_transcribed)
 
     print("\ntranscribing test split (once)...")
     test_transcribed = await transcribe_examples(
         list(test.entity_bearing) + list(test.clean_sample), stt, clock, log=log, split="test"
     )
     log.close()
-    final_corrector = EntityCorrector(DEFAULT_LEXICON, threshold=chosen_threshold)
     test_report = score_transcripts(
-        test_transcribed, DEFAULT_LEXICON, final_corrector, split="test"
+        test_transcribed,
+        DEFAULT_LEXICON,
+        EntityCorrector(DEFAULT_LEXICON, threshold=chosen_threshold),
+        split="test",
     )
 
     print(f"\n--- final (test split, single run at the dev-chosen threshold) [stt={stt.name}] ---")
     _print_report("test", test_report)
+
+    commit = subprocess.run(
+        ["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=False
+    ).stdout.strip()
+    out = args.out or Path(f"results/f2_eer_{args.dataset}_{args.stt}.json")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    result = {
+        "item": "3B-4",
+        "code_commit": commit,
+        "dataset": args.dataset,
+        "stt": stt.name,
+        "model": model,
+        "seed": args.seed,
+        "sampling": sampling,
+        "n_dev": {"entity": len(dev.entity_bearing), "clean": len(dev.clean_sample)},
+        "n_test": {"entity": len(test.entity_bearing), "clean": len(test.clean_sample)},
+        "transcript_log": str(log.path).replace("\\", "/"),
+        "threshold_objective": "min dev canonical_miss_after + corruption_rate; ties -> higher",
+        "dev_sweep": [_summarise(r) for r in dev_reports],
+        "chosen_threshold": chosen_threshold,
+        "test": _summarise(test_report),
+    }
+    out.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"\nwrote {out}")
 
 
 if __name__ == "__main__":

@@ -271,11 +271,22 @@ as their own problem.
       for LAHAJA** (<30). The audit's own LAHAJA recount (38) was also inflated:
       its `\w` regex let `आधारित` ("based on") through. Awaiting owner review;
       Reviewed and accepted by owner 2026-11-12.
-- [~] 3B-1a — LAHAJA pivot required by the failed gate. Owner decision
+- [?] 3B-1a — LAHAJA pivot required by the failed gate. Owner decision
       2026-11-12: switch the Hindi arm to IndicVoices' use-case split (not
       lexicon widening). Gate must be re-run on IndicVoices Hindi first. Also:
       bare `आधार` is a homonym -- the lexicon needs a context rule or must drop
       the bare variant before any Hindi EER is scored.
+      evidence: df63af1 · `uv run python scripts/entity_density_gate.py --datasets
+      indicvoices-hindi --out results/entity_density_gate_indicvoices_hindi.json` ·
+      `results/entity_density_gate_indicvoices_hindi.json` + `..._review.json`
+      (results committed in 27b402b; this tick follows in the next commit, a
+      rule-0.2.3 slip, not a re-run) · 450,690 Hindi transcripts; 2,677
+      word-boundary pairs, **1,890** excluding bare-homonym-only pairs,
+      **1,386** in the government use-case tasks -> **PROCEED** on every count.
+      Caveats carried with every number: the gov subset is 94% read speech
+      (lower bound); only 9 gov pairs in `valid` (eval samples `train`, which
+      Saaras may have trained on); bare `आधार`/`पैन` are false outside gov
+      tasks (286 "के आधार पर" pairs, "पैन किलर"). Awaiting owner review.
 - [ ] 3B-2 — two-rate scorer: **recognition EER** (any curated variant, any
       script) and **canonicalization rate**, both paired with corruption
 - [ ] 3B-3 — cache every raw transcript to committed JSONL so rescoring never

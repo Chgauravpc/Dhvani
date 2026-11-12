@@ -1,0 +1,1008 @@
+{
+  "item": "3B-1",
+  "code_commit": "6fa78b2e56e1bec4cd3465cb0b9d8263988458c1",
+  "datasets": [
+    {
+      "dataset": "Svarah",
+      "n_transcripts": 6656,
+      "transcripts_sha256": "19648f08816ba5bea27ca9af770085d9cf015147fb6cea5acb065f738119ce5c",
+      "totals": {
+        "legacy_raw_occurrences": 212,
+        "substring_pairs": 202,
+        "word_boundary_pairs": 94
+      },
+      "examples_with_word_boundary_mention": 93,
+      "decision": "PROCEED_WITH_CI_AND_LEXICON_EXPANSION (30-100)",
+      "per_entity": [
+        {
+          "entity": "ESIC",
+          "legacy_raw_occurrences": 35,
+          "substring_pairs": 35,
+          "word_boundary_pairs": 35
+        },
+        {
+          "entity": "EPFO",
+          "legacy_raw_occurrences": 23,
+          "substring_pairs": 22,
+          "word_boundary_pairs": 22
+        },
+        {
+          "entity": "CoWIN",
+          "legacy_raw_occurrences": 15,
+          "substring_pairs": 15,
+          "word_boundary_pairs": 15
+        },
+        {
+          "entity": "UPI",
+          "legacy_raw_occurrences": 14,
+          "substring_pairs": 13,
+          "word_boundary_pairs": 10
+        },
+        {
+          "entity": "Provident Fund",
+          "legacy_raw_occurrences": 31,
+          "substring_pairs": 29,
+          "word_boundary_pairs": 5
+        },
+        {
+          "entity": "Jan Dhan Yojana",
+          "legacy_raw_occurrences": 3,
+          "substring_pairs": 3,
+          "word_boundary_pairs": 3
+        },
+        {
+          "entity": "Voter ID",
+          "legacy_raw_occurrences": 7,
+          "substring_pairs": 7,
+          "word_boundary_pairs": 2
+        },
+        {
+          "entity": "Aadhaar",
+          "legacy_raw_occurrences": 2,
+          "substring_pairs": 1,
+          "word_boundary_pairs": 1
+        },
+        {
+          "entity": "Ayushman Bharat",
+          "legacy_raw_occurrences": 2,
+          "substring_pairs": 1,
+          "word_boundary_pairs": 1
+        },
+        {
+          "entity": "PAN card",
+          "legacy_raw_occurrences": 69,
+          "substring_pairs": 66,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "GST",
+          "legacy_raw_occurrences": 11,
+          "substring_pairs": 10,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "DigiLocker",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "IFSC code",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Kisan Credit Card",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Mudra Yojana",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Passport Seva",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Pradhan Mantri Awas Yojana",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Ration card",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Sukanya Samriddhi Yojana",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Ujjwala Yojana",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        }
+      ],
+      "word_boundary_variant_hits": {
+        "ESIC :: esic": 35,
+        "EPFO :: epfo": 23,
+        "CoWIN :: co-win": 15,
+        "UPI :: upi": 11,
+        "Provident Fund :: provident fund": 4,
+        "Jan Dhan Yojana :: jan dhan yojana": 3,
+        "Voter ID :: voter id": 2,
+        "Aadhaar :: aadhar card": 1,
+        "Provident Fund :: pf": 1,
+        "Ayushman Bharat :: ayushman bharat": 1
+      },
+      "substring_only_hits": [
+        {
+          "row": 43,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "o consumer service of this company"
+        },
+        {
+          "row": 55,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "delivery time for my products Pantene Bamboo Shampoo and 24 Man"
+        },
+        {
+          "row": 127,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "Can you delete Paper Boat Aam Panna from my shopping cart"
+        },
+        {
+          "row": 240,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "the government is trying to expand it like in theater, jatra, c"
+        },
+        {
+          "row": 259,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "I used, it is very much helpful"
+        },
+        {
+          "row": 376,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "I started watching during the pandemic,"
+        },
+        {
+          "row": 553,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "Can you delete Chings Paneer Chilli Masala and BORGES V"
+        },
+        {
+          "row": 731,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "The coronavirus pandemic had a big impact on the "
+        },
+        {
+          "row": 812,
+          "entity": "GST",
+          "variant": "gst",
+          "context": " impactful sound systems. Youngster are seen making reels"
+        },
+        {
+          "row": 814,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "Always check a company's stock price performance an"
+        },
+        {
+          "row": 862,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "hutan, Pakistan, Australia, Japan"
+        },
+        {
+          "row": 864,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "and fetch my balance of EPFO passbook with UAN number"
+        },
+        {
+          "row": 872,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "pressions, postures, and accompanying music, these all together"
+        },
+        {
+          "row": 970,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "Brazil, Cambodia, Japan, Spain, Greece."
+        },
+        {
+          "row": 971,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "I want EPFO passbook statement for accou"
+        },
+        {
+          "row": 1049,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "What is the status of my EPFO claim having tracking ID 995"
+        },
+        {
+          "row": 1227,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "many companies in the world"
+        },
+        {
+          "row": 1332,
+          "entity": "GST",
+          "variant": "gst",
+          "context": "ourts have been built for youngsters to learn the sport."
+        },
+        {
+          "row": 1343,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "e city of Ahmedabad went on expanding in every direction"
+        },
+        {
+          "row": 1351,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "f-employment, startups are rampant in the city."
+        },
+        {
+          "row": 1412,
+          "entity": "GST",
+          "variant": "gst",
+          "context": "by the youngsters is increasing day by day."
+        },
+        {
+          "row": 1426,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "ted the huge Tata Group of companies,"
+        },
+        {
+          "row": 1497,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "Karnataka's expansive list of handmade artisana"
+        },
+        {
+          "row": 1562,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "Resend OTP to my EPFO registered mobile number 967"
+        },
+        {
+          "row": 1672,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "For example, Panama is one location where you "
+        },
+        {
+          "row": 1685,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "which is under the Ulthapani Reserve Forest."
+        },
+        {
+          "row": 1746,
+          "entity": "UPI",
+          "variant": "upi",
+          "context": "akshina Kannada, Kundapura, Udupi and so on"
+        },
+        {
+          "row": 1801,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "ke mobile boarding passes, companies are able to cut their expe"
+        },
+        {
+          "row": 1808,
+          "entity": "GST",
+          "variant": "gst",
+          "context": "hey cannot drive like the youngsters."
+        },
+        {
+          "row": 1832,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "delivery time for my products Pantene Bamboo Shampoo and 24 Man"
+        },
+        {
+          "row": 1836,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": " all rejected claims from my EPFO account with UAN number 3171"
+        },
+        {
+          "row": 1887,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "me 10 to 5 pm, located at Patopanjim, exhibits Goan artifacts w"
+        },
+        {
+          "row": 1892,
+          "entity": "GST",
+          "variant": "gst",
+          "context": "de employment to a lot of youngsters"
+        },
+        {
+          "row": 1948,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "abetes herbal tea, and Chings Paneer Chilli Masala."
+        },
+        {
+          "row": 2022,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "the band or the accompanist to play for some time. And"
+        },
+        {
+          "row": 2125,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "I want EPFO passbook statement for accou"
+        },
+        {
+          "row": 2139,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "ur order of Bombay Shaving Company Turmeric Shaving Foam becaus"
+        },
+        {
+          "row": 2226,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "hat means we don't have to be panic in trouble or sorrow and we"
+        },
+        {
+          "row": 2333,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "to Shriram Finance Company"
+        },
+        {
+          "row": 2386,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "tement, please login with my EPFO registered mobile number and"
+        },
+        {
+          "row": 2449,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "like wearing full slip, long pant,"
+        },
+        {
+          "row": 2452,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "The items MPM Panchakavya Eggs, Bansiwala Paan "
+        },
+        {
+          "row": 2505,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "gional languages like mantra, pandit, guru, avatar, khaki, sham"
+        },
+        {
+          "row": 2509,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": " teaching used to be done pre-pandemic and post-pandemic"
+        },
+        {
+          "row": 2607,
+          "entity": "GST",
+          "variant": "gst",
+          "context": "youngsters or on the outskirts like y"
+        },
+        {
+          "row": 2652,
+          "entity": "GST",
+          "variant": "gst",
+          "context": "to youngsters who like to play indoor an"
+        },
+        {
+          "row": 2737,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "ted the huge Tata Group of companies, with major interests in s"
+        },
+        {
+          "row": 2889,
+          "entity": "Voter ID",
+          "variant": "epic",
+          "context": "It's a wonderful story which depicts the unsatisfactory life of "
+        },
+        {
+          "row": 3004,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": " which had his essays on the Upanishads."
+        },
+        {
+          "row": 3010,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "oan EMI to Shriram Finance Company"
+        },
+        {
+          "row": 3061,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "Resend OTP to my EPFO registered mobile number 604"
+        },
+        {
+          "row": 3141,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "opment, the mobile network companies have started to"
+        },
+        {
+          "row": 3157,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "hen the British East India Company took over the city as a part"
+        },
+        {
+          "row": 3199,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "perty from Shriram Finance Company"
+        },
+        {
+          "row": 3233,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "Login to EPFO portal using mobile number"
+        },
+        {
+          "row": 3387,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "ebrated as a grand event accompanied by 10 days of celebration."
+        },
+        {
+          "row": 3412,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "Can I login to EPFO portal with another mobile n"
+        },
+        {
+          "row": 3414,
+          "entity": "Voter ID",
+          "variant": "epic",
+          "context": "rite classic books are Indian epics, Ramayana and Mahabharata. I"
+        },
+        {
+          "row": 3604,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "Japan"
+        },
+        {
+          "row": 3609,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "Can I login to EPFO portal with another mobile n"
+        },
+        {
+          "row": 3650,
+          "entity": "UPI",
+          "variant": "upi",
+          "context": "was the capital of British occupied India."
+        },
+        {
+          "row": 3720,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "aking a rough structure is helpful."
+        },
+        {
+          "row": 3835,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "Can I login to EPFO portal with another mobile n"
+        },
+        {
+          "row": 3862,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "We can say insurance companies and banks are both financi"
+        },
+        {
+          "row": 3900,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "h councils which are the Gram Panchayats."
+        },
+        {
+          "row": 3931,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "king here and also the new companies are allotted to start over"
+        },
+        {
+          "row": 3943,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "for the Spanish and French and German and "
+        },
+        {
+          "row": 4008,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "e six-digit OTP sent to your EPFO registered mobile number 616"
+        },
+        {
+          "row": 4044,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "China, Germany, Japan, England, France."
+        },
+        {
+          "row": 4159,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "aking after the long of COVID pandemic."
+        },
+        {
+          "row": 4168,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "o be in just one another's company for those few days in a year"
+        },
+        {
+          "row": 4205,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "Courtallam is a panchayat town situated at a mean"
+        },
+        {
+          "row": 4219,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": " agent is an individual or company that receives legal document"
+        },
+        {
+          "row": 4294,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "What is the status of my EPFO claim having tracking ID 773"
+        },
+        {
+          "row": 4313,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "designs to be active participants of the teaching learning pr"
+        },
+        {
+          "row": 4499,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "Login to EPFO portal using mobile number 8"
+        },
+        {
+          "row": 4529,
+          "entity": "GST",
+          "variant": "gst",
+          "context": "opment institutes for the youngsters of the region."
+        },
+        {
+          "row": 4534,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "ky that day and could see the panoramic view of almost all the "
+        },
+        {
+          "row": 4535,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "John Dilemma, Tapan Gajjar, Vicky Agarwal, Chitre"
+        },
+        {
+          "row": 4557,
+          "entity": "GST",
+          "variant": "gst",
+          "context": "l, etc, are played by the youngsters"
+        },
+        {
+          "row": 4742,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "wab of Bengal ceded to the company the rights of 24 Mahals. The"
+        },
+        {
+          "row": 4783,
+          "entity": "Voter ID",
+          "variant": "epic",
+          "context": "so most of the arts are made depicting the life history of her."
+        },
+        {
+          "row": 4793,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "ts own IPL team led by Hardik Pandya. And these are the only ev"
+        },
+        {
+          "row": 4845,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "that is Tunganath, one of the Panchakhedars."
+        },
+        {
+          "row": 4846,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "n order to overcome the discrepancies that exist at different l"
+        },
+        {
+          "row": 4852,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "g base for several leading companies in areas such as fertilize"
+        },
+        {
+          "row": 4855,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "tiple loving ones in a short span of time,"
+        },
+        {
+          "row": 5011,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "ber 721478288833 to check my EPFO passbook balance"
+        },
+        {
+          "row": 5040,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "gotomy (an incision in the tympanic membrane) or decompression "
+        },
+        {
+          "row": 5135,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": " small tasks can really be helpful in keeping the spirits high"
+        },
+        {
+          "row": 5139,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "India, China, Pakistan, Japan, Sri Lanka"
+        },
+        {
+          "row": 5273,
+          "entity": "Voter ID",
+          "variant": "epic",
+          "context": "as most of the art depicts the"
+        },
+        {
+          "row": 5288,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "ber 116195929553 to generate EPFO passbook statement"
+        },
+        {
+          "row": 5457,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "bration like Madhusramani and Panchami"
+        },
+        {
+          "row": 5479,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "Ulthapani Reserve Forest, which is now"
+        },
+        {
+          "row": 5526,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "We have tu, tumhala, tumhi, apan sort of pronouns which we use"
+        },
+        {
+          "row": 5606,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": " MOOZ Organic Masala Tofu Soy Paneer than mentioned on your web"
+        },
+        {
+          "row": 5792,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "vement. Dancers here are accompanied by musical instruments lik"
+        },
+        {
+          "row": 5913,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "Resend OTP to my EPFO registered mobile number 860"
+        },
+        {
+          "row": 6022,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "Can I login to EPFO portal with another mobile n"
+        },
+        {
+          "row": 6082,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "The pupils are active participants in learning and acquiring k"
+        },
+        {
+          "row": 6082,
+          "entity": "UPI",
+          "variant": "upi",
+          "context": "The pupils are active participants in "
+        },
+        {
+          "row": 6213,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "tart from the January, Vasant Panchami is there, then the Makar"
+        },
+        {
+          "row": 6215,
+          "entity": "Voter ID",
+          "variant": "epic",
+          "context": "The novel depicts the life of Najib, name of "
+        },
+        {
+          "row": 6242,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "alance, please login with my EPFO registered mobile number"
+        },
+        {
+          "row": 6388,
+          "entity": "GST",
+          "variant": "gst",
+          "context": "younger generation or the youngsters are getting involved in uh"
+        },
+        {
+          "row": 6468,
+          "entity": "Provident Fund",
+          "variant": "pf",
+          "context": "ber 387775845565 to generate EPFO passbook statement"
+        },
+        {
+          "row": 6632,
+          "entity": "PAN card",
+          "variant": "pan",
+          "context": "Sri Lanka, Australia, Japan, England, China"
+        }
+      ]
+    },
+    {
+      "dataset": "LAHAJA",
+      "n_transcripts": 6152,
+      "transcripts_sha256": "ed4cbf233f34f1682dd9b2d21d40ecabba1575f5a6fb787dbef6a12f1a164631",
+      "totals": {
+        "legacy_raw_occurrences": 40,
+        "substring_pairs": 40,
+        "word_boundary_pairs": 29
+      },
+      "examples_with_word_boundary_mention": 29,
+      "decision": "STOP_CHANGE_CORPUS (<30)",
+      "per_entity": [
+        {
+          "entity": "CoWIN",
+          "legacy_raw_occurrences": 17,
+          "substring_pairs": 17,
+          "word_boundary_pairs": 17
+        },
+        {
+          "entity": "Aadhaar",
+          "legacy_raw_occurrences": 23,
+          "substring_pairs": 23,
+          "word_boundary_pairs": 12
+        },
+        {
+          "entity": "Ayushman Bharat",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "DigiLocker",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "EPFO",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "ESIC",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "GST",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "IFSC code",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Jan Dhan Yojana",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Kisan Credit Card",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Mudra Yojana",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "PAN card",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Passport Seva",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Pradhan Mantri Awas Yojana",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Provident Fund",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Ration card",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Sukanya Samriddhi Yojana",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "UPI",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Ujjwala Yojana",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Voter ID",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        }
+      ],
+      "word_boundary_variant_hits": {
+        "CoWIN :: कोविन": 17,
+        "Aadhaar :: आधार": 12
+      },
+      "substring_only_hits": [
+        {
+          "row": 130,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "्माणाधीन सड़क ताल पर विमान की आधारशिला रखी है"
+        },
+        {
+          "row": 142,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "हुआ होगा हालाँकि यह परिणाम आधारभूत तौर पर ऐतिहासिक प्रभावों क"
+        },
+        {
+          "row": 1147,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ी वुडांग जैसे अन्य स्कूलों पर आधारित वर्गीकरण सभी को एक प्रणाली "
+        },
+        {
+          "row": 1175,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "यह उसी पर आधारित है उनकी कठिनाइयों और सामाजि"
+        },
+        {
+          "row": 1285,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ातर आबादी पर्यटन व्यवसायों पर आधारित है"
+        },
+        {
+          "row": 1287,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "आधारित थे पर आज वह व्यवसाय बंद होन"
+        },
+        {
+          "row": 2924,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "समें श्री राव ने अपने जीवन पर आधारित एक उपन्यास लिखा है तो उस का"
+        },
+        {
+          "row": 4020,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "रदर्शन का उद्देश्य जो अवसर पर आधारित है"
+        },
+        {
+          "row": 4398,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "य परिवहन प्रणाली कई माध्यम पर आधारित है जिसमें सड़क परिवहन रेल प"
+        },
+        {
+          "row": 4413,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ना पौधों का प्रजनन का और सबसे आधारित और प्राकृतिक तरीका है"
+        },
+        {
+          "row": 5799,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " इस्लामी परम्परा और सुन्नत पर आधारित होती हैं इनमें से कुछ प्रमु"
+        }
+      ]
+    }
+  ]
+}

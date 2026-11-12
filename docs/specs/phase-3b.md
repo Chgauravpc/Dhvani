@@ -210,7 +210,7 @@ Priority 2 is only if time remains; none of it may displace Phase 4.
 
 ### Priority 0 — make the existing numbers true
 
-- [~] **3B-1 GATE — reproduce the audit.** Word-boundary, deduplicated
+- [?] **3B-1 GATE — reproduce the audit.** Word-boundary, deduplicated
       (example, entity) counting, shared by the gate script and the scorer
       (one function, not two copies that can drift). Longest-variant-wins so
       "aadhaar card" and "aadhaar" do not double count. Re-run the gate on
@@ -219,12 +219,19 @@ Priority 2 is only if time remains; none of it may displace Phase 4.
       counts for both datasets, and the gate decision is restated from it.
       If Svarah < 100, follow the 30–100 rule literally (CI + lexicon
       expansion from what the data contains — ESIC/EPFO/CoWIN/UPI dominate).
-      status: code done (`dhvani.entity.mentions`, one function now used by
-      gate, scorer and dataset filter; `tests/test_mentions.py` covers every
-      audit false hit). Real gate run not yet done -- needs a Hugging Face
-      token with Svarah/LAHAJA gated access (`GatedRepoError` on Nov 12, no
-      local token or cached shards). Run: `uv run python
-      scripts/entity_density_gate.py` -> `results/entity_density_gate.json`.
+      evidence: 6fa78b2 · `uv run python scripts/entity_density_gate.py` ·
+      `results/entity_density_gate.json` + `results/entity_density_gate_review.json` ·
+      Svarah 212 legacy / 202 substring / **94 word-boundary** -> PROCEED with CI +
+      lexicon expansion; LAHAJA 40 / 40 / **29** matcher, **17 after review**
+      (all 12 bare `आधार` hits are the noun "basis", not the ID) -> **GATE FAILED
+      for LAHAJA** (<30). The audit's own LAHAJA recount (38) was also inflated:
+      its `\w` regex let `आधारित` ("based on") through. Awaiting owner review;
+      LAHAJA pivot needs an owner decision (see 3B-1a).
+- [!] 3B-1a — LAHAJA pivot required by the failed gate. blocked: owner decision
+      between the spec-2A options: widen the lexicon toward what LAHAJA
+      contains, or switch the Hindi arm to IndicVoices' use-case split. Also:
+      bare `आधार` is a homonym -- the lexicon needs a context rule or must drop
+      the bare variant before any Hindi EER is scored.
 - [ ] **3B-2 — two-rate scorer.** Recognition EER and canonicalization rate
       (section 3), both exact-match on curated variants, both paired with
       `corruption_rate`. Unit tests must include: Devanagari-correct output

@@ -6,6 +6,8 @@ built around civic terminology, so this is a go/no-go gate: an EER over
 eight mentions is not a result.
 
     uv run python scripts/entity_density_gate.py [--out results/entity_density_gate.json]
+    uv run python scripts/entity_density_gate.py --datasets indicvoices-hindi \
+        --out results/entity_density_gate_indicvoices_hindi.json
 
 Counts with the shared word-bounded definition in `dhvani.entity.mentions`
 (the one the EER scorer and dataset filter also use), and reports the two
@@ -41,13 +43,18 @@ import hashlib
 import json
 import subprocess
 from collections import Counter
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
 from dhvani.config import load_dotenv
 from dhvani.entity.lexicon import DEFAULT_LEXICON
 from dhvani.entity.mentions import find_mentions, mentioned_entities, substring_mentioned_entities
-from dhvani.eval.datasets import load_lahaja_ground_truth_texts, load_svarah_ground_truth_texts
+from dhvani.eval.datasets import (
+    load_indicvoices_text_rows,
+    load_lahaja_ground_truth_texts,
+    load_svarah_ground_truth_texts,
+)
 
 _CONTEXT_CHARS = 30
 
@@ -90,17 +97,40 @@ def _substring_only_examples(index: int, text: str, entities: set[str]) -> list[
     return out
 
 
-def analyse(name: str, texts: list[str]) -> dict[str, Any]:
+def _group_breakdown(
+    texts: list[str], labels: list[str], wb_per_text: list[set[str]]
+) -> list[dict[str, Any]]:
+    """Word-boundary (example, entity) pairs per metadata value, so the
+    use cases where entities actually live are visible (3B-1a)."""
+    rows: dict[str, dict[str, Any]] = {}
+    for label, wb in zip(labels, wb_per_text, strict=True):
+        r = rows.setdefault(
+            label, {"value": label, "n_rows": 0, "word_boundary_pairs": 0, "by_entity": Counter()}
+        )
+        r["n_rows"] += 1
+        r["word_boundary_pairs"] += len(wb)
+        r["by_entity"].update(wb)
+    out = sorted(rows.values(), key=lambda r: (-r["word_boundary_pairs"], r["value"]))
+    for r in out:
+        r["by_entity"] = dict(r["by_entity"].most_common())
+    return out
+
+
+def analyse(
+    name: str, texts: list[str], groups: dict[str, list[str]] | None = None
+) -> dict[str, Any]:
     legacy = _legacy_raw_occurrences(texts)
     substring: Counter[str] = Counter()
     bounded: Counter[str] = Counter()
     variant_hits: Counter[str] = Counter()
     examples_with_mention = 0
     substring_only: list[dict[str, Any]] = []
+    wb_per_text: list[set[str]] = []
 
     for i, text in enumerate(texts):
         sub = substring_mentioned_entities(text, DEFAULT_LEXICON)
         wb = mentioned_entities(text, DEFAULT_LEXICON)
+        wb_per_text.append(wb)
         substring.update(sub)
         bounded.update(wb)
         for m in find_mentions(text, DEFAULT_LEXICON):
@@ -124,6 +154,9 @@ def analyse(name: str, texts: list[str]) -> dict[str, Any]:
     ]
     total_wb = sum(bounded.values())
     digest = hashlib.sha256("\n".join(texts).encode("utf-8")).hexdigest()
+    breakdowns = {
+        key: _group_breakdown(texts, labels, wb_per_text) for key, labels in (groups or {}).items()
+    }
     return {
         "dataset": name,
         "n_transcripts": len(texts),
@@ -138,6 +171,7 @@ def analyse(name: str, texts: list[str]) -> dict[str, Any]:
         "per_entity": per_entity,
         "word_boundary_variant_hits": dict(variant_hits.most_common()),
         "substring_only_hits": substring_only,
+        "breakdowns": breakdowns,
     }
 
 
@@ -158,19 +192,50 @@ def _print(result: dict[str, Any]) -> None:
     print(f"  -> {result['decision']}")
 
 
+_Loaded = tuple[list[str], dict[str, list[str]] | None]
+
+
+def _indicvoices_hindi() -> _Loaded:
+    rows = load_indicvoices_text_rows("hindi")
+    texts = [r.text for r in rows]
+    groups = {
+        "split": [r.split for r in rows],
+        "scenario": [r.scenario for r in rows],
+        "task_name": [r.task_name for r in rows],
+    }
+    return texts, groups
+
+
+def _svarah() -> _Loaded:
+    return load_svarah_ground_truth_texts(), None
+
+
+def _lahaja() -> _Loaded:
+    return load_lahaja_ground_truth_texts(), None
+
+
+_DATASETS: dict[str, tuple[str, Callable[[], _Loaded]]] = {
+    "svarah": ("Svarah", _svarah),
+    "lahaja": ("LAHAJA", _lahaja),
+    "indicvoices-hindi": ("IndicVoices-Hindi", _indicvoices_hindi),
+}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument(
+        "--datasets", nargs="+", choices=sorted(_DATASETS), default=["svarah", "lahaja"]
+    )
     parser.add_argument("--out", type=Path, default=Path("results/entity_density_gate.json"))
     args = parser.parse_args()
     load_dotenv()  # HF_TOKEN may live in the gitignored .env
 
     results = []
-    for name, loader in (
-        ("Svarah", load_svarah_ground_truth_texts),
-        ("LAHAJA", load_lahaja_ground_truth_texts),
-    ):
-        print(f"Downloading {name} ground-truth transcripts (text only, no audio)...")
-        result = analyse(name, loader())
+    for key in args.datasets:
+        name, loader = _DATASETS[key]
+        print(f"Loading {name} ground-truth transcripts (text only, no audio)...")
+        texts, groups = loader()
+        result = analyse(name, texts, groups)
         _print(result)
         results.append(result)
 

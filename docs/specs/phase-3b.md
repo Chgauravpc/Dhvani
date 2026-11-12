@@ -210,7 +210,7 @@ Priority 2 is only if time remains; none of it may displace Phase 4.
 
 ### Priority 0 — make the existing numbers true
 
-- [?] **3B-1 GATE — reproduce the audit.** Word-boundary, deduplicated
+- [x] **3B-1 GATE — reproduce the audit.** Word-boundary, deduplicated
       (example, entity) counting, shared by the gate script and the scorer
       (one function, not two copies that can drift). Longest-variant-wins so
       "aadhaar card" and "aadhaar" do not double count. Re-run the gate on
@@ -226,10 +226,10 @@ Priority 2 is only if time remains; none of it may displace Phase 4.
       (all 12 bare `आधार` hits are the noun "basis", not the ID) -> **GATE FAILED
       for LAHAJA** (<30). The audit's own LAHAJA recount (38) was also inflated:
       its `\w` regex let `आधारित` ("based on") through. Awaiting owner review;
-      LAHAJA pivot needs an owner decision (see 3B-1a).
-- [!] 3B-1a — LAHAJA pivot required by the failed gate. blocked: owner decision
-      between the spec-2A options: widen the lexicon toward what LAHAJA
-      contains, or switch the Hindi arm to IndicVoices' use-case split. Also:
+      Reviewed and accepted by owner 2026-11-12.
+- [~] 3B-1a — LAHAJA pivot required by the failed gate. Owner decision
+      2026-11-12: switch the Hindi arm to IndicVoices' use-case split (not
+      lexicon widening). Gate must be re-run on IndicVoices Hindi first. Also:
       bare `आधार` is a homonym -- the lexicon needs a context rule or must drop
       the bare variant before any Hindi EER is scored.
 - [ ] **3B-2 — two-rate scorer.** Recognition EER and canonicalization rate

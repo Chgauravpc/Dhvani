@@ -261,7 +261,7 @@ as their own problem.
 
 **Priority 0 — make the existing numbers true** (all must be `[x]` before Phase 4's `RESULTS.md` items can start)
 
-- [?] 3B-1 **GATE** — word-boundary, deduplicated mention counting shared by
+- [x] 3B-1 **GATE** — word-boundary, deduplicated mention counting shared by
       gate and scorer; re-run the gate; restate the decision from it
       evidence: 6fa78b2 · `uv run python scripts/entity_density_gate.py` ·
       `results/entity_density_gate.json` + `results/entity_density_gate_review.json` ·
@@ -270,10 +270,10 @@ as their own problem.
       (all 12 bare `आधार` hits are the noun "basis", not the ID) -> **GATE FAILED
       for LAHAJA** (<30). The audit's own LAHAJA recount (38) was also inflated:
       its `\w` regex let `आधारित` ("based on") through. Awaiting owner review;
-      LAHAJA pivot needs an owner decision (see 3B-1a).
-- [!] 3B-1a — LAHAJA pivot required by the failed gate. blocked: owner decision
-      between the spec-2A options: widen the lexicon toward what LAHAJA
-      contains, or switch the Hindi arm to IndicVoices' use-case split. Also:
+      Reviewed and accepted by owner 2026-11-12.
+- [~] 3B-1a — LAHAJA pivot required by the failed gate. Owner decision
+      2026-11-12: switch the Hindi arm to IndicVoices' use-case split (not
+      lexicon widening). Gate must be re-run on IndicVoices Hindi first. Also:
       bare `आधार` is a homonym -- the lexicon needs a context rule or must drop
       the bare variant before any Hindi EER is scored.
 - [ ] 3B-2 — two-rate scorer: **recognition EER** (any curated variant, any

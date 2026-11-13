@@ -145,7 +145,18 @@ async def _phase_llm(args: argparse.Namespace, examples: list[VoiceAgentBenchExa
     logs = {arm: _transcript_log(arm) for arm in arms}
     runs = RunLog(args.runs)
     clock = RealClock()
-    llm = GroqLLM(clock)
+    # `GROQ_API_KEYS` (comma-separated) spreads calls across keys, each with its
+    # own throttle, moving on when one hits its daily quota. Quotas are per
+    # Groq account, so this only helps with keys from separate accounts. Keys
+    # are never logged or written anywhere.
+    keys = [k.strip() for k in os.environ.get("GROQ_API_KEYS", "").split(",") if k.strip()]
+    if not keys:
+        keys = [os.environ["GROQ_API_KEY"]]
+    llms = [GroqLLM(clock, api_key=k) for k in keys]
+    alive = list(range(len(llms)))
+    last_call = [0.0] * len(llms)
+    turn = 0
+    print(f"using {len(llms)} Groq key(s)", flush=True)
     by_language: dict[str, int] = {}
     indices: dict[str, int] = {}
     for example in examples:
@@ -153,7 +164,6 @@ async def _phase_llm(args: argparse.Namespace, examples: list[VoiceAgentBenchExa
         by_language[example.language] = indices[_eid(example)] + 1
 
     calls = 0
-    last_call = 0.0
     try:
         for run in range(1, args.k + 1):
             for example in examples:
@@ -188,11 +198,23 @@ async def _phase_llm(args: argparse.Namespace, examples: list[VoiceAgentBenchExa
                     if calls >= args.max_llm_calls:
                         print(f"call cap reached ({calls}); run again later", flush=True)
                         return 0
-                    wait = args.min_interval - (time.monotonic() - last_call)
-                    if wait > 0:
-                        await asyncio.sleep(wait)
-                    last_call = time.monotonic()
-                    attempt = await call_llm_with_retries(llm, example, text, clock)
+                    while True:
+                        if not alive:
+                            raise QuotaExhausted("every Groq key has hit its daily quota")
+                        key_index = alive[turn % len(alive)]
+                        turn += 1
+                        wait = args.min_interval - (time.monotonic() - last_call[key_index])
+                        if wait > 0:
+                            await asyncio.sleep(wait)
+                        last_call[key_index] = time.monotonic()
+                        try:
+                            attempt = await call_llm_with_retries(
+                                llms[key_index], example, text, clock
+                            )
+                            break
+                        except QuotaExhausted:
+                            alive.remove(key_index)
+                            print(f"key #{key_index + 1} quota exhausted", flush=True)
                     calls += 1
                     call = (
                         None

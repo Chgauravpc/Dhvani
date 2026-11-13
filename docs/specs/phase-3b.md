@@ -277,13 +277,40 @@ Priority 2 is only if time remains; none of it may displace Phase 4.
       No real run has written a committed transcript file yet -- the first one
       lands with 3B-4. Also fixed: `run_f1_ablation.py` still counted lexicon
       mentions by substring (a fourth copy 3B-1 missed). Accepted by owner 2026-11-13.
-- [~] **3B-4 — re-run F2 EER on both datasets × both ASRs** with 3B-1..3B-3,
+- [?] **3B-4 — re-run F2 EER on both datasets × both ASRs** with 3B-1..3B-3,
       same dev/test protocol, threshold re-tuned on dev per STT. Old rows
       stay, marked superseded. **Preregister first** (commit before the
       run): what does it mean if recognition EER on LAHAJA is low for
       Saaras? (Answer to write down: the entity failure was a scoring
       artifact on LAHAJA; F2's value there is canonicalization, and the
       README says so.)
+      evidence: <this commit> · four committed results files
+      `results/f2_eer_{svarah,indicvoices-hindi}_{whisper,sarvam}.json` + four
+      transcript logs under `results/transcripts/` (243 / 243 / 464 / 464
+      rows, every row transcribed once) · preregistration `b47d29f` precedes
+      every run · deviations 1-3 in §9.7 · LAHAJA not run (gate failed, 3B-1).
+      Test split, dev-chosen threshold, recognition EER / canonical miss
+      before -> after, corruption on clean rows:
+      Svarah+Whisper 25.8% -> 12.1% / 28.8% -> 12.1%, corruption 11.4%;
+      Svarah+Saaras 0.0% -> 0.0% / 1.5% -> 0.0%, corruption 0.0%;
+      IndicVoices+Whisper 93.8% -> 17.4% / 100% -> 17.4%, corruption 14.8%;
+      IndicVoices+Saaras 4.5% -> 0.8% / 99.6% -> 0.8%, corruption 0.0%.
+      Verdicts by the §9.4 rules (not by how good the number looks):
+      rule 1 (canonicalization improves) holds only for IndicVoices+Saaras
+      (239 fixed / 0 broken, corruption 0.0% <= 5%); Whisper arms are
+      trade-offs (corruption 11.4% / 14.8% > 5%); Svarah+Saaras has nothing
+      to fix (p = 1.0). Rule 2 (recognition repair) holds for three arms
+      (Svarah+Whisper 9/0, IndicVoices+Whisper 185/0, IndicVoices+Saaras
+      9/0, all p < 0.05) -- the preregistered prediction that it would
+      mostly fail was wrong for Whisper. Rule 3: Saaras Hindi recognition
+      EER 4.5% (CI 2.6-8.0%) <= 15%, so the "entities fail on Hindi"
+      headline was mostly the A2 scoring artifact and F2's Hindi value is
+      canonicalization. A1 prediction confirmed (both Svarah recognition
+      EERs far below the superseded 59.4% / 46.9%). Caveats travel with
+      all of it (§9.5): read speech, Saaras may have trained on IndicVoices
+      `train`, clustered sample so CIs are optimistic, n ~ 66 on Svarah.
+      Old rows in ROADMAP/phase-2 are NOT yet marked superseded -- that
+      edit is left to the owner's review.
 - [ ] **3B-5 — F1 noise floor.** Run the ground-truth condition twice
       (A/A). The GT-vs-GT delta *is* the noise floor; any ASR-vs-GT delta
       inside it is not a finding. Repeat each condition k≥3 times, report
@@ -515,3 +542,14 @@ by the owner 2026-11-13.
    threads; thread count can in principle perturb float reductions in the last
    bits, so a row could differ from a re-run at another thread count. Rows are
    never re-transcribed, so this arm mixes the two, with no known effect on text.
+3. **Sarvam credits ran out, then a network error (2026-11-13/14).** The
+   Hindi/Saaras arm hit HTTP 402 `insufficient_quota_error` at 315 of 464
+   rows; the owner supplied a replacement API key (used for that run only,
+   passed in the environment, not stored in the repo or any results file). The
+   resumed run then failed once more at 444/464 with a `ProviderError` whose
+   message was empty (consistent with an `httpx` timeout or dropped
+   connection; the exception type was not captured), and was resumed again
+   from the transcript log. Every row was transcribed exactly once; failed
+   requests produced no log line, so no row was re-sent after a success. The
+   two keys are not distinguished in the log, and Sarvam-side behaviour could in
+   principle differ between accounts; nothing indicates it did.

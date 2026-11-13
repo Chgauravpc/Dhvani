@@ -311,11 +311,15 @@ Priority 2 is only if time remains; none of it may displace Phase 4.
       `train`, clustered sample so CIs are optimistic, n ~ 66 on Svarah.
       Old rows in ROADMAP/phase-2 are NOT yet marked superseded -- that
       edit is left to the owner's review.
-- [ ] **3B-5 — F1 noise floor.** Run the ground-truth condition twice
+- [~] **3B-5 — F1 noise floor.** Run the ground-truth condition twice
       (A/A). The GT-vs-GT delta *is* the noise floor; any ASR-vs-GT delta
       inside it is not a finding. Repeat each condition k≥3 times, report
       mean ± paired-bootstrap CI and a McNemar test on the paired
       per-example outcomes. Use the full `single_tool` set, not 40.
+      Preregistered in §10 (commit 9b30533). Code: `dhvani.eval.noise_floor`,
+      `scripts/run_f1_noise_floor.py`, `scripts/analyze_f1_noise_floor.py`;
+      real run not started. Groq's free tier (1,000 requests/day) makes the full
+      design a ~3-day run.
 - [ ] **3B-6 — fix the jitter model** (section 4) and re-run only the rows
       it affects. Report latency from end of speech.
 
@@ -683,4 +687,8 @@ and are not edited.
 
 ### 10.9 Deviations
 
-None yet.
+None yet. (Implementation note, not a deviation: the existing F1 transcript
+log keys on `example_id` alone, and 133 VoiceAgentBench ids exist in both
+languages, so the Phase 2/2B F1 logging path can overwrite one language's
+transcript with the other's. 3B-5 qualifies every id as `language:id` and
+keys its run log on language; the old F1 path is left as is.)

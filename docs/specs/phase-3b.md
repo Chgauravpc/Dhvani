@@ -687,7 +687,19 @@ and are not edited.
 
 ### 10.9 Deviations
 
-None yet. (Implementation note, not a deviation: the existing F1 transcript
+1. **Multiple Groq API keys (2026-11-14).** The owner supplied three additional
+   Groq keys (the owner's statement: from a friend). `run_f1_noise_floor.py`
+   spreads LLM calls across them (`GROQ_API_KEYS`, per-key throttle, next key
+   on a daily-quota 429). One request per key on 2026-11-14 showed 999 of 1,000
+   daily requests remaining on each, i.e. separate quotas. It changes only
+   which key signs a request: same model (`openai/gpt-oss-20b`), same
+   parameters, same provider. Which key served a cell is not recorded in the
+   run log. Keys are stored only in the gitignored `.env`.
+2. **Batch API not used.** Groq's Batch API returned `403 not_available_for_plan`
+   for this account (probe, 2026-11-14, nothing sent), so the protocol's
+   synchronous interleaved order stands unchanged.
+
+None other yet. (Implementation note, not a deviation: the existing F1 transcript
 log keys on `example_id` alone, and 133 VoiceAgentBench ids exist in both
 languages, so the Phase 2/2B F1 logging path can overwrite one language's
 transcript with the other's. 3B-5 qualifies every id as `language:id` and

@@ -504,3 +504,14 @@ by the owner 2026-11-13.
    No sampling, split, threshold, scoring or lexicon change; the row
    selection is the same 14-shard draw, and the per-row audio already cached
    by the crashed run is reused. No transcription had happened yet.
+2. **Throughput: Whisper `cpu_threads` (2026-11-13).** The Hindi/Whisper arm
+   was killed three times by the host's low-memory reaper and resumed from the
+   transcript log each time (80, 166, then 241+ of 464 rows kept). To finish
+   sooner, `WhisperSTT` gained an optional `cpu_threads` (default 0 =
+   CTranslate2's default, unchanged), set via `DHVANI_WHISPER_CPU_THREADS`; the
+   remainder of this arm runs with 8 of 12 cores instead of the default 4.
+   Model (`small`), compute type (`int8`), language handling and decoding
+   options are untouched. Caveat: rows transcribed before the change used 4
+   threads; thread count can in principle perturb float reductions in the last
+   bits, so a row could differ from a re-run at another thread count. Rows are
+   never re-transcribed, so this arm mixes the two, with no known effect on text.

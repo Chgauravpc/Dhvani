@@ -96,7 +96,11 @@ def _make_stt(stt_choice: str, clock: Clock) -> STTProvider:
     if stt_choice == "sarvam":
         return SarvamSTT(DEFAULT_SARVAM_MODEL, clock)
     whisper_model_size = os.environ.get("DHVANI_WHISPER_MODEL", "small")
-    return WhisperSTT(whisper_model_size, clock)
+    return WhisperSTT(
+        whisper_model_size,
+        clock,
+        cpu_threads=int(os.environ.get("DHVANI_WHISPER_CPU_THREADS", "0")),
+    )
 
 
 def _split_by_row(

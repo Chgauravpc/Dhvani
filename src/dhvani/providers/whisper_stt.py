@@ -32,8 +32,13 @@ class WhisperSTT:
         device: str = "cpu",
         compute_type: str = "int8",
         language: str | None = None,
+        cpu_threads: int = 0,
     ) -> None:
-        self._model = WhisperModel(model_size, device=device, compute_type=compute_type)
+        # cpu_threads=0 keeps CTranslate2's default (4); it is a throughput
+        # knob only -- model, compute type and decoding options are unchanged.
+        self._model = WhisperModel(
+            model_size, device=device, compute_type=compute_type, cpu_threads=cpu_threads
+        )
         self._clock = clock
         self._language = language
 

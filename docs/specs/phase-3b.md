@@ -553,3 +553,134 @@ by the owner 2026-11-13.
    requests produced no log line, so no row was re-sent after a success. The
    two keys are not distinguished in the log, and Sarvam-side behaviour could in
    principle differ between accounts; nothing indicates it did.
+
+---
+
+## 10. 3B-5 preregistration — F1 noise floor, written and committed before any 3B-5 run
+
+Committed 2026-11-14 in its own commit, before any code for this item and
+before any LLM or ASR call made for it. §10.1–10.8 do not change after that
+commit. A deviation forced by a run is a numbered entry in §10.9 with its
+reason; it is never edited into the sections above.
+
+### 10.1 What is measured, and why
+
+A4: every F1 task-success delta so far came from **one** LLM sample per
+condition per example, on 40 examples per language. LLM sampling noise was never
+measured, so no delta can be told apart from it. This item measures that noise
+floor and re-states F1 against it. It does **not** change what F1 measures
+(tool-call success on VoiceAgentBench `single_tool`, same judge, same LLM,
+same prompts).
+
+### 10.2 Arms and data
+
+- **Examples:** the **full** VoiceAgentBench `single_tool` set, both languages
+  that F1 used: **141 English + 134 Hindi = 275** (counted 2026-11-14 from the
+  dataset manifests). No sampling, no filtering. The Phase 2 F1 rows used the
+  first 40 per language, which is a subset; it is also reported separately for
+  comparability.
+- **Conditions per example:**
+  - `gt` — LLM on the ground-truth text (`GroundTruthSTT`).
+  - `whisper` — LLM on faster-whisper `small` / `int8` text (the Phase 2
+    setting).
+  - `sarvam` — LLM on Saaras `saaras:v3` text (the Phase 2B baseline).
+- **LLM:** Groq `openai/gpt-oss-20b`, `reasoning_effort` and tool schema
+  handling exactly as in the shipped `GroqLLM` / `task_success` code at the
+  commit that precedes the run (recorded in the results file), **no
+  temperature or seed set** (provider default, as in Phase 2). The model name
+  and run dates are recorded; Groq may change the served model between days and
+  that is a stated limitation.
+- **k = 3** independent LLM runs of every condition on every example.
+
+### 10.3 Procedure
+
+1. **ASR once per example per ASR**, text appended to the 3B-3 transcript log
+   and reused by all three LLM runs. The noise floor is about *LLM sampling*;
+   decoding by Whisper / Saaras is treated as deterministic. That assumption
+   is **checked, not assumed**: 30 examples (seed 0, both languages) are
+   transcribed a second time with Whisper and the fraction of byte-identical
+   texts is reported. Saaras is not re-called for this (credits).
+2. **LLM runs are interleaved.** Order is `for run in 1..3: for example: for
+   condition in (gt, whisper, sarvam)`. Any time-of-day or model-backend drift
+   then lands on every condition of an example alike, instead of on one
+   condition.
+3. Every LLM outcome is appended to a committed JSONL
+   (`results/f1_runs/…`): example id, language, condition, run, outcome, the
+   tool call returned, error class, model, UTC timestamp. The runner is
+   **resumable** from it and never repeats a completed (example, condition,
+   run).
+4. Budget, measured 2026-11-14 from Groq's response headers: **1,000
+   requests/day, 8,000 tokens/minute** on the free tier. One replicate
+   (275 × 3 conditions) is 825 calls, so the full design takes roughly three
+   days of quota. The runner throttles to the rate-limit headers; retries
+   count against quota. No paid tier is used.
+
+### 10.4 What counts as a failure — and what must not
+
+- A model/response that is wrong, malformed, or rejected by Groq as an invalid
+  tool call (HTTP 400, the Phase 2 documented behaviour) is a **task failure**,
+  as in Phase 2.
+- **Infrastructure errors are never scored.** HTTP 429, 5xx, timeouts and
+  connection errors are retried with backoff (at most 6 tries); if still
+  failing, that (example, condition, run) is marked `incomplete` and retried
+  on the next invocation. The existing F1 harness counts *every* exception as a
+  failure; that would turn a rate limit into fake ASR loss, so it is not used
+  here. Any `incomplete` cell left at the end is reported and blocks the
+  headline claim for its arm.
+
+### 10.5 Statistics (all computed from the committed JSONL)
+
+Per language, per ASR arm, with `n` examples:
+
+- **A/A noise floor.** For each pair of runs of the **same** condition (1v2,
+  1v3, 2v3): the difference in success rate (percentage points) and the
+  fraction of examples whose outcome differs. Reported for `gt` and for each
+  real-ASR condition. **Noise floor = the largest absolute success-rate
+  difference among the three `gt` pairs.** (Three pairs is a coarse estimate;
+  stated, not hidden.)
+- **ASR loss.** Per example, `d_i = mean over runs(gt) − mean over runs(real)`.
+  Reported as the mean of `d_i` (pp) with a **paired bootstrap 95% CI**
+  (percentile method, 10,000 resamples of examples, seed 0).
+- **McNemar.** Per-example outcome = **majority of the 3 runs** (3 is odd, no
+  ties). Exact two-sided McNemar p on the discordant pairs `gt`-pass/`real`-fail
+  vs `gt`-fail/`real`-pass, via the shared `mcnemar_exact_p`.
+- Pooled (both languages) numbers are secondary; the per-language results
+  are the claims.
+
+### 10.6 Decision rule
+
+"ASR costs task success" is claimed for a (language, ASR) arm **only if all
+hold**: (a) the paired-bootstrap 95% CI of mean `d_i` excludes 0; (b) the
+majority-vote McNemar p < 0.05; (c) the mean loss exceeds that language's
+noise floor. Otherwise the arm is reported as **not distinguishable from LLM
+sampling noise** — an outcome as reportable as the other. The old 27.5% /
+10.0% / Sarvam loss rows are marked `superseded by:` this item either way,
+and are not edited.
+
+### 10.7 Predictions (recorded to check, not decision rules)
+
+- **Noise floor:** at n ≈ 140 per language, `gt` run-to-run success-rate
+  differences are at most 4 pp, with 5–12% of examples changing outcome
+  between some pair of runs.
+- **English / Whisper:** loss stays well outside the noise floor and passes
+  §10.6 (full-set loss between 15 and 35 pp; the old 27.5 pp was n = 40).
+- **Hindi / Whisper:** loss between 0 and 20 pp; **at least 40% likely** that it
+  fails §10.6, i.e. that the old 10.0 pp Hindi loss was indistinguishable
+  from noise.
+- **Sarvam:** Hindi loss smaller than Whisper's Hindi loss.
+- ASR determinism check: ≥ 95% of the 30 re-transcribed texts byte-identical.
+
+### 10.8 Caveats that travel with every 3B-5 number
+
+- VoiceAgentBench audio is **synthesized**; this remains a lower bound on the
+  real-world ASR penalty, as in Phase 2.
+- `single_tool` is restaurants / recipes / local search, not the civic domain
+  of `dhvani-entity`; nothing here says anything about F2.
+- k = 3 gives a coarse noise estimate; the CIs resample examples, not runs.
+- One LLM, one provider; Groq's served model may drift across the ~3 days.
+- The judge is exact-match on function name and normalized argument values;
+  its own false negatives are common to every condition, not removed.
+
+### 10.9 Deviations
+
+None yet.

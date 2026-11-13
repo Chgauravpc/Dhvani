@@ -550,8 +550,8 @@ def load_indicvoices_examples(
             continue
         print(f"  downloading {shard} for {len(missing)} rows ({n}/{len(by_shard)})", flush=True)
         local = Path(hf_hub_download(_INDICVOICES_REPO, shard, repo_type="dataset"))
+        parquet = pq.ParquetFile(local)
         try:
-            parquet = pq.ParquetFile(local)
             starts = []
             offset = 0
             for rg in range(parquet.num_row_groups):
@@ -579,6 +579,8 @@ def load_indicvoices_examples(
                     )
                 del table
         finally:
+            # Windows refuses to unlink a file with an open handle.
+            parquet.close()
             local.unlink(missing_ok=True)
 
     examples: list[TranscriptExample] = []

@@ -496,4 +496,11 @@ by the owner 2026-11-13.
 
 ### 9.7 Deviations
 
-None yet.
+1. **IndicVoices audio loader crashed on Windows (2026-11-13).** The first
+   Hindi/Whisper run died with `PermissionError: [WinError 32]` when
+   `load_indicvoices_examples` tried to delete the downloaded shard
+   `train-00001-of-00082.parquet`: the `pq.ParquetFile` handle was still
+   open. Fix: close the handle before `unlink` (`datasets.py`, 3 lines).
+   No sampling, split, threshold, scoring or lexicon change; the row
+   selection is the same 14-shard draw, and the per-row audio already cached
+   by the crashed run is reused. No transcription had happened yet.

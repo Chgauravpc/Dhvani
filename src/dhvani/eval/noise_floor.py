@@ -176,6 +176,8 @@ async def call_llm_with_retries(
     - success path: the judged tool call -> `pass` / `fail`.
     - HTTP 400 (Groq rejecting its own malformed tool call, the documented
       Phase 2 behaviour) -> `fail`.
+    - a mid-stream "Tool call validation failed" APIError (Groq rejecting its own
+      generated call) -> `fail`, the same documented Phase 2 behaviour.
     - 408 / 429 / 5xx / connection errors -> retried with backoff, then
       `incomplete` (never scored). A 429 whose Retry-After exceeds
       `QUOTA_WAIT_LIMIT_S` raises `QuotaExhausted`.
@@ -210,6 +212,15 @@ async def call_llm_with_retries(
             raise FatalProviderError(f"HTTP {status}: {exc}") from exc
         except groq.APIConnectionError:
             last_error = "connection"
+            await sleep(min(60.0, 2.0 * 2**attempt))
+        except groq.APIError as exc:
+            # A bare APIError (no status code) is how Groq reports an error event
+            # mid-stream. Its rejection of its own generated tool call is the
+            # documented Phase 2 failure, scored as one (section 10.4); anything
+            # else mid-stream is treated as infrastructure and retried.
+            if "tool call validation failed" in str(exc).lower():
+                return LlmAttempt("fail", None, "tool_validation_failed")
+            last_error = "api_error"
             await sleep(min(60.0, 2.0 * 2**attempt))
     return LlmAttempt("incomplete", None, last_error or "unknown")
 

@@ -89,6 +89,34 @@ async def test_400_is_a_task_failure() -> None:
 
 
 @pytest.mark.asyncio
+async def test_midstream_tool_validation_error_is_a_task_failure() -> None:
+    request = httpx.Request("POST", "http://groq.test")
+    error = groq.APIError(
+        "Tool call validation failed: parameters for tool walmart.check_price did not "
+        "match schema: errors: [`/quantities/2`: expected integer, but got number]",
+        request=request,
+        body=None,
+    )
+    llm = ScriptedLLM([error])
+    attempt = await call_llm_with_retries(llm, EXAMPLE, "x", RealClock(), sleep=_no_sleep)
+    assert (attempt.outcome, attempt.error_class, llm.calls) == (
+        "fail",
+        "tool_validation_failed",
+        1,
+    )
+
+
+@pytest.mark.asyncio
+async def test_other_midstream_api_error_is_retried_not_scored() -> None:
+    request = httpx.Request("POST", "http://groq.test")
+    llm = ScriptedLLM([groq.APIError("stream hiccup", request=request, body=None)])
+    attempt = await call_llm_with_retries(
+        llm, EXAMPLE, "x", RealClock(), sleep=_no_sleep, max_tries=2
+    )
+    assert (attempt.outcome, attempt.error_class, llm.calls) == ("incomplete", "api_error", 2)
+
+
+@pytest.mark.asyncio
 async def test_429_is_retried_not_scored() -> None:
     llm = ScriptedLLM([_status_error(groq.RateLimitError, 429, "2"), GOOD])
     attempt = await call_llm_with_retries(llm, EXAMPLE, "x", RealClock(), sleep=_no_sleep)

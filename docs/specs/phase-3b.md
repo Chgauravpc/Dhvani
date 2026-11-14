@@ -311,15 +311,54 @@ Priority 2 is only if time remains; none of it may displace Phase 4.
       `train`, clustered sample so CIs are optimistic, n ~ 66 on Svarah.
       Old rows in ROADMAP/phase-2 are NOT yet marked superseded -- that
       edit is left to the owner's review.
-- [~] **3B-5 — F1 noise floor.** Run the ground-truth condition twice
+- [?] **3B-5 — F1 noise floor.** Run the ground-truth condition twice
       (A/A). The GT-vs-GT delta *is* the noise floor; any ASR-vs-GT delta
       inside it is not a finding. Repeat each condition k≥3 times, report
       mean ± paired-bootstrap CI and a McNemar test on the paired
       per-example outcomes. Use the full `single_tool` set, not 40.
-      Preregistered in §10 (commit 9b30533). Code: `dhvani.eval.noise_floor`,
-      `scripts/run_f1_noise_floor.py`, `scripts/analyze_f1_noise_floor.py`;
-      real run not started. Groq's free tier (1,000 requests/day) makes the full
-      design a ~3-day run.
+      Preregistered in §10 (commit 9b30533, before any code or run).
+      evidence: <this commit> · `uv run python scripts/run_f1_noise_floor.py
+      --phase asr|llm|determinism` then `scripts/analyze_f1_noise_floor.py` ·
+      `results/f1_noise_floor.json`, `results/f1_runs/runs.jsonl` (2,475 of 2,475
+      cells scored, 0 incomplete), `results/transcripts/f1_noise_floor_{whisper,sarvam}.jsonl`,
+      `results/f1_whisper_determinism.json` · full `single_tool` set (141 en + 134 hi),
+      k = 3, Groq gpt-oss-20b. Deviations 1-5 in §10.9.
+      GT run-to-run success rate: English 56.7 / 50.4 / 52.5% (noise floor 6.4 pp),
+      Hindi 31.3 / 32.1 / 32.8% (1.5 pp). ASR loss (GT minus real, mean over runs,
+      paired-bootstrap 95% CI, majority-vote McNemar), by the §10.6 rule:
+      English/Whisper 19.6 pp [13.2, 26.5], 29/2, p = 5e-7 -> ASR costs task success;
+      English/Sarvam 12.3 pp [7.1, 17.7], 20/3, p = 5e-4 -> ASR costs task success;
+      Hindi/Whisper 10.2 pp [3.7, 16.9], 25/7, p = 0.002 -> ASR costs task success;
+      Hindi/Sarvam 6.0 pp [1.0, 10.9], 16/7, p = 0.093 -> NOT distinguishable from
+      LLM sampling noise (CI excludes 0 but McNemar does not).
+      Results the preregistration did not expect, stated plainly:
+      (1) The determinism check FAILED: 8 of 30 Whisper re-transcriptions were
+      byte-identical (English 5/13, Hindi 3/17) against a predicted >= 95%. The
+      "decoding is deterministic" assumption in §10.3 is false for Whisper; each
+      Whisper transcript is one draw from a stochastic ASR, and that variance is
+      NOT in the noise floor or the CIs (which resample examples). Cause not
+      investigated (faster-whisper's default temperature fallback is one candidate).
+      Saaras determinism was not checked (credits), so the Sarvam rows carry the
+      same unquantified caveat. How different the re-transcriptions are was not
+      measured.
+      (2) On the Phase 2 subset (first 40 per language) Hindi/Whisper loss is
+      -1.7 pp [-11.7, 8.3] against 10.2 pp on the full 134: the old "10.0%
+      Hindi loss" at n = 40 was mostly a draw. English/Whisper first-40 is 22.5 pp
+      (old: 27.5). Hindi/Sarvam first-40 is 2.5 pp; the old -7.5 pp was noise.
+      (3) The GT-only noise floor understates run-to-run spread: the real-ASR arms
+      vary more (English/Sarvam 39.7 / 37.6 / 45.4%, a 7.8 pp range; Hindi/Whisper
+      18.7 / 22.4 / 24.6%, 5.9 pp). §10.6 uses the GT floor as written.
+      (4) Ceiling: with perfect text the agent passes ~53% (English) and ~32%
+      (Hindi) of tasks on the full set; 8-15% of examples change outcome between
+      GT runs. That ceiling is the larger limit on any ASR effect (§11 B5, 3B-19).
+      Prediction check (§10.7): noise floor <= 4 pp: English 6.4 NO, Hindi 1.5 yes;
+      5-12% flips: English GT 7.8-10.6% yes, Hindi GT 12.7-14.9% slightly above;
+      English/Whisper 15-35 pp and passes: yes (19.6); Hindi/Whisper >= 40% likely to
+      fail: it passed; Sarvam Hindi loss < Whisper Hindi loss: yes (6.0 < 10.2, not
+      significant); determinism >= 95%: NO (27%).
+      Pooled (secondary): Whisper 15.0 pp [10.4, 19.6], Sarvam 9.2 pp [5.6, 12.8].
+      Caveats of §10.8 apply (synthesized audio is a lower bound; one LLM; k = 3).
+      Old F1 rows in ROADMAP / phase-2 are NOT yet marked superseded; left to review.
 - [ ] **3B-6 — fix the jitter model** (section 4) and re-run only the rows
       it affects. Report latency from end of speech.
 
@@ -698,6 +737,31 @@ and are not edited.
 2. **Batch API not used.** Groq's Batch API returned `403 not_available_for_plan`
    for this account (probe, 2026-11-14, nothing sent), so the protocol's
    synchronous interleaved order stands unchanged.
+
+3. **Sarvam transcription needed a different key (2026-11-14).** The
+   `SARVAM_API_KEY` in `.env` returned HTTP 402 (no credits); the owner supplied
+   another, used for that phase only (passed in the environment, not stored). All
+   275 Saaras transcripts were produced by it, once each.
+4. **Groq's daily token limit, not its request limit, bounded the run.** Free-tier
+   `gpt-oss-20b` allows 200,000 *tokens* per day per account, which the
+   rate-limit headers (requests / minute-tokens) do not show. At ~250 tokens per
+   call the design (~600,000 tokens) used the three supplied keys' whole
+   allowance: all three were exhausted at 2,389 of 2,475 cells, and a
+   mid-run stall was first misdiagnosed by me as a hung request (it was
+   waiting out 429 retries). The owner supplied a fourth key (separate account);
+   the last 86 cells (all Hindi run 3) were scored on that key alone, so Hindi
+   run 3 was served by a different account from the rest. Keys are not recorded
+   in the run log; the fourth is in the gitignored `.env`.
+5. **Runner changes made while the run was in progress (2026-11-14).** (a) Groq
+   reports its rejection of its own generated tool call as a bare mid-stream
+   `APIError`; the first version did not catch it and the run crashed after 54
+   rows, so it is now scored a failure, as §10.4 already specified
+   (commit c9af892; 49 such cells in the final log, 2% of all cells). (b) The
+   per-key call spacing was halved from 8 s to 4 s for throughput only. (c) The
+   run was stopped several times (host memory-pressure kills, a
+   mistaken stall diagnosis) and resumed from the run log each time; no cell was
+   scored twice (2,475 unique of 2,475). (d) The determinism check's first
+   attempt exited 1 for an unrecorded reason; the second completed.
 
 None other yet. (Implementation note, not a deviation: the existing F1 transcript
 log keys on `example_id` alone, and 133 VoiceAgentBench ids exist in both

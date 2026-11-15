@@ -6,11 +6,25 @@ A real-time Indic voice agent, built to test one claim: **Indic voice agents fai
 at the ear, not the brain.** The claim is a hypothesis this project measures, and
 this page reports what the measurements say, including where they say no.
 
-*Status as of 2026-11-15. Every number below is read from a committed results file
-(`scripts/render_readme_tables.py --check README.md` verifies the tables), and every
-result still awaiting the owner's review is labelled as such in
-[`docs/specs/phase-3b.md`](docs/specs/phase-3b.md). The closing plan is
-[`docs/specs/phase-4.md`](docs/specs/phase-4.md).*
+*Status as of 2026-11-15 (tag `v0.2`). Every number below is read from a committed
+results file (`scripts/render_readme_tables.py --check README.md` verifies the tables).
+The measurement work in [`docs/specs/phase-4.md`](docs/specs/phase-4.md) is done except
+real response time (3B-9), which is not started; each result has a preregistration and a
+run record in [`docs/runs/`](docs/runs/), and the owner has accepted them.*
+
+**In five lines**
+
+1. **Entities, clean audio, Saaras:** it already recognises nearly all of them (231 of 242
+   Hindi mentions, 66 of 66 English), so the thesis is refuted there; exact lookup only
+   canonicalises. It is *not* refuted for every ASR: open Whisper `large-v3` misses 16.7% of
+   the English ones (section 2).
+2. **Task success:** ASR costs task success in three of four arms once the judge is fixed, but
+   the agent fails 27% (English) and 35% (Hindi) of tasks even with perfect text (section 3).
+3. **Digits:** Saaras does not reproduce about 8% (English) and 16% (Hindi) of digit strings on
+   clean audio, and number formatting was about half of its Hindi WER (section 4).
+4. **Phone:** a simulated phone codec does not hurt Saaras or `large-v3` on read speech; real
+   telephone Hindi gives Saaras 26.5% WER, a number confounded with corpus and speaking style.
+5. **Not measured:** real response time, and any real call (section 4).
 
 ## 1. What was claimed, what was wrong, what is true now
 
@@ -201,6 +215,10 @@ uv run python scripts/f2_three_way_table.py        # -> results/f2_three_way.jso
 uv run python scripts/analyze_f1_noise_floor.py    # -> results/f1_noise_floor.json
 uv run python scripts/audit_f1_judge.py            # -> results/f1_judge_audit.json
 uv run python scripts/analyze_f1_meaning_judge.py  # -> results/f1_meaning_judge.json
+uv run python scripts/score_digits.py              # -> results/f2_digits.json
+uv run python scripts/score_channel.py --stt sarvam         # -> results/f3_channel_sarvam.json
+uv run python scripts/score_channel.py --stt groq-whisper   # -> results/f3_channel_groq-whisper.json
+uv run python scripts/score_gramvaani.py           # needs the OpenSLR 118 archive (below)
 uv run python scripts/render_readme_tables.py --check README.md
 ```
 
@@ -212,8 +230,15 @@ terms, then `huggingface-cli login` or set `HF_TOKEN`) and, for the Saaras arms,
 uv run python scripts/entity_density_gate.py                              # needs HF access
 uv run python scripts/run_f2_entity_eval.py --dataset svarah --stt sarvam # or --dataset indicvoices-hindi, --stt whisper
 uv run python scripts/run_f1_noise_floor.py --phase asr                   # then --phase llm (Groq quota; see its docstring)
+uv run python scripts/run_f2_entity_eval.py --dataset svarah --stt groq-whisper   # GROQ_API_KEY(S)
+uv run python scripts/run_f3_channel.py --stt sarvam                      # the 8 kHz phone leg
 uv run python scripts/run_model_sweep.py --dataset svarah --n-examples 30
 ```
+
+The real-telephone arm needs Gram Vaani's labelled dev split
+([OpenSLR 118](https://www.openslr.org/118/), free for academic use, about 98 MB) extracted
+to its own folder; set its path in `scripts/preflight_3b21.py` / `run_f3_gramvaani.py`. Only
+utterance ids and hypotheses are committed, never its transcripts.
 
 ## Running the live demo
 

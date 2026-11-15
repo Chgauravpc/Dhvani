@@ -141,6 +141,8 @@ def stt_model_label(stt_choice: str, sarvam_model: str) -> str:
     `DHVANI_WHISPER_MODEL`, compute type `WhisperSTT`'s default `int8`)."""
     if stt_choice == "sarvam":
         return sarvam_model
+    if stt_choice == "groq-whisper":
+        return "whisper-large-v3"
     return f"{os.environ.get('DHVANI_WHISPER_MODEL', 'small')}/int8"
 
 

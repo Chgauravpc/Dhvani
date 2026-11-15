@@ -71,6 +71,7 @@ from dhvani.eval.transcript_log import (
     stt_model_label,
 )
 from dhvani.providers.base import STTProvider
+from dhvani.providers.groq_stt import GroqSTT
 from dhvani.providers.sarvam_stt import DEFAULT_MODEL as DEFAULT_SARVAM_MODEL
 from dhvani.providers.sarvam_stt import SarvamSTT
 from dhvani.providers.whisper_stt import WhisperSTT
@@ -83,7 +84,7 @@ _DEV_FRACTION = 0.3
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset", choices=_DATASETS, required=True)
-    parser.add_argument("--stt", choices=["whisper", "sarvam"], default="whisper")
+    parser.add_argument("--stt", choices=["whisper", "sarvam", "groq-whisper"], default="whisper")
     parser.add_argument("--n-clean-sample", type=int, default=150)
     parser.add_argument("--min-entity-rows", type=int, default=300)
     parser.add_argument("--seed", type=int, default=0)
@@ -92,7 +93,14 @@ def _parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def _make_stt(stt_choice: str, clock: Clock) -> STTProvider:
+def _make_stt(stt_choice: str, clock: Clock, dataset: str = "") -> STTProvider:
+    if stt_choice == "groq-whisper":  # 3B-20: language forced per corpus
+        keys = [k.strip() for k in os.environ.get("GROQ_API_KEYS", "").split(",") if k.strip()]
+        return GroqSTT(
+            clock,
+            language="en" if dataset == "svarah" else "hi",
+            api_key=keys[0] if keys else None,
+        )
     if stt_choice == "sarvam":
         return SarvamSTT(DEFAULT_SARVAM_MODEL, clock)
     whisper_model_size = os.environ.get("DHVANI_WHISPER_MODEL", "small")
@@ -234,7 +242,7 @@ async def main() -> None:
     )
 
     clock = RealClock()
-    stt = _make_stt(args.stt, clock)
+    stt = _make_stt(args.stt, clock, args.dataset)
     model = stt_model_label(args.stt, DEFAULT_SARVAM_MODEL)
     log = TranscriptLog(
         args.transcripts or default_log_path("f2", args.dataset, args.stt),

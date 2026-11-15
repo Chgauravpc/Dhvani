@@ -9,7 +9,7 @@ this page reports what the measurements say, including where they say no.
 *Status as of 2026-11-15 (tag `v0.2`). Every number below is read from a committed
 results file (`scripts/render_readme_tables.py --check README.md` verifies the tables).
 The measurement work in [`docs/specs/phase-4.md`](docs/specs/phase-4.md) is done except
-real response time (3B-9), which is not started; each result has a preregistration and a
+the real phone call (3B-10), which is blocked; each result has a preregistration and a
 run record in [`docs/runs/`](docs/runs/), and the owner has accepted them.*
 
 **In five lines**
@@ -24,7 +24,8 @@ run record in [`docs/runs/`](docs/runs/), and the owner has accepted them.*
    clean audio, and number formatting was about half of its Hindi WER (section 4).
 4. **Phone:** a simulated phone codec does not hurt Saaras or `large-v3` on read speech; real
    telephone Hindi gives Saaras 26.5% WER, a number confounded with corpus and speaking style.
-5. **Not measured:** real response time, and any real call (section 4).
+5. **Response time:** 1.8 s p50 to the first audio byte with streaming STT, 7.8 s with local
+   Whisper `tiny`; no real phone call has been made (section 4).
 
 ## 1. What was claimed, what was wrong, what is true now
 
@@ -39,7 +40,7 @@ be quoted by accident, each with what replaced it.
 | ~~F2: LAHAJA entity error 100% → 46.4%~~ | The scorer accepted only the Latin spelling, so a correct Devanagari "आधार" scored as an ASR error; the 100% was an artifact. LAHAJA then failed the entity-density gate (17 real mentions) and was replaced by IndicVoices Hindi. | replaced by the table in section 2 |
 | ~~Jitter raises STT latency from 1.3 s to 4.8 s~~ | The channel simulator's "jitter" accumulated as a slowdown, not as jitter. | not re-measured |
 | ~~F1: the agent loses 27.5% (English) / 10.0% (Hindi) of tasks to ASR~~ | One LLM sample per condition, 40 tasks per language, no noise floor, and the judge had bugs (section 3). | replaced by the tables in section 3 |
-| ~~"Sub-800 ms p50 conversation"~~ | That number came from mock providers. | no real voice-to-voice latency has been measured |
+| ~~"Sub-800 ms p50 conversation"~~ | That number came from mock providers. | replaced by the measured figures in section 4 (end of speech to first audio byte on replayed recordings; no real call, no network leg) |
 
 ## 2. Entity correction (F2): what is left once the ASR is good
 
@@ -179,9 +180,13 @@ The exact-match and list-fix results sit beside these in
   ([`docs/runs/3b-17-digit-strings.md`](docs/runs/3b-17-digit-strings.md)). Hindi WER for
   Saaras is 26.4% as scored and 12.6% once numbers are normalised on both sides, so
   number formatting accounts for about half of it.
-- **Real response time.** The only latency measured is STT alone: `small`/`int8` at p50
-  7.46 s (Svarah) to 13.7 s (LAHAJA), and `tiny` at about 1.2 s, against a 200 ms stage
-  budget. There is no voice-to-voice number.
+- **Real response time.** End of speech to first agent audio byte, real providers at real time, 50
+  telephone-quality Hindi utterances: **1.8 s p50 (3.3 s p90) with Sarvam realtime STT** (about
+  0.6 s waiting out the silence, 0.55 s for the LLM's first sentence, 0.55 s for Piper's first
+  audio; the streaming STT adds about 0.1 s), and **7.8 s p50 (22.6 s p90) with local Whisper
+  `tiny`**, dominated by transcription. In about one turn in five the 500 ms silence rule fired
+  while the speaker was only pausing. The earlier "sub-800 ms" figure came from mocks
+  ([`docs/runs/3b-9-response-time.md`](docs/runs/3b-9-response-time.md)).
 - Everything on synthesized speech (F1) is a lower bound on the real-world penalty.
 
 ## What is in the repository

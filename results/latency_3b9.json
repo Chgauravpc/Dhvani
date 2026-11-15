@@ -1,0 +1,120 @@
+{
+ "item": "3B-9",
+ "preregistration": "docs/runs/3b-9-preregistration.md",
+ "note": "End of speech (last Silero-voiced window of the clip) to first TTS audio byte; 8 kHz mu-law telephone audio at real time; 50 utterances plus an excluded warm-up; Groq LLM and local Piper behind both STT arms. 'clamped' turns are ones whose endpoint fired before the clip's last speech (a premature endpoint).",
+ "arms": {
+  "sarvam-realtime": {
+   "turns": 50,
+   "all_completed_as_preregistered": {
+    "n_completed": 50,
+    "n_failed": 0,
+    "endpoint_ms": {
+     "p50": 582.9091000000001,
+     "p90": 660.38518
+    },
+    "stt_ms": {
+     "p50": 114.7154,
+     "p90": 170.7388
+    },
+    "llm_ms": {
+     "p50": 551.3345999999999,
+     "p90": 733.6148900000001
+    },
+    "tts_ms": {
+     "p50": 563.67505,
+     "p90": 1969.1631200000002
+    },
+    "total_ms": {
+     "p50": 1800.0799,
+     "p90": 3285.8198800000005
+    }
+   },
+   "turns_with_premature_endpoint": 10,
+   "excluding_premature_endpoints": {
+    "n_completed": 40,
+    "n_failed": 0,
+    "endpoint_ms": {
+     "p50": 612.75855,
+     "p90": 663.13059
+    },
+    "stt_ms": {
+     "p50": 133.72135,
+     "p90": 174.86314000000007
+    },
+    "llm_ms": {
+     "p50": 575.7257999999999,
+     "p90": 733.6148900000001
+    },
+    "tts_ms": {
+     "p50": 735.72525,
+     "p90": 2020.0793300000003
+    },
+    "total_ms": {
+     "p50": 1987.44035,
+     "p90": 3419.4586400000003
+    }
+   },
+   "failures": []
+  },
+  "whisper-tiny": {
+   "turns": 50,
+   "all_completed_as_preregistered": {
+    "n_completed": 44,
+    "n_failed": 6,
+    "endpoint_ms": {
+     "p50": 506.82624999999996,
+     "p90": 545.80617
+    },
+    "stt_ms": {
+     "p50": 4579.264999999999,
+     "p90": 11946.699440000002
+    },
+    "llm_ms": {
+     "p50": 493.44370000000004,
+     "p90": 638.36819
+    },
+    "tts_ms": {
+     "p50": 584.9787,
+     "p90": 15995.694810000019
+    },
+    "total_ms": {
+     "p50": 7818.08885,
+     "p90": 22572.329220000007
+    }
+   },
+   "turns_with_premature_endpoint": 12,
+   "excluding_premature_endpoints": {
+    "n_completed": 32,
+    "n_failed": 0,
+    "endpoint_ms": {
+     "p50": 513.6623999999999,
+     "p90": 550.99854
+    },
+    "stt_ms": {
+     "p50": 5745.9076000000005,
+     "p90": 12243.923780000001
+    },
+    "llm_ms": {
+     "p50": 535.1173,
+     "p90": 671.46209
+    },
+    "tts_ms": {
+     "p50": 804.284,
+     "p90": 19652.06889
+    },
+    "total_ms": {
+     "p50": 10157.081250000001,
+     "p90": 25312.656059999998
+    }
+   },
+   "failures": [
+    "empty_transcript",
+    "empty_transcript",
+    "empty_transcript",
+    "empty_transcript",
+    "empty_transcript",
+    "empty_transcript"
+   ]
+  }
+ }
+}

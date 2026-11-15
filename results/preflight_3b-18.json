@@ -1,0 +1,25 @@
+{
+ "item": "3B-18",
+ "model_requested": "saaras:v3",
+ "datasets": {
+  "svarah": {
+   "test_entity_rows": 65,
+   "audio_seconds": 577.16,
+   "longest_clip_seconds": 18.12
+  },
+  "indicvoices-hindi": {
+   "test_entity_rows": 225,
+   "audio_seconds": 3325.934,
+   "longest_clip_seconds": 29.444
+  }
+ },
+ "total_test_entity_rows": 290,
+ "total_audio_minutes": 65.05156666666667,
+ "estimated_cost_rs_at_plan_rate": 32.52578333333334,
+ "live_probe": {
+  "probe_seconds": 1.992,
+  "accepted_8khz_wav": false,
+  "status": 402,
+  "error": "ApiError: headers: {'date': 'Sun, 15 Nov 2026 15:33:14 GMT', 'content-type': 'application/json', 'content-length': '140', 'connection': 'keep-alive', 'server': 'uvicorn', 'referrer-policy': 'strict-origin-when-cross-origin', 'permissions-policy': 'geolocation=(), camera=(), microphone=(), payment=()', 'cache-"
+ }
+}

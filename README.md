@@ -9,8 +9,9 @@ this page reports what the measurements say, including where they say no.
 *Status as of 2026-11-15 (tag `v0.2`). Every number below is read from a committed
 results file (`scripts/render_readme_tables.py --check README.md` verifies the tables).
 The measurement work in [`docs/specs/phase-4.md`](docs/specs/phase-4.md) is done except
-the real phone call (3B-10), which is blocked; each result has a preregistration and a
-run record in [`docs/runs/`](docs/runs/), and the owner has accepted them.*
+the real phone call (3B-10), which was cut; each result has a preregistration and a
+run record in [`docs/runs/`](docs/runs/). The owner has accepted all of them except 3B-9
+(response time), which awaits review.*
 
 **In five lines**
 
@@ -25,7 +26,7 @@ run record in [`docs/runs/`](docs/runs/), and the owner has accepted them.*
 4. **Phone:** a simulated phone codec does not hurt Saaras or `large-v3` on read speech; real
    telephone Hindi gives Saaras 26.5% WER, a number confounded with corpus and speaking style.
 5. **Response time:** 1.8 s p50 to the first audio byte with streaming STT, 7.8 s with local
-   Whisper `tiny`; no real phone call has been made (section 4).
+   Whisper `tiny`; no real phone call was made: that item was cut (section 4).
 
 ## 1. What was claimed, what was wrong, what is true now
 
@@ -166,7 +167,9 @@ The exact-match and list-fix results sit beside these in
   change that passes the preregistered 5-point and McNemar test
   ([`docs/runs/3b-18-phone-channel.md`](docs/runs/3b-18-phone-channel.md)). The Twilio Media
   Streams transport is tested only against a mock server (a Twilio trial account cannot
-  stream), so no real call has been made.
+  stream), so no real call has been made. The plan's one real-call item (3B-10) was cut: Plivo
+  trials need a company account, Exotel has no self-serve login, and a self-hosted SIP gateway
+  could not have reached the phone network without a carrier trunk.
 - **Real telephone speech.** On 220 utterances (35 minutes) of real telephone Hindi from the Gram Vaani
   corpus, Saaras has a 26.5% word error rate (interval 24.7 to 28.5%) once numbers are normalised,
   and Whisper `large-v3` 54.5%. The simulated codec alone moved Saaras by 1.5 points on read

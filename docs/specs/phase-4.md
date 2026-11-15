@@ -305,6 +305,11 @@ promoted from the parking lot** (§7); **3B-9 kept**, uncut; **3B-10 kept** with
 pre-flight session, a Plivo trial then an Exotel trial, to be cut and stated in the README
 if neither streams audio on a free trial. No Q2 or Q3 item is cut.
 
+**Update, same day:** neither trial route works (Plivo trials need a company account;
+Exotel has no self-serve login). A self-hosted SIP gateway with a softphone was proposed
+and **declined by the owner**. **3B-10 is therefore cut** (it stays listed, R6); the README
+says no real phone call was made.
+
 At any other time the only allowed moves are the fallbacks written beside
 each item. A new idea, a new dataset, a better metric or a surprising
 result is written into §7 and waits for a checkpoint. An agent that thinks

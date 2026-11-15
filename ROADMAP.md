@@ -432,9 +432,11 @@ as their own problem.
       `results/latency_3b9.json` · Sarvam realtime p50 1.80 s / p90 3.29 s; local Whisper tiny p50
       7.82 s / p90 22.57 s (6 of 50 empty); premature endpoints 10 and 12; balance not readable by
       the agent -- owner to read the dashboard
-- [!] 3B-10 — one real phone call with barge-in and measured `clear`-to-
-      silence latency; mock server does **not** satisfy this item
-      blocked: Twilio trial accounts do not allow Media Streams (Twilio
+- [!] 3B-10 — **cut at Checkpoint 2, 2026-11-15 (owner)**: one real phone call with
+      barge-in and measured `clear`-to-silence latency; mock server does **not** satisfy
+      this item. Stays listed as cut (R6). Plivo trials need a company account, Exotel has
+      no self-serve login, a self-hosted SIP gateway was considered and declined (it could
+      not reach the phone network without a trunk). Was blocked: Twilio trial accounts do not allow Media Streams (Twilio
       docs, read 2026-11-14). One session to pre-flight a Plivo, then an
       Exotel, trial (`phase-4.md` §5.2 Q3).
 

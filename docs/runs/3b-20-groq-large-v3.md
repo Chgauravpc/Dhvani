@@ -7,8 +7,7 @@
 logs, `results/preflight_3b-20.json`, and the new arms in `results/f2_three_way.json`,
 `results/f2_rescore.json`, `results/f2_digits.json`. Groq `whisper-large-v3`, language forced
 (`en` Svarah, `hi` IndicVoices), temperature 0, the same 243 / 464 rows as 3B-4, each clip
-transcribed once. The run never hit a rate limit. **Only the clean half
-is done; the `pstn` half needs 3B-18, so this item is `[~]`, not `[?]`.**
+transcribed once. The run never hit a rate limit. The `pstn` half is at the end of this note.
 
 ## Results (test split; recognition error / canonical miss; corruption on clean rows)
 
@@ -62,3 +61,21 @@ exact: +2 / −0 (p = 0.5). For comparison: local `small` 25.8%, Saaras 0.0%.
 - Read speech, clustered samples (intervals optimistic), 66 Svarah mentions, a lexicon this project
   wrote. The 40 pre-flight clips were sent to Groq as well (owner decision 5 of the plan, default
   yes) and are not part of the results.
+
+## The `pstn` half (added 2026-11-15, after 3B-18)
+
+Same 290 test entity rows through `dhvani.eval.pstn.to_pstn` (8 kHz mu-law, no loss or jitter),
+Groq `whisper-large-v3`, language forced, once each: `results/f3_channel_groq-whisper.json`,
+`results/transcripts/f3_*_groq-whisper_pstn.jsonl`, protocol `docs/runs/3b-18-preregistration.md`
+(the same rules as Saaras). Clean transcripts are the 3B-20 clean-half ones.
+
+| | Digit-string exact match | Entity recognition | WER, number-normalised |
+|---|---|---|---|
+| Svarah / `large-v3` | 39/44 = 88.6% → 40/44 = 90.9% (1 worse, 2 better; p = 1) | 55/66 = 83.3% → 56/66 = 84.8% (0 worse, 1 better; p = 1) | 15.1% → 14.9% |
+| Hindi / `large-v3` — *broken baseline, not compared* | 123/179 = 68.7% → 121/179 = 67.6% (8 worse, 6 better; p = 0.79) | 83/242 = 34.3% → 81/242 = 33.5% (12 worse, 10 better; p = 0.83) | 35.5% → 36.4% |
+
+By the preregistered rule **nothing degrades** for `large-v3` either (the largest drop is 1.1 points).
+So the codec alone does not hurt this reference arm on these utterances, in the same sense as
+Saaras. The Hindi row inherits the broken-baseline label and is not interpreted. Same caveats:
+simulated codec, read speech, one draw per clip, clustered samples. With both clean and `pstn`
+halves done, **3B-20 is `[?]`**.

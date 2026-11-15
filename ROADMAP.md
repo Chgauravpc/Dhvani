@@ -394,8 +394,8 @@ as their own problem.
       · digit-string exact match Svarah Whisper 81.3% / Saaras 92.0%, Hindi Saaras 84.1%; Hindi Saaras WER
       26.4% -> 12.6% after number normalisation. Normaliser amended after seeing misses (deviation 1);
       awaiting owner review
-- [~] 3B-20 — reference arm: hosted Whisper `large-v3`, language forced
-      evidence (clean half only; the `pstn` half waits for 3B-18): prereg `2b52ff2` ·
+- [?] 3B-20 — reference arm: hosted Whisper `large-v3`, language forced
+      evidence (clean and `pstn` halves; nothing degrades under pstn, max drop 1.1 pp; `results/f3_channel_groq-whisper.json`): prereg `2b52ff2` ·
       `docs/runs/3b-20-groq-large-v3.md` · `results/f2_eer_*_groq-whisper.json` · Svarah recognition
       error 16.7% [9.6, 27.4] vs Saaras 0.0%; Hindi arm is a broken baseline by the pre-flight rule
 - [?] 3B-18 — Saaras on the test-split entity rows through the 8 kHz

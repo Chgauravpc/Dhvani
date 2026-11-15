@@ -1,0 +1,126 @@
+{
+ "item": "3B-20 (pstn half)",
+ "preregistration": "docs/runs/3b-18-preregistration.md",
+ "stt": "groq-whisper",
+ "note": "Test-split entity rows, clean (3B-4 transcripts) vs simulated 8 kHz mu-law `pstn`, paired by unit. Degrades = drop >= 5 points and exact McNemar p < 0.05. Intervals and tests treat units as independent; samples are clustered, so they are optimistic.",
+ "datasets": {
+  "svarah": {
+   "rows": 65,
+   "digit_string_exact_match": {
+    "clean": {
+     "k": 39,
+     "n": 44,
+     "rate": 0.8863636363636364,
+     "ci95": [
+      0.7602056485186641,
+      0.950472924104325
+     ]
+    },
+    "pstn": {
+     "k": 40,
+     "n": 44,
+     "rate": 0.9090909090909091,
+     "ci95": [
+      0.7884048060208251,
+      0.9640783885211635
+     ]
+    },
+    "worse_under_pstn": 1,
+    "better_under_pstn": 2,
+    "drop_pp": -2.272727272727273,
+    "mcnemar_p": 1.0,
+    "degrades": false
+   },
+   "entity_recognition_rate": {
+    "clean": {
+     "k": 55,
+     "n": 66,
+     "rate": 0.8333333333333334,
+     "ci95": [
+      0.7256918759242571,
+      0.9043051459080035
+     ]
+    },
+    "pstn": {
+     "k": 56,
+     "n": 66,
+     "rate": 0.8484848484848485,
+     "ci95": [
+      0.7430687139857184,
+      0.9155645361116449
+     ]
+    },
+    "worse_under_pstn": 0,
+    "better_under_pstn": 1,
+    "drop_pp": -1.5151515151515151,
+    "mcnemar_p": 1.0,
+    "degrades": false
+   },
+   "wer": {
+    "clean_raw": 0.15090090090090091,
+    "pstn_raw": 0.14864864864864866,
+    "clean_number_normalised": 0.15090090090090091,
+    "pstn_number_normalised": 0.14864864864864866
+   }
+  },
+  "indicvoices-hindi": {
+   "rows": 225,
+   "digit_string_exact_match": {
+    "clean": {
+     "k": 123,
+     "n": 179,
+     "rate": 0.6871508379888268,
+     "ci95": [
+      0.6158971380723427,
+      0.7505402591064175
+     ]
+    },
+    "pstn": {
+     "k": 121,
+     "n": 179,
+     "rate": 0.6759776536312849,
+     "ci95": [
+      0.6043417118382548,
+      0.7402188258074451
+     ]
+    },
+    "worse_under_pstn": 8,
+    "better_under_pstn": 6,
+    "drop_pp": 1.1173184357541899,
+    "mcnemar_p": 0.79052734375,
+    "degrades": false
+   },
+   "entity_recognition_rate": {
+    "clean": {
+     "k": 83,
+     "n": 242,
+     "rate": 0.34297520661157027,
+     "ci95": [
+      0.28603779622922304,
+      0.40482005695754447
+     ]
+    },
+    "pstn": {
+     "k": 81,
+     "n": 242,
+     "rate": 0.3347107438016529,
+     "ci95": [
+      0.27824843650040826,
+      0.39633877738039963
+     ]
+    },
+    "worse_under_pstn": 12,
+    "better_under_pstn": 10,
+    "drop_pp": 0.8264462809917356,
+    "mcnemar_p": 0.8318119049072266,
+    "degrades": false
+   },
+   "wer": {
+    "clean_raw": 0.4748743718592965,
+    "pstn_raw": 0.4821164646763228,
+    "clean_number_normalised": 0.35518538420204193,
+    "pstn_number_normalised": 0.3644993730969013
+   }
+  }
+ }
+}

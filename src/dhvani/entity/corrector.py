@@ -8,9 +8,11 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from typing import Literal
 
 from rapidfuzz import fuzz
 
+from dhvani.entity.exact import canonicalise_exact
 from dhvani.entity.lexicon import DomainLexicon
 from dhvani.entity.phonetic import detect_script, phonetic_key
 
@@ -23,6 +25,9 @@ class Correction:
     original: str
     corrected: str
     canonical_entity: str
+    stage: Literal["exact", "fuzzy"] = "fuzzy"
+    """Which pass made this rewrite. An `"exact"` span is relative to the input
+    text; a `"fuzzy"` span is relative to the text *after* the exact pass."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -31,8 +36,22 @@ class CorrectionResult:
     corrections: list[Correction]
 
 
+Mode = Literal["exact", "fuzzy"]
+
+
 class EntityCorrector:
     """Corrects lexicon entity mentions in a transcript.
+
+    **`mode`** (phase-4 plan 3B-15):
+
+    - `"exact"` (the default, what ships): replace each word-bounded hand-curated
+      variant with its canonical form (`dhvani.entity.exact`). No phonetic keys, no
+      threshold, no corruption source beyond the lexicon itself. This is what the
+      Nov 14 re-score showed does the canonicalisation (`results/f2_rescore.json`).
+    - `"fuzzy"` (optional): the exact pass, then the phonetic fuzzy windows below
+      over its output. It can repair a misrecognised entity the lexicon has no
+      variant for, at the price of the corruption documented below; its value is
+      its gain *over* `"exact"`, not over the raw transcript.
 
     `threshold` (0..1, a rapidfuzz `fuzz.ratio` fraction) is the single knob
     trading recovery against corruption -- 0.82 is a starting guess with
@@ -52,7 +71,13 @@ class EntityCorrector:
     off, not a guess.
     """
 
-    def __init__(self, lexicon: DomainLexicon, threshold: float = 0.82) -> None:
+    def __init__(
+        self, lexicon: DomainLexicon, threshold: float = 0.82, mode: Mode = "exact"
+    ) -> None:
+        if mode not in ("exact", "fuzzy"):
+            raise ValueError(f"unknown EntityCorrector mode {mode!r} (expected 'exact' or 'fuzzy')")
+        self._lexicon = lexicon
+        self._mode: Mode = mode
         self._threshold = threshold
         self._keys: tuple[tuple[str, str], ...] = tuple(
             (canonical, phonetic_key(variant, script))
@@ -64,10 +89,15 @@ class EntityCorrector:
         )
 
     @property
+    def mode(self) -> Mode:
+        return self._mode
+
+    @property
     def threshold(self) -> float:
         """The fuzzy-match threshold this corrector was built with -- for
         reporting alongside its results (phase-2 spec section 6.7 requires
-        every `EerReport` to carry the threshold it used)."""
+        every `EerReport` to carry the threshold it used). Unused in `"exact"`
+        mode."""
         return self._threshold
 
     def _best_match(self, candidate_key: str) -> tuple[str, float] | None:
@@ -85,6 +115,25 @@ class EntityCorrector:
         return best_canonical, best_score
 
     def correct(self, text: str) -> CorrectionResult:
+        """`"exact"` mode: canonicalise curated variants only. `"fuzzy"` mode: that,
+        then the fuzzy pass (`_correct_fuzzy`) over its output."""
+        exact = canonicalise_exact(text, self._lexicon)
+        exact_corrections = [
+            Correction(
+                span=w.span,
+                original=w.original,
+                corrected=w.canonical,
+                canonical_entity=w.canonical,
+                stage="exact",
+            )
+            for w in exact.rewrites
+        ]
+        if self._mode == "exact":
+            return CorrectionResult(text=exact.text, corrections=exact_corrections)
+        fuzzy = self._correct_fuzzy(exact.text)
+        return CorrectionResult(text=fuzzy.text, corrections=exact_corrections + fuzzy.corrections)
+
+    def _correct_fuzzy(self, text: str) -> CorrectionResult:
         """Slides a word-window (longest lexicon phrase down to one word)
         over `text`, replacing the first (greedy, non-overlapping,
         longest-first) window at or above `threshold` with its canonical

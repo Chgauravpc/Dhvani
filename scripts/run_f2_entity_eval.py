@@ -211,7 +211,7 @@ def _sweep_dev(dev_transcribed: list[TranscribedExample]) -> tuple[float, list[E
     best_cost = float("inf")
     reports: list[EerReport] = []
     for threshold in _THRESHOLD_GRID:
-        corrector = EntityCorrector(DEFAULT_LEXICON, threshold=threshold)
+        corrector = EntityCorrector(DEFAULT_LEXICON, threshold=threshold, mode="fuzzy")
         report = score_transcripts(dev_transcribed, DEFAULT_LEXICON, corrector, split="dev")
         reports.append(report)
         _print_report("  dev", report)
@@ -258,7 +258,7 @@ async def main() -> None:
     test_report = score_transcripts(
         test_transcribed,
         DEFAULT_LEXICON,
-        EntityCorrector(DEFAULT_LEXICON, threshold=chosen_threshold),
+        EntityCorrector(DEFAULT_LEXICON, threshold=chosen_threshold, mode="fuzzy"),
         split="test",
     )
 

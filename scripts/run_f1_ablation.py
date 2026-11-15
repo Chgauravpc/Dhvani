@@ -104,7 +104,9 @@ async def main() -> None:
     if args.with_corrected_stt:
 
         def make_corrected_stt() -> CorrectedSTT:
-            return CorrectedSTT(_make_stt(args.stt, clock), EntityCorrector(DEFAULT_LEXICON))
+            return CorrectedSTT(
+                _make_stt(args.stt, clock), EntityCorrector(DEFAULT_LEXICON, mode="fuzzy")
+            )
 
     log = TranscriptLog(
         args.transcripts or default_log_path("f1", "voiceagentbench", args.stt),

@@ -59,24 +59,16 @@ REPORT_KEYS = (
 )
 
 
-class _Exact:
-    """Adapter so `score_transcripts` can score exact lookup."""
+class _FuzzyOnly:
+    """The pre-3B-15 corrector: the fuzzy windows alone, no exact pass. Kept so the
+    committed 3B-4 numbers can be reproduced by the algorithm that produced them."""
 
-    threshold = 0.0
-
-    def correct(self, text: str) -> Any:
-        return canonicalise_exact(text, DEFAULT_LEXICON)
-
-
-class _Layered:
-    """Exact lookup first, then the fuzzy windows over its output."""
-
-    def __init__(self, fuzzy: EntityCorrector) -> None:
-        self._fuzzy = fuzzy
-        self.threshold = fuzzy.threshold
+    def __init__(self, corrector: EntityCorrector) -> None:
+        self._corrector = corrector
+        self.threshold = corrector.threshold
 
     def correct(self, text: str) -> Any:
-        return self._fuzzy.correct(canonicalise_exact(text, DEFAULT_LEXICON).text)
+        return self._corrector._correct_fuzzy(text)  # noqa: SLF001 - legacy reproduction
 
 
 def dominant_script(text: str) -> str:
@@ -105,24 +97,31 @@ def rescore_arm(dataset: str, stt: str) -> dict[str, Any]:
     rows = list(latest.values())
     test = [r for r in rows if r.split == "test"]
     threshold = float(committed["chosen_threshold"])
-    fuzzy = EntityCorrector(DEFAULT_LEXICON, threshold=threshold)
+    layered = EntityCorrector(DEFAULT_LEXICON, threshold=threshold, mode="fuzzy")
+    exact_corrector = EntityCorrector(DEFAULT_LEXICON, mode="exact")
+    fuzzy = _FuzzyOnly(layered)
 
     def transcribed(rs: list[TranscriptRecord]) -> list[TranscribedExample]:
         return [TranscribedExample(r.ground_truth_text, r.raw_text) for r in rs]
 
     fuzzy_report = score_transcripts(transcribed(test), DEFAULT_LEXICON, fuzzy, "test")  # type: ignore[arg-type]
-    exact_report = score_transcripts(transcribed(test), DEFAULT_LEXICON, _Exact(), "test")  # type: ignore[arg-type]
-    layered_report = score_transcripts(
-        transcribed(test),
-        DEFAULT_LEXICON,
-        _Layered(fuzzy),  # type: ignore[arg-type]
-        "test",
-    )
+    exact_report = score_transcripts(transcribed(test), DEFAULT_LEXICON, exact_corrector, "test")
+    layered_report = score_transcripts(transcribed(test), DEFAULT_LEXICON, layered, "test")
     reproduces = all(
         abs(getattr(fuzzy_report, k) - committed["test"][k]) < 1e-12
         for k in REPORT_KEYS
         if k in committed["test"]
     )
+    layered_reproduces = all(
+        abs(getattr(layered_report, k) - committed["test"][k]) < 1e-12
+        for k in REPORT_KEYS
+        if k in committed["test"]
+    )
+
+    if not layered_reproduces:
+        raise SystemExit(
+            f"{dataset}/{stt}: mode='fuzzy' no longer matches the committed 3B-4 report"
+        )
 
     entity_rows = [r for r in test if mentioned_entities(r.ground_truth_text, DEFAULT_LEXICON)]
     clean_rows = [r for r in test if not mentioned_entities(r.ground_truth_text, DEFAULT_LEXICON)]
@@ -131,7 +130,7 @@ def rescore_arm(dataset: str, stt: str) -> dict[str, Any]:
     fuzzy_adds = fuzzy_breaks = 0
     for r in entity_rows:
         exact_text = canonicalise_exact(r.raw_text, DEFAULT_LEXICON).text
-        layered_text = fuzzy.correct(exact_text).text
+        layered_text = layered.correct(r.raw_text).text
         recognised = mentioned_entities(r.raw_text, DEFAULT_LEXICON)
         for canonical in mentioned_entities(r.ground_truth_text, DEFAULT_LEXICON):
             row = per_entity.setdefault(
@@ -189,7 +188,10 @@ def rescore_arm(dataset: str, stt: str) -> dict[str, Any]:
             "test_rows": dict(Counter(dominant_script(r.raw_text) for r in test)),
         },
         "empty_outputs": sum(1 for r in rows if not r.raw_text.strip()),
-        "sanity": {"reproduces_committed_results": reproduces, "chosen_threshold": threshold},
+        "sanity": {
+            "reproduces_committed_results": reproduces,
+            "chosen_threshold": threshold,
+        },
         "test": {
             "raw_vs_fuzzy_as_committed": _report(fuzzy_report, has_threshold=True),
             "exact_lookup": _report(exact_report, has_threshold=False),

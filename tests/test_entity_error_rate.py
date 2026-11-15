@@ -46,7 +46,7 @@ def _stt(final_text: str, clock: FakeClock) -> MockSTT:
 
 async def test_eer_zero_when_asr_gets_the_entity_right() -> None:
     clock = FakeClock()
-    corrector = EntityCorrector(_LEXICON, threshold=0.82)
+    corrector = EntityCorrector(_LEXICON, threshold=0.82, mode="fuzzy")
     report = await compute_entity_error_rate(
         [_example("please check my aadhaar status")],
         _LEXICON,
@@ -62,7 +62,7 @@ async def test_eer_zero_when_asr_gets_the_entity_right() -> None:
 
 async def test_eer_before_counts_a_mangled_entity_asr_missed() -> None:
     clock = FakeClock()
-    corrector = EntityCorrector(_LEXICON, threshold=0.82)
+    corrector = EntityCorrector(_LEXICON, threshold=0.82, mode="fuzzy")
     report = await compute_entity_error_rate(
         [_example("please check my aadhaar status")],
         _LEXICON,
@@ -80,7 +80,7 @@ async def test_eer_after_stays_wrong_when_correction_is_too_weak() -> None:
     phonetic key (verified directly) -- a threshold above that correctly
     declines to touch it, so it stays wrong after "correction."""
     clock = FakeClock()
-    strict_corrector = EntityCorrector(_LEXICON, threshold=0.95)
+    strict_corrector = EntityCorrector(_LEXICON, threshold=0.95, mode="fuzzy")
     report = await compute_entity_error_rate(
         [_example("please check my aadhaar status")],
         _LEXICON,
@@ -95,7 +95,7 @@ async def test_eer_after_stays_wrong_when_correction_is_too_weak() -> None:
 
 async def test_multiple_entities_in_one_example_count_as_multiple_mentions() -> None:
     clock = FakeClock()
-    corrector = EntityCorrector(_LEXICON, threshold=0.82)
+    corrector = EntityCorrector(_LEXICON, threshold=0.82, mode="fuzzy")
     report = await compute_entity_error_rate(
         [_example("link my aadhaar to upi")],
         _LEXICON,
@@ -109,7 +109,7 @@ async def test_multiple_entities_in_one_example_count_as_multiple_mentions() -> 
 
 async def test_clean_example_with_no_corruption() -> None:
     clock = FakeClock()
-    corrector = EntityCorrector(_LEXICON, threshold=0.82)
+    corrector = EntityCorrector(_LEXICON, threshold=0.82, mode="fuzzy")
     report = await compute_entity_error_rate(
         [_example("the weather is nice today")],
         _LEXICON,
@@ -128,7 +128,7 @@ async def test_clean_example_that_the_corrector_falsely_alters() -> None:
     correction on text that had no real entity at all -- corruption_rate
     exists specifically to catch this."""
     clock = FakeClock()
-    lenient_corrector = EntityCorrector(_LEXICON, threshold=0.3)
+    lenient_corrector = EntityCorrector(_LEXICON, threshold=0.3, mode="fuzzy")
     report = await compute_entity_error_rate(
         [_example("the weather is nice today")],
         _LEXICON,
@@ -143,7 +143,7 @@ async def test_clean_example_that_the_corrector_falsely_alters() -> None:
 
 async def test_report_carries_split_and_threshold() -> None:
     clock = FakeClock()
-    corrector = EntityCorrector(_LEXICON, threshold=0.75)
+    corrector = EntityCorrector(_LEXICON, threshold=0.75, mode="fuzzy")
     report = await compute_entity_error_rate(
         [_example("no entity here")],
         _LEXICON,
@@ -166,7 +166,7 @@ async def test_transcribe_then_score_matches_compute_entity_error_rate() -> None
         _example("please check my aadhaar status"),
         _example("the weather is nice today"),
     ]
-    corrector = EntityCorrector(_LEXICON, threshold=0.82)
+    corrector = EntityCorrector(_LEXICON, threshold=0.82, mode="fuzzy")
 
     direct = await compute_entity_error_rate(
         examples, _LEXICON, _stt("please check my adhar status", clock), corrector, clock, "test"
@@ -190,10 +190,10 @@ async def test_score_transcripts_reused_across_thresholds() -> None:
     )
 
     lenient = score_transcripts(
-        transcribed, _LEXICON, EntityCorrector(_LEXICON, threshold=0.5), "dev"
+        transcribed, _LEXICON, EntityCorrector(_LEXICON, threshold=0.5, mode="fuzzy"), "dev"
     )
     strict = score_transcripts(
-        transcribed, _LEXICON, EntityCorrector(_LEXICON, threshold=0.95), "dev"
+        transcribed, _LEXICON, EntityCorrector(_LEXICON, threshold=0.95, mode="fuzzy"), "dev"
     )
 
     assert lenient.canonical_miss_after == pytest.approx(0.0)
@@ -210,7 +210,7 @@ def _score(ground_truth: str, asr_output: str, threshold: float = 0.99) -> EerRe
     return score_transcripts(
         [TranscribedExample(ground_truth_text=ground_truth, raw_text=asr_output)],
         _LEXICON,
-        EntityCorrector(_LEXICON, threshold=threshold),
+        EntityCorrector(_LEXICON, threshold=threshold, mode="fuzzy"),
         split="test",
     )
 
@@ -262,7 +262,7 @@ async def test_paired_counts_record_what_the_corrector_fixed_and_broke() -> None
         TranscribedExample(ground_truth_text="pay by upi", raw_text="pay by UPI"),
     ]
     report = score_transcripts(
-        transcribed, _LEXICON, EntityCorrector(_LEXICON, threshold=0.82), split="test"
+        transcribed, _LEXICON, EntityCorrector(_LEXICON, threshold=0.82, mode="fuzzy"), split="test"
     )
     assert report.n_entity_mentions == 2
     assert report.recognition_fixed == 1

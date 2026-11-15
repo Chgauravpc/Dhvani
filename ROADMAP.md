@@ -43,7 +43,7 @@ one deliverable with one metric.
 | # | Finding | Deliverable | Status |
 |---|---------|-------------|--------|
 | F1 | ASR is the bottleneck, not the LLM — 24%+ swing from transcript quality | ASR-ablation harness | **reopened** — harness done; noise floor running (3B-5); the 42.5% / 17.5% ground-truth ceiling is mostly our exact-match judge (the benchmark expects English argument values for Hindi queries), so every F1 number is withdrawn until re-scored (3B-19) |
-| F2 | Named entities are where Indic ASR breaks — 11.2% vs 6.2% WER | `dhvani-entity` post-ASR corrector | **reopened** — code done; EER numbers invalidated by the Sep 23 audit (substring + script-blind scoring); re-run done and awaiting owner review (3B-4 `[?]`). Being split into exact canonicalisation (default) and optional fuzzy repair (3B-15) |
+| F2 | Named entities are where Indic ASR breaks — 11.2% vs 6.2% WER | `dhvani-entity` post-ASR corrector | **reopened** — code done; EER numbers invalidated by the Sep 23 audit (substring + script-blind scoring); re-run done and accepted by owner 2026-11-15 (3B-4 `[x]`). Being split into exact canonicalisation (default) and optional fuzzy repair (3B-15) |
 | F3 | Code-switching costs 30–50% relative WER | Hinglish-aware decode + script normalization | deferred past Nov 3 |
 | F4 | Safety refusal collapses 51.78% to 2.67% English-to-Indic | pre-LLM language-agnostic intent guard | deferred past Nov 3 |
 | F5 | Zero Indic turn-taking / full-duplex research exists | Indic endpointer (prosody + semantic completion) | deferred past Nov 3 |
@@ -349,7 +349,7 @@ as their own problem.
       No real run has written a committed transcript file yet -- the first one
       lands with 3B-4. Also fixed: `run_f1_ablation.py` still counted lexicon
       mentions by substring (a fourth copy 3B-1 missed). Accepted by owner 2026-11-13.
-- [?] 3B-4 — preregister, then re-run F2 EER, 2 datasets × 2 ASRs; old rows
+- [x] 3B-4 — preregister, then re-run F2 EER, 2 datasets × 2 ASRs; old rows
       kept as superseded
       preregistered: `docs/specs/phase-3b.md` §9 (own commit, before any run).
       Arms: Svarah + IndicVoices Hindi (LAHAJA's gate failed) × Whisper + Saaras.
@@ -357,9 +357,10 @@ as their own problem.
       four `results/f2_eer_*.json` files). Marker synced here 2026-11-14 to
       match the spec; awaiting owner review. Old rows above not yet marked
       superseded (3B-16).
-- [~] 3B-5 — F1 noise floor: ground-truth A/A run, k≥3 repeats, paired
+- [x] 3B-5 — F1 noise floor: ground-truth A/A run, k≥3 repeats, paired
       bootstrap CI + McNemar, full `single_tool` set
-      preregistered `phase-3b.md` §10 (9b30533); real run in progress 2026-11-14.
+      preregistered `phase-3b.md` §10 (9b30533); run complete; evidence and verdicts in `phase-3b.md` §6 3B-5 and
+      `docs/runs/3b-5-f1-noise-floor.md`. Accepted by owner 2026-11-15.
 
 **Open work — defined in [`docs/specs/phase-4.md`](docs/specs/phase-4.md)**
 (the only place open items are specified; read its §1 rules first)

@@ -277,7 +277,7 @@ Priority 2 is only if time remains; none of it may displace Phase 4.
       No real run has written a committed transcript file yet -- the first one
       lands with 3B-4. Also fixed: `run_f1_ablation.py` still counted lexicon
       mentions by substring (a fourth copy 3B-1 missed). Accepted by owner 2026-11-13.
-- [?] **3B-4 — re-run F2 EER on both datasets × both ASRs** with 3B-1..3B-3,
+- [x] **3B-4 — re-run F2 EER on both datasets × both ASRs** with 3B-1..3B-3,
       same dev/test protocol, threshold re-tuned on dev per STT. Old rows
       stay, marked superseded. **Preregister first** (commit before the
       run): what does it mean if recognition EER on LAHAJA is low for
@@ -311,7 +311,7 @@ Priority 2 is only if time remains; none of it may displace Phase 4.
       `train`, clustered sample so CIs are optimistic, n ~ 66 on Svarah.
       Old rows in ROADMAP/phase-2 are NOT yet marked superseded -- that
       edit is left to the owner's review.
-- [?] **3B-5 — F1 noise floor.** Run the ground-truth condition twice
+- [x] **3B-5 — F1 noise floor.** Run the ground-truth condition twice
       (A/A). The GT-vs-GT delta *is* the noise floor; any ASR-vs-GT delta
       inside it is not a finding. Repeat each condition k≥3 times, report
       mean ± paired-bootstrap CI and a McNemar test on the paired

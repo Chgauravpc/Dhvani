@@ -350,11 +350,13 @@ Fill in to accept. Defaults apply if left blank.
 
 | # | Decision | Default |
 |---|---|---|
-| 1 | Accept this plan and its change-control rule | — |
+| 1 | Accept this plan and its change-control rule | — |  <!-- accepted 2026-11-15 -->
 | 2 | Sarvam spend: 3B-18 `pstn` (about Rs 33), then 3B-21 (at most Rs 17), then 3B-9 (about Rs 3) | yes, under the §4 stop rule |
 | 3 | Pay for a Twilio upgrade if no free trial streams audio | no; 3B-10 stays blocked |
 | 4 | Thesis line in `ROADMAP.md`: keep as the hypothesis tested, or rewrite | keep, with the dated status note |
 | 5 | Send audio from the cached datasets to Groq for 3B-20 | yes (same data already sent to Sarvam) |
 | 6 | One hour to hand-label 50 argument mismatches for 3B-19, before seeing the judge's verdicts | yes |
 
-Accepted by: ______ on ______
+Decision 1 accepted; decisions 2-6 left blank, so their defaults apply.
+
+Accepted by: Gaurav Chaudhari (Chgauravpc) on 2026-11-15

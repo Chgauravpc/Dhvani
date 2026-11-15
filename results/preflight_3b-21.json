@@ -1,0 +1,38 @@
+{
+ "item": "3B-21",
+ "source": "OpenSLR 118, GV_Dev_5h.tar.gz (labelled dev split of the Gram Vaani Hindi ASR challenge)",
+ "licence": "free for academic purposes; commercial use needs permission (openslr.org/118)",
+ "utterances_in_dev": 1885,
+ "skipped": {
+  "empty_or_tagged_reference": 141,
+  "duration_out_of_range": 1
+ },
+ "eligible": 1743,
+ "eligible_sample_rates_hz": {
+  "8000": 1071,
+  "44100": 586,
+  "48000": 65,
+  "16000": 19,
+  "32000": 2
+ },
+ "sample": {
+  "seed": 0,
+  "utterances": 221,
+  "minutes": 34.95513333333335,
+  "sample_rates_hz": {
+   "44100": 80,
+   "8000": 132,
+   "16000": 4,
+   "48000": 5
+  },
+  "reference_words": 5602,
+  "rows_with_a_digit_string": 11,
+  "digit_strings": 14
+ },
+ "checks": {
+  "downloadable": true,
+  "fits_on_D": true,
+  "at_least_100_utterances": true,
+  "references_usable": "Devanagari text; spelled numbers; <...> tags excluded"
+ }
+}

@@ -1,0 +1,1111 @@
+{
+ "seed": 0,
+ "max_seconds": 2100,
+ "items": [
+  {
+   "uttid": "01-08779-01",
+   "seconds": 9.322,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-08719-03",
+   "seconds": 10.126,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "02-12958-02",
+   "seconds": 10.117,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-04172-02",
+   "seconds": 7.095,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-16200-01",
+   "seconds": 10.672,
+   "sample_rate_hz": 16000
+  },
+  {
+   "uttid": "13-00408-05",
+   "seconds": 9.402,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "13-00321-01",
+   "seconds": 9.033,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-22404-01",
+   "seconds": 8.542,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-07011-01",
+   "seconds": 7.551,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-08979-02",
+   "seconds": 17.651,
+   "sample_rate_hz": 48000
+  },
+  {
+   "uttid": "02-19341-01",
+   "seconds": 1.812,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-20172-01",
+   "seconds": 8.37,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-07618-03",
+   "seconds": 3.592,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-04484-02",
+   "seconds": 17.192,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-05305-01",
+   "seconds": 10.189,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-03388-03",
+   "seconds": 6.857,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-02359-01",
+   "seconds": 3.057,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-03556-01",
+   "seconds": 10.88,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-12521-01",
+   "seconds": 10.162,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-11008-03",
+   "seconds": 10.746,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-06074-03",
+   "seconds": 10.842,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-09229-02",
+   "seconds": 10.75,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "13-00264-05",
+   "seconds": 8.297,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-14171-01",
+   "seconds": 10.564,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-03159-03",
+   "seconds": 10.654,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "13-00290-06",
+   "seconds": 9.069,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-14887-01",
+   "seconds": 10.035,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-06523-02",
+   "seconds": 5.398,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-01547-02",
+   "seconds": 11.793,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-19307-01",
+   "seconds": 11.487,
+   "sample_rate_hz": 16000
+  },
+  {
+   "uttid": "01-01383-02",
+   "seconds": 11.148,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-06773-03",
+   "seconds": 1.895,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-12247-01",
+   "seconds": 10.401,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-07973-03",
+   "seconds": 9.14,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-04210-03",
+   "seconds": 10.403,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-09801-01",
+   "seconds": 10.366,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-12222-01",
+   "seconds": 10.377,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-10613-01",
+   "seconds": 9.1,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-08698-02",
+   "seconds": 10.957,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-15547-01",
+   "seconds": 10.158,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-15403-01",
+   "seconds": 10.138,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "02-18786-01",
+   "seconds": 10.255,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-08913-01",
+   "seconds": 9.973,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-04982-03",
+   "seconds": 1.453,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-18517-01",
+   "seconds": 11.669,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "02-17044-01",
+   "seconds": 11.801,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "02-17434-01",
+   "seconds": 10.264,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-00766-01",
+   "seconds": 9.934,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-08742-02",
+   "seconds": 11.367,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-01328-02",
+   "seconds": 8.981,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-22940-01",
+   "seconds": 8.577,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-11218-01",
+   "seconds": 1.548,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-21262-01",
+   "seconds": 11.197,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-08603-01",
+   "seconds": 7.571,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "02-13391-01",
+   "seconds": 11.154,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "02-16995-01",
+   "seconds": 10.986,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-09675-01",
+   "seconds": 4.002,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-05268-01",
+   "seconds": 11.409,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-11170-02",
+   "seconds": 10.577,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-00622-02",
+   "seconds": 5.584,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-10822-03",
+   "seconds": 9.168,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-06278-03",
+   "seconds": 9.619,
+   "sample_rate_hz": 48000
+  },
+  {
+   "uttid": "02-18580-01",
+   "seconds": 6.084,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-07007-02",
+   "seconds": 11.384,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-16522-01",
+   "seconds": 10.166,
+   "sample_rate_hz": 16000
+  },
+  {
+   "uttid": "01-02324-02",
+   "seconds": 10.533,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-19188-01",
+   "seconds": 14.506,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-04460-03",
+   "seconds": 8.468,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-01994-02",
+   "seconds": 3.469,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "13-00314-04",
+   "seconds": 10.249,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-01891-03",
+   "seconds": 4.217,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-05292-01",
+   "seconds": 10.045,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-07779-01",
+   "seconds": 9.524,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-08556-01",
+   "seconds": 10.82,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "02-18090-01",
+   "seconds": 11.948,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-10009-01",
+   "seconds": 3.545,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-11378-01",
+   "seconds": 9.759,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-01404-01",
+   "seconds": 10.389,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-11884-01",
+   "seconds": 7.69,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-08138-03",
+   "seconds": 10.555,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-02652-03",
+   "seconds": 9.223,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-07708-01",
+   "seconds": 11.127,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-05683-01",
+   "seconds": 11.995,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-06531-03",
+   "seconds": 10.757,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-02185-03",
+   "seconds": 11.363,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-07164-01",
+   "seconds": 7.909,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-01282-01",
+   "seconds": 3.178,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-04769-01",
+   "seconds": 11.657,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-07158-03",
+   "seconds": 9.933,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-09422-02",
+   "seconds": 11.581,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "02-17146-01",
+   "seconds": 10.574,
+   "sample_rate_hz": 16000
+  },
+  {
+   "uttid": "02-13511-01",
+   "seconds": 10.217,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-13822-01",
+   "seconds": 9.494,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-04837-02",
+   "seconds": 11.895,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-02890-03",
+   "seconds": 5.815,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-07995-02",
+   "seconds": 8.197,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-13046-01",
+   "seconds": 6.845,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-07906-02",
+   "seconds": 9.811,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-07966-01",
+   "seconds": 9.947,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-07506-03",
+   "seconds": 6.88,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-07698-01",
+   "seconds": 16.711,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-15602-01",
+   "seconds": 11.939,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-00670-01",
+   "seconds": 9.968,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-00046-02",
+   "seconds": 11.97,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-00244-01",
+   "seconds": 9.595,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-02836-03",
+   "seconds": 11.253,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-07392-01",
+   "seconds": 11.619,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-04959-01",
+   "seconds": 11.588,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-12891-02",
+   "seconds": 10.115,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-10177-03",
+   "seconds": 10.231,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-06025-03",
+   "seconds": 10.901,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-13370-01",
+   "seconds": 10.962,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "02-22409-01",
+   "seconds": 9.425,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-02494-03",
+   "seconds": 4.016,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-03302-01",
+   "seconds": 10.679,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-17884-01",
+   "seconds": 7.273,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "02-18844-01",
+   "seconds": 11.719,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-08067-01",
+   "seconds": 8.171,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-03931-01",
+   "seconds": 8.349,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-07251-03",
+   "seconds": 10.684,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-12562-01",
+   "seconds": 8.468,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-10510-03",
+   "seconds": 11.342,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "02-15843-01",
+   "seconds": 11.239,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-10889-02",
+   "seconds": 10.743,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-04113-02",
+   "seconds": 7.293,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-03931-02",
+   "seconds": 11.424,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-08858-03",
+   "seconds": 11.796,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-10768-02",
+   "seconds": 4.883,
+   "sample_rate_hz": 48000
+  },
+  {
+   "uttid": "01-03829-01",
+   "seconds": 12.844,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-03587-02",
+   "seconds": 8.559,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-05269-02",
+   "seconds": 11.279,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-06187-03",
+   "seconds": 11.712,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-02889-02",
+   "seconds": 11.39,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-09859-03",
+   "seconds": 10.276,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "02-20253-01",
+   "seconds": 6.762,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "02-12993-01",
+   "seconds": 10.33,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-11441-01",
+   "seconds": 4.948,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-00944-03",
+   "seconds": 10.571,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-04528-02",
+   "seconds": 3.107,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-11537-02",
+   "seconds": 5.386,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "02-12795-01",
+   "seconds": 10.723,
+   "sample_rate_hz": 48000
+  },
+  {
+   "uttid": "01-04035-01",
+   "seconds": 9.824,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-01911-01",
+   "seconds": 11.689,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-00632-01",
+   "seconds": 8.214,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-03187-01",
+   "seconds": 12.822,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-08741-03",
+   "seconds": 8.99,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-09754-01",
+   "seconds": 7.661,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-08607-02",
+   "seconds": 11.669,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-04303-01",
+   "seconds": 6.64,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-09066-01",
+   "seconds": 9.018,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "02-12921-02",
+   "seconds": 9.613,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-08400-03",
+   "seconds": 4.782,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-08804-03",
+   "seconds": 9.033,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-10139-02",
+   "seconds": 6.953,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "02-19641-01",
+   "seconds": 11.635,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "13-00091-02",
+   "seconds": 8.046,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-09855-03",
+   "seconds": 10.276,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-11653-02",
+   "seconds": 11.456,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-02813-01",
+   "seconds": 11.836,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-03610-03",
+   "seconds": 11.121,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-06113-03",
+   "seconds": 8.825,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-04134-01",
+   "seconds": 10.059,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-22063-01",
+   "seconds": 10.812,
+   "sample_rate_hz": 48000
+  },
+  {
+   "uttid": "02-19665-01",
+   "seconds": 10.208,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-09871-01",
+   "seconds": 11.856,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-07141-02",
+   "seconds": 11.182,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-04950-02",
+   "seconds": 11.533,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-15484-01",
+   "seconds": 8.978,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-05962-02",
+   "seconds": 14.599,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-05298-01",
+   "seconds": 11.24,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-12677-01",
+   "seconds": 7.579,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "02-18595-01",
+   "seconds": 8.983,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-06930-02",
+   "seconds": 10.914,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-03251-01",
+   "seconds": 10.993,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-09175-02",
+   "seconds": 11.032,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "02-17528-01",
+   "seconds": 11.111,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "02-21645-01",
+   "seconds": 10.37,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-03839-01",
+   "seconds": 4.888,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-05919-03",
+   "seconds": 11.601,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-06783-02",
+   "seconds": 1.007,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-17810-01",
+   "seconds": 2.517,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "02-19535-01",
+   "seconds": 9.993,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-11255-03",
+   "seconds": 11.797,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "02-13028-02",
+   "seconds": 9.479,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-01258-01",
+   "seconds": 11.049,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-00583-01",
+   "seconds": 11.444,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-01879-02",
+   "seconds": 7.58,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-09140-02",
+   "seconds": 11.265,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-08547-03",
+   "seconds": 1.34,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-07233-03",
+   "seconds": 9.62,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-05728-02",
+   "seconds": 7.971,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-08694-02",
+   "seconds": 11.581,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-06065-02",
+   "seconds": 9.491,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-01236-01",
+   "seconds": 11.816,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-10820-01",
+   "seconds": 7.209,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-08869-03",
+   "seconds": 11.086,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "02-18898-01",
+   "seconds": 10.286,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-10666-02",
+   "seconds": 11.449,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-04973-03",
+   "seconds": 10.476,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-06518-03",
+   "seconds": 5.046,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-13569-01",
+   "seconds": 5.371,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "13-00247-03",
+   "seconds": 11.553,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-19290-01",
+   "seconds": 11.592,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "02-13025-02",
+   "seconds": 10.795,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-04668-02",
+   "seconds": 7.142,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-04866-01",
+   "seconds": 29.383,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-20513-01",
+   "seconds": 14.562,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-07649-02",
+   "seconds": 10.358,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-03553-03",
+   "seconds": 7.41,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-04388-02",
+   "seconds": 3.423,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-03973-03",
+   "seconds": 11.211,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-07767-02",
+   "seconds": 11.41,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-01662-03",
+   "seconds": 3.992,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-06919-01",
+   "seconds": 11.412,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-07674-02",
+   "seconds": 10.639,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-06679-03",
+   "seconds": 10.539,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-02701-01",
+   "seconds": 3.934,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "02-16838-01",
+   "seconds": 10.926,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-00840-03",
+   "seconds": 3.511,
+   "sample_rate_hz": 8000
+  },
+  {
+   "uttid": "01-08254-02",
+   "seconds": 8.611,
+   "sample_rate_hz": 44100
+  },
+  {
+   "uttid": "01-08845-02",
+   "seconds": 11.57,
+   "sample_rate_hz": 44100
+  }
+ ]
+}

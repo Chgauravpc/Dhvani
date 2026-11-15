@@ -2,47 +2,38 @@
 
 [![CI](https://github.com/Chgauravpc/Dhvani/actions/workflows/ci.yml/badge.svg)](https://github.com/Chgauravpc/Dhvani/actions/workflows/ci.yml)
 
-A real-time Indic voice agent, built to test one claim: **Indic voice agents fail
-at the ear, not the brain.** The claim is a hypothesis this project measures, and
-this page reports what the measurements say, including where they say no.
+A real-time Hindi and English voice agent, and a measured answer to one question:
+**where do Indic voice agents actually fail: at the ear (transcription) or the brain
+(the LLM)?**
 
-*Status as of 2026-11-15 (tag `v0.2`). Every number below is read from a committed
-results file (`scripts/render_readme_tables.py --check README.md` verifies the tables).
-The measurement work in [`docs/specs/phase-4.md`](docs/specs/phase-4.md) is done except
-the real phone call (3B-10), which was cut; each result has a preregistration and a
-run record in [`docs/runs/`](docs/runs/), and the owner has accepted all of them.*
+**Findings**
 
-**In five lines**
+1. **Transcription costs task success.** Replacing perfect text with an ASR transcript
+   loses 10 to 23 points of task success in three of four setups; Hindi with Saaras
+   (7.7 points) is within LLM sampling noise (section 2).
+2. **The LLM costs more.** Even with perfect text the agent completes 73% (English) and
+   65% (Hindi) of tasks, a larger gap than any ASR loss measured (section 2).
+3. **The ASR choice decides entity accuracy.** Saaras recognises 66 of 66 English and
+   231 of 242 Hindi entity mentions unaided; open Whisper `large-v3` misses 16.7% of the
+   English ones. After a strong ASR, an exact dictionary lookup is all the correction
+   needed (section 1).
+4. **Digits are the unsolved part.** On clean audio the best ASR still gets about 8%
+   (English) and 16% (Hindi) of digit strings wrong (section 3).
+5. **The phone codec is not the problem.** A simulated 8 kHz mu-law phone leg moves digit
+   and entity accuracy by about 2 points at most (section 3).
+6. **Real response time is 1.8 s** (p50, end of speech to first audio byte), split about
+   evenly across endpointing, the LLM and the voice; a 500 ms silence rule cuts speakers
+   off in about one turn in five (section 3).
+7. **Half of the measured Hindi WER was number formatting**, not recognition error:
+   26.4% as scored, 12.6% once numbers are normalised (section 3).
 
-1. **Entities, clean audio, Saaras:** it already recognises nearly all of them (231 of 242
-   Hindi mentions, 66 of 66 English), so the thesis is refuted there; exact lookup only
-   canonicalises. It is *not* refuted for every ASR: open Whisper `large-v3` misses 16.7% of
-   the English ones (section 2).
-2. **Task success:** ASR costs task success in three of four arms once the judge is fixed, but
-   the agent fails 27% (English) and 35% (Hindi) of tasks even with perfect text (section 3).
-3. **Digits:** Saaras does not reproduce about 8% (English) and 16% (Hindi) of digit strings on
-   clean audio, and number formatting was about half of its Hindi WER (section 4).
-4. **Phone:** a simulated phone codec does not hurt Saaras or `large-v3` on read speech; real
-   telephone Hindi gives Saaras 26.5% WER, a number confounded with corpus and speaking style.
-5. **Response time:** 1.8 s p50 to the first audio byte with streaming STT, 7.8 s with local
-   Whisper `tiny`; no real phone call was made: that item was cut (section 4).
+*Status: tag `v0.2`, 2026-11-15. Every result has a preregistration and a run record in
+[`docs/runs/`](docs/runs/), and every table is generated from a committed results file
+(`scripts/render_readme_tables.py --check README.md`). These numbers replaced an earlier
+set that this project's own audit found were wrong: see [Audit history](#audit-history).
+Scope and limits are in [Limitations](#limitations).*
 
-## 1. What was claimed, what was wrong, what is true now
-
-An earlier version of this README quoted numbers that a measurement audit
-(2026-09-23, [`docs/specs/phase-3b.md`](docs/specs/phase-3b.md) §2) showed did not
-measure what they claimed. They are withdrawn, kept here struck through so they cannot
-be quoted by accident, each with what replaced it.
-
-| Withdrawn claim | What was wrong | Status |
-|---|---|---|
-| ~~F2: Svarah entity error 59.4% → 49.0%~~ | Mentions were counted as raw substrings ("pan" inside "company"): the audit's recount took Svarah's entity mentions from about 202 to 94. | replaced by the table in section 2 |
-| ~~F2: LAHAJA entity error 100% → 46.4%~~ | The scorer accepted only the Latin spelling, so a correct Devanagari "आधार" scored as an ASR error; the 100% was an artifact. LAHAJA then failed the entity-density gate (17 real mentions) and was replaced by IndicVoices Hindi. | replaced by the table in section 2 |
-| ~~Jitter raises STT latency from 1.3 s to 4.8 s~~ | The channel simulator's "jitter" accumulated as a slowdown, not as jitter. | not re-measured |
-| ~~F1: the agent loses 27.5% (English) / 10.0% (Hindi) of tasks to ASR~~ | One LLM sample per condition, 40 tasks per language, no noise floor, and the judge had bugs (section 3). | replaced by the tables in section 3 |
-| ~~"Sub-800 ms p50 conversation"~~ | That number came from mock providers. | replaced by the measured figures in section 4 (end of speech to first audio byte on replayed recordings; no real call, no network leg) |
-
-## 2. Entity correction (F2): what is left once the ASR is good
+## 1. Entities: the ASR choice decides (F2)
 
 `dhvani-entity` post-processes a transcript so that "aadhar card" and "आधार कार्ड"
 become the canonical "Aadhaar". Test split of each arm, scored with word-bounded
@@ -81,9 +72,8 @@ exact lookup does: Hindi canonical-form misses fall from 99.6% to 4.5%, and from
 rows); with local Whisper it adds 9 and 185 mentions, at 12 of 105 and 17 of 115 clean
 rows corrupted (`play` → "Pradhan Mantri Awas Yojana", `coming` → "CoWIN", `हर` →
 "Aadhaar"). The fuzzy layer is therefore optional (`EntityCorrector(mode="fuzzy")`);
-exact lookup is the default. So, for entities on clean audio with **Saaras**, the
-project's thesis is **refuted**: the ear is not where these fail. It is not refuted for
-every ASR (next paragraph).
+exact lookup is the default. So with **Saaras** on clean audio, entities are not lost
+at the ear; that is not true of every ASR (next paragraph).
 
 **Not every strong ASR recognises them.** Hosted Whisper `large-v3` (Groq, language forced;
 [`docs/runs/3b-20-groq-large-v3.md`](docs/runs/3b-20-groq-large-v3.md)) misses 16.7% of the
@@ -106,14 +96,13 @@ files (and their McNemar tests, which treat mentions as independent) are optimis
 Svarah's 66 test mentions are 43 ESIC or EPFO, and Hindi's 242 are 163 Aadhaar or PAN
 card; the lexicon is this project's own, so nothing here speaks to entities outside it.
 
-## 3. Task success (F1): what ASR costs once the judge is fixed
+## 2. Task success: what transcription costs (F1)
 
 F1 asks how much task success an agent loses to transcription: VoiceAgentBench
 `single_tool` tasks (141 English, 134 Hindi, synthesized speech), Groq `gpt-oss-20b` as the
-agent, each condition run three times. The original scoring was exact string match against a
-benchmark that expects English argument values for Hindi queries, so those numbers were
-withdrawn. The judge was repaired in two steps (a list-argument fix, then a meaning-level
-LLM judge) and checked against 50 hand labels: Cohen's kappa **0.682**, 95% interval
+agent, each condition run three times. The benchmark expects English argument values for
+Hindi queries, so exact string match under-scores it; scoring uses a list-aware match plus a
+meaning-level LLM judge, checked against 50 hand labels: Cohen's kappa **0.682**, 95% interval
 0.465 to 0.878, 84% raw agreement
 ([`docs/runs/3b-19-meaning-judge.md`](docs/runs/3b-19-meaning-judge.md)).
 
@@ -158,17 +147,13 @@ Caveats that travel with these numbers:
 The exact-match and list-fix results sit beside these in
 [`results/f1_meaning_judge.json`](results/f1_meaning_judge.json).
 
-## 4. Phone audio, digits and latency: measured so far, and not
+## 3. Digits, phone audio and response time
 
 - **Phone channel (simulated).** Through an 8 kHz mu-law phone leg (no packet loss or
   jitter), Saaras loses little on read speech: digit-string match 97.7% → 95.5% (English)
   and 82.1% → 82.1% (Hindi), entity recognition 100% → 98.5% and 95.5% → 95.0%, with no
   change that passes the preregistered 5-point and McNemar test
-  ([`docs/runs/3b-18-phone-channel.md`](docs/runs/3b-18-phone-channel.md)). The Twilio Media
-  Streams transport is tested only against a mock server (a Twilio trial account cannot
-  stream), so no real call has been made. The plan's one real-call item (3B-10) was cut: Plivo
-  trials need a company account, Exotel has no self-serve login, and a self-hosted SIP gateway
-  could not have reached the phone network without a carrier trunk.
+  ([`docs/runs/3b-18-phone-channel.md`](docs/runs/3b-18-phone-channel.md)).
 - **Real telephone speech.** On 220 utterances (35 minutes) of real telephone Hindi from the Gram Vaani
   corpus, Saaras has a 26.5% word error rate (interval 24.7 to 28.5%) once numbers are normalised,
   and Whisper `large-v3` 54.5%. The simulated codec alone moved Saaras by 1.5 points on read
@@ -187,9 +172,41 @@ The exact-match and list-fix results sit beside these in
   0.6 s waiting out the silence, 0.55 s for the LLM's first sentence, 0.55 s for Piper's first
   audio; the streaming STT adds about 0.1 s), and **7.8 s p50 (22.6 s p90) with local Whisper
   `tiny`**, dominated by transcription. In about one turn in five the 500 ms silence rule fired
-  while the speaker was only pausing. The earlier "sub-800 ms" figure came from mocks
+  while the speaker was only pausing
   ([`docs/runs/3b-9-response-time.md`](docs/runs/3b-9-response-time.md)).
-- Everything on synthesized speech (F1) is a lower bound on the real-world penalty.
+
+## Limitations
+
+- **No real phone call was made.** Response time is measured on replayed recordings with
+  no network leg, and the Twilio Media Streams transport is tested only against a mock
+  server. The plan's one real-call item (3B-10) was cut: a Twilio trial account could not
+  stream, Plivo trials need a company account, Exotel has no self-serve login, and a
+  self-hosted SIP gateway cannot reach the phone network without a carrier trunk.
+- **The phone channel is simulated,** with no packet loss or jitter. The one real-telephone
+  sample (220 utterances) differs from the clean rows in content and speaking style, so it
+  is not a channel comparison.
+- **Task-success audio is synthesized,** so the ASR losses in section 2 are a lower bound on
+  real speech.
+- **Samples are small in places:** 66 English entity mentions, 75 English digit strings,
+  and one annotator's 50 labels behind the judge check.
+- **Hindi has one working ASR.** Both Whisper models failed the baseline-sanity line on
+  Hindi, so the Hindi conclusions rest on Saaras.
+- Section-specific caveats are stated in each section and in the run records.
+
+## Audit history
+
+An earlier version of this README quoted numbers that this project's own measurement
+audit (2026-09-23, [`docs/specs/phase-3b.md`](docs/specs/phase-3b.md) §2) showed did not
+measure what they claimed. They are withdrawn, kept here struck through so they cannot
+be quoted by accident, each with what replaced it.
+
+| Withdrawn claim | What was wrong | Status |
+|---|---|---|
+| ~~F2: Svarah entity error 59.4% → 49.0%~~ | Mentions were counted as raw substrings ("pan" inside "company"): the audit's recount took Svarah's entity mentions from about 202 to 94. | replaced by the table in section 1 |
+| ~~F2: LAHAJA entity error 100% → 46.4%~~ | The scorer accepted only the Latin spelling, so a correct Devanagari "आधार" scored as an ASR error; the 100% was an artifact. LAHAJA then failed the entity-density gate (17 real mentions) and was replaced by IndicVoices Hindi. | replaced by the table in section 1 |
+| ~~Jitter raises STT latency from 1.3 s to 4.8 s~~ | The channel simulator's "jitter" accumulated as a slowdown, not as jitter. | not re-measured |
+| ~~F1: the agent loses 27.5% (English) / 10.0% (Hindi) of tasks to ASR~~ | One LLM sample per condition, 40 tasks per language, no noise floor, and an exact-match judge with two bugs (section 2). | replaced by the tables in section 2 |
+| ~~"Sub-800 ms p50 conversation"~~ | That number came from mock providers. | replaced by the measured figures in section 3 (end of speech to first audio byte on replayed recordings; no real call, no network leg) |
 
 ## What is in the repository
 

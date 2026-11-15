@@ -65,11 +65,26 @@ async def main() -> int:
                     if transcript.is_final:
                         text = transcript.text
             except ProviderError as exc:
-                print(f"stopped after {sent} utterances: {exc}"[:300], flush=True)
-                return 3
+                if "exceeds the maximum limit of 30 seconds" in str(exc):
+                    # Deviation 1 (prereg section 8): the decoded clip is over the API's
+                    # 30 s limit although its container duration was under 29.5 s. Logged
+                    # as rejected (no text), skipped, and excluded from every arm's score.
+                    text = ""
+                    rejected = "audio_over_30s"
+                else:
+                    print(f"stopped after {sent} utterances: {exc}"[:300], flush=True)
+                    return 3
+            else:
+                rejected = ""
             out.write(
                 json.dumps(
-                    {"uttid": uttid, "stt": stt.name, "model": model, "raw_text": text},
+                    {
+                        "uttid": uttid,
+                        "stt": stt.name,
+                        "model": model,
+                        "raw_text": None if rejected else text,
+                        "rejected": rejected,
+                    },
                     ensure_ascii=False,
                 )
                 + "\n"

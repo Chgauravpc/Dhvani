@@ -76,4 +76,6 @@ strings were too few to measure.
 
 ## 8. Deviations
 
-Deviations A and B are stated in §2. No others yet.
+Deviations A and B are stated in §2.
+
+1. **(2026-11-15, during the Saaras run, before its remaining utterances were sent; 205 of 221 were already logged.)** Saaras answered HTTP 400 "Audio duration exceeds the maximum limit of 30 seconds" for utterance `01-04866-01` (container duration 29.38 s, so it passed the 29.5 s eligibility filter; the decoded audio is evidently longer). That is a rejected request, not a credit error and not a transcript. The run script now logs such an utterance as rejected (no text) and continues; any other provider error, including HTTP 402, still stops the run. **Scoring uses only the utterances every arm transcribed**, so the two ASRs are compared on the same set; the number excluded is reported. The sample itself is not changed.

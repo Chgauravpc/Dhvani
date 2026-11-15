@@ -78,23 +78,35 @@ def main() -> None:
         "codec_share_pp_3b18_saaras_hindi_normalised": codec_pp,
         "arms": {},
     }
-    for stt, arm in ASRS.items():
+    all_hyps: dict[str, dict[str, str | None]] = {}
+    for stt in ASRS:
         path = Path(f"results/transcripts/f3_gramvaani_{stt}.jsonl")
-        if not path.exists():
+        if path.exists():
+            all_hyps[stt] = {
+                json.loads(line)["uttid"]: json.loads(line)["raw_text"]
+                for line in path.read_text(encoding="utf-8").splitlines()
+                if line.strip()
+            }
+    # Deviation 1: score only utterances every arm transcribed (the API rejected a few
+    # decoded clips over its 30 s limit); the same utterances for both ASRs.
+    common = [
+        i["uttid"] for i in sample if all(h.get(i["uttid"]) is not None for h in all_hyps.values())
+    ]
+    out["utterances_scored"] = len(common)
+    out["utterances_in_sample"] = len(sample)
+    out["excluded_unscored_or_rejected"] = len(sample) - len(common)
+    for stt, arm in ASRS.items():
+        if stt not in all_hyps:
             continue
-        hyps = {}
-        for line in path.read_text(encoding="utf-8").splitlines():
-            if line.strip():
-                rec = json.loads(line)
-                hyps[rec["uttid"]] = rec["raw_text"]
-        items = [i["uttid"] for i in sample if i["uttid"] in hyps]
+        hyps = all_hyps[stt]
+        items = common
         raw = [(refs[u], hyps[u]) for u in items]
         norm = [(to_digit_tokens(r), to_digit_tokens(h)) for r, h in raw]
         w_raw, w_norm = _wer_ci(_per_utterance(raw)), _wer_ci(_per_utterance(norm))
         clean_w = clean[arm]["wer_all_rows"]
         gap = 100 * (w_norm["wer"] - clean_w["number_normalised"])
         out["arms"][stt] = {
-            "complete": len(items) == len(sample),
+            "complete": len(all_hyps[stt]) >= len(sample),
             "telephone_raw": w_raw,
             "telephone_number_normalised": w_norm,
             "clean_rows_raw_wer": clean_w["raw"],

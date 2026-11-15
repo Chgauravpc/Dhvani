@@ -139,4 +139,5 @@ ASR" line appears before then.
 
 ## 8. Deviations
 
-None yet.
+1. **(2026-11-15, before any step (b) call; the owner's labels `9301dec` are committed.)** Details the registration left open, fixed here in writing before the first call: the judge is called with `max_completion_tokens=2048` and `response_format=json_object` (neither is a temperature or seed, which stay unset); an answer that does not parse is retried up to 3 times, then reported as `unparsed` and never scored. The rubric is the `RUBRIC` text in `src/dhvani/eval/meaning_judge.py`, committed with this entry. The judged population for step (d) is every `value_mismatch` parameter under the list-aware judge across **all three conditions** (`gt`, `whisper`, `sarvam`), de-duplicated on (language, example, parameter, normalised returned value): 624 unique items (209 English, 415 Hindi) from 1,013 cells. The judge is run on the 50 labelled items first and kappa is computed before the rest is run.
+2. **(2026-11-15.)** The labelling was done through a local page, `results/f1_judge_label_tool.html`, built by `scripts/make_label_tool.py` from the unchanged blank sheet; it shows exactly the §4 fields. The labels file's rows match the blank sheet field for field (checked before commit).

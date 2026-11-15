@@ -768,3 +768,63 @@ log keys on `example_id` alone, and 133 VoiceAgentBench ids exist in both
 languages, so the Phase 2/2B F1 logging path can overwrite one language's
 transcript with the other's. 3B-5 qualifies every id as `language:id` and
 keys its run log on language; the old F1 path is left as is.)
+
+---
+
+## 11. Nov 14 review — what the 3B-4 results mean, and the re-plan
+
+Written 2026-11-14 from a read of the four committed 3B-4 result files and a
+**read-only re-score of the four committed transcript logs** (no
+transcription, no API call, no code change). Status: findings stand as
+recorded; the plan that follows from them is `docs/specs/phase-4.md`.
+
+**Every number in §11.1 comes from a throwaway script that is not committed.
+None of them may be quoted in `README.md` / `RESULTS.md` until 3B-14
+reproduces them into a committed results file** (the rule §2 applied to
+the Sep 23 recount).
+
+### 11.1 Findings
+
+| # | Finding | Evidence (unreproduced, see above) | Affects |
+|---|---|---|---|
+| B1 | Local Whisper `small`/`int8` is a **broken** Hindi baseline, not a weak one | WER 66.5% on the IndicVoices arm (Saaras 26.4%); 17.7% vs 8.6% on Svarah; language is auto-detected, and 41 of 464 Hindi rows came back in Latin (33) or Arabic (8) script | every Whisper Hindi number; the 93.8% recognition EER reads as an entity problem and is not one |
+| B2 | With a competent ASR the corrector has almost nothing to repair | Saaras recognises 66/66 Svarah and 231/242 Hindi test mentions before correction | the F2 thesis ("entities are where Indic ASR breaks") |
+| B3 | The big canonicalisation win is a **dictionary lookup**, not phonetic matching | replacing word-bounded curated variants by their canonical form would canonicalise 231/242 (Hindi, Saaras) and 66/66 (Svarah, Saaras); fuzzy matching adds 9 mentions and 0 | what `dhvani-entity` can honestly claim |
+| B4 | Corruption is a **design** defect, not a threshold problem | entity-free test rows rewritten: `play`/`many` -> "Pradhan Mantri Awas Yojana" (via the `pmay` alias), `coming`/`known`/`loving`/`growing` -> "CoWIN", `number`/`large number` -> "PAN card", `हर`/`बाहर`/`शान्दार`/`दार` -> "Aadhaar". Causes: `fuzz.ratio` on very short keys, fuzzy matching of acronyms and aliases, widest-window-wins | the 11.4% / 14.8% corruption; 3B-12 |
+| B5 | F1's **ground-truth ceiling** is the bigger failure | with perfect text the agent succeeds on 42.5% (English) / 17.5% (Hindi) of tasks (phase-2 §12); the Sarvam Hindi "loss" was -7.5 pp (§18) | the thesis itself ("the ear, not the brain"); any F1 delta |
+| B6 | Hindi WER is inflated by number formatting | Saaras writes `5193993566` where the reference spells the digits as words; `eval/wer.py` does not normalise that | every Hindi WER, B1's Saaras figure included |
+| B7 | No real latency number exists | STT alone p50 7.46 s (`small`) / 1.16 s (`tiny`) vs a 200 ms stage budget; "sub-800 ms" was mocks (already `[!]` in ROADMAP) | the real-time claim |
+| B8 | The public state is wrong | the README on `main` still leads with the invalidated 59.4->49.0 and 100->46.4 rows and has no audit banner; the corrected results are on an unmerged branch; the Nov 3 apply date has passed | everything a visitor sees |
+
+Sample caveats noticed in the same pass: 43 of the 66 Svarah test mentions
+are ESIC or EPFO (two acronyms carry the arm); the IndicVoices rows are from
+`train` (already §9.5).
+
+### 11.2 – 11.4 Superseded the same day
+
+The first re-plan written here (new items 3B-14 to 3B-19, the order, the
+demotions) was replaced on 2026-11-14 by `docs/specs/phase-4.md`, after
+provider, hiring and literature checks changed three of its items. Item
+IDs are unchanged. Open work is defined only in `phase-4.md`.
+
+Two further findings from those checks, recorded here because they are
+measurement findings like B1–B8:
+
+| # | Finding | Evidence | Affects |
+|---|---|---|---|
+| B9 | F1's exact-match judge is a **fourth measurement bug** | 403 of 407 acceptable argument values for the Hindi tasks are in English while the queries are Devanagari (cached manifests, checked 2026-11-14); the benchmark's authors score with an LLM judge for meaning and report 76–81% for Hindi | every F1 number, B5 included; 3B-19 |
+| B10 | The F2 source figure was misread | "11.2% vs 6.2%" is everyday-use-case vs read speech on Svarah, not entity vs non-entity WER | the F2 row in `ROADMAP.md` |
+
+### 11.5 Test-split exposure — a constraint on 3B-12
+
+This review **listed the false rewrites the corrector made on the test
+split** (B4). Any change to the fuzzy matcher designed after reading that
+list is tuned on test. So: 3B-12 is developed on dev rows only, and its
+headline is reported on a **fresh draw** (IndicVoices shards outside the 14
+in §9.2; for Svarah there is no unused entity data, so the Svarah row is
+reported as "design informed by this split" every time it is quoted). The
+`exact` mode of 3B-15 is not affected: it has no tunable part.
+
+### 11.6 Open questions for the owner
+
+Moved to `docs/specs/phase-4.md` §9.

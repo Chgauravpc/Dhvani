@@ -5,6 +5,17 @@ evidence says transcription quality — not model reasoning — is what breaks t
 Every deliverable here attacks one measured failure in that ear, and every one
 ships with a number.
 
+> **Thesis status, 14 Nov 2026 (proposed by review; `docs/specs/phase-4.md`).**
+> The corrected F2 re-run (3B-4) does not support the entity half of this
+> thesis for a competent ASR on clean audio: Saaras recognises nearly every
+> lexicon entity unaided, and local Whisper `small` fails Hindi as a whole,
+> not on entities. F1's low ground-truth ceiling (42.5% / 17.5%) turned out
+> to be mostly our own exact-match judge (the benchmark expects English
+> argument values for Hindi queries), so F1 says nothing yet in either
+> direction. The thesis stays above as the hypothesis that was tested. The
+> open questions are now three, each with its outcomes written in advance:
+> digits and phone audio, the F1 judge, and real response time.
+
 **Goal:** a portfolio project for Indian voice-AI startups (smallest.ai, Sarvam,
 Gnani, Bolna, Skit). Optimized for a demo someone can talk to and a README with
 measurements in it.
@@ -31,8 +42,8 @@ one deliverable with one metric.
 
 | # | Finding | Deliverable | Status |
 |---|---------|-------------|--------|
-| F1 | ASR is the bottleneck, not the LLM — 24%+ swing from transcript quality | ASR-ablation harness | **done**, pending re-run against an Indic ASR baseline |
-| F2 | Named entities are where Indic ASR breaks — 11.2% vs 6.2% WER | `dhvani-entity` post-ASR corrector | **reopened** — code done; EER numbers invalidated by the Sep 23 audit (substring + script-blind scoring), re-run in Phase 3B |
+| F1 | ASR is the bottleneck, not the LLM — 24%+ swing from transcript quality | ASR-ablation harness | **reopened** — harness done; noise floor running (3B-5); the 42.5% / 17.5% ground-truth ceiling is mostly our exact-match judge (the benchmark expects English argument values for Hindi queries), so every F1 number is withdrawn until re-scored (3B-19) |
+| F2 | Named entities are where Indic ASR breaks — 11.2% vs 6.2% WER | `dhvani-entity` post-ASR corrector | **reopened** — code done; EER numbers invalidated by the Sep 23 audit (substring + script-blind scoring); re-run done and awaiting owner review (3B-4 `[?]`). Being split into exact canonicalisation (default) and optional fuzzy repair (3B-15) |
 | F3 | Code-switching costs 30–50% relative WER | Hinglish-aware decode + script normalization | deferred past Nov 3 |
 | F4 | Safety refusal collapses 51.78% to 2.67% English-to-Indic | pre-LLM language-agnostic intent guard | deferred past Nov 3 |
 | F5 | Zero Indic turn-taking / full-duplex research exists | Indic endpointer (prosody + semantic completion) | deferred past Nov 3 |
@@ -42,11 +53,33 @@ justifies spending the project on transcription rather than on prompt
 engineering. F5 remains the only genuinely novel contribution, and is the
 reason the deferred list is a list rather than a deletion.
 
+> **Source corrections, 14 Nov 2026** (papers re-read; details and links in
+> `docs/specs/phase-4.md` §2.1). The table above is left as written.
+> - F2's "11.2% vs 6.2%" is Whisper-large WER on Svarah's everyday-use-case
+>   speech vs its read speech. It is a data-type split, not an entity vs
+>   non-entity measurement; the paper attributes it to names and IDs
+>   without measuring that.
+> - F4's "51.78% to 2.67%" is one speech model (KimiAudio). The cascaded
+>   ASR+LLM pipelines in the same paper go 56 → 46, 60 → 38 and 39 → 47.
+> - F1's benchmark reports about 72% (English) and 76–81% (Hindi)
+>   single-tool parameter filling for 8B–70B models under an LLM judge.
+
 **Scope decision, 21 Sep 2026.** F1 and F2 are measured. The remaining
 43 days do not fit F3, F4, F5, the Twilio reframe and a finished artifact,
 so the deadline was held and the findings were cut. What ships on Nov 3 is
 Phases 0–2 plus an Indic ASR baseline, the Twilio reframe, and a README
 that reports all of it honestly — including the negative result.
+
+**Scope decision, 14 Nov 2026 (proposed by review; owner accepts in
+`docs/specs/phase-4.md` §9).** Nov 3 passed with the audit unmerged and the
+README on `main` still showing invalidated numbers. The remaining work is
+now one closed plan, `docs/specs/phase-4.md`: Release 1 ships what is
+already measured (3B-14, 3B-15, 3B-16) and applications go out after it;
+Release 2 answers three questions whose every outcome is mapped in advance
+to a README sentence (digits and phone audio; the F1 judge; real response
+time). Everything else is parked with an entry condition. The plan changes
+only at two named checkpoints, and only by cutting an item or taking a
+fallback written beside it.
 
 ## Two tracks
 
@@ -316,32 +349,59 @@ as their own problem.
       No real run has written a committed transcript file yet -- the first one
       lands with 3B-4. Also fixed: `run_f1_ablation.py` still counted lexicon
       mentions by substring (a fourth copy 3B-1 missed). Accepted by owner 2026-11-13.
-- [~] 3B-4 — preregister, then re-run F2 EER, 2 datasets × 2 ASRs; old rows
+- [?] 3B-4 — preregister, then re-run F2 EER, 2 datasets × 2 ASRs; old rows
       kept as superseded
       preregistered: `docs/specs/phase-3b.md` §9 (own commit, before any run).
       Arms: Svarah + IndicVoices Hindi (LAHAJA's gate failed) × Whisper + Saaras.
-- [ ] 3B-5 — F1 noise floor: ground-truth A/A run, k≥3 repeats, paired
+      evidence and verdicts: `docs/specs/phase-3b.md` §6 3B-4 (commit 0a632b3,
+      four `results/f2_eer_*.json` files). Marker synced here 2026-11-14 to
+      match the spec; awaiting owner review. Old rows above not yet marked
+      superseded (3B-16).
+- [~] 3B-5 — F1 noise floor: ground-truth A/A run, k≥3 repeats, paired
       bootstrap CI + McNemar, full `single_tool` set
-- [ ] 3B-6 — real jitter model (arrival times + jitter buffer, real-time
-      pacing, latency from end of speech); re-run affected rows
+      preregistered `phase-3b.md` §10 (9b30533); real run in progress 2026-11-14.
 
-**Priority 1 — stand out**
+**Open work — defined in [`docs/specs/phase-4.md`](docs/specs/phase-4.md)**
+(the only place open items are specified; read its §1 rules first)
 
-- [ ] 3B-7 — decoder-side contextual biasing vs. `dhvani-entity` vs. both,
-      same test split (the first question an ASR team asks)
-- [ ] 3B-8 — TTS round-trip: lexicon entities + Indic text normalization
-      (₹, dates, digits, Hinglish) → TTS → ASR → recognition EER, plus TTS
-      time-to-first-byte (the project currently says nothing about TTS)
-- [ ] 3B-9 — voice-to-voice latency on real utterances (end of speech →
-      first agent audio byte, per stage), local vs. one hosted streaming STT
-- [ ] 3B-10 — one real Twilio call with barge-in and measured `clear`-to-
+*Release 1 — ship what is already true (cached transcripts only)*
+
+- [ ] 3B-14 — committed re-score script and `results/f2_rescore.json`
+- [ ] 3B-15 — exact-match canonicaliser as the shipped default; raw /
+      exact / exact+fuzzy table per arm
+- [ ] 3B-16 — old F2 rows marked superseded, branch merged, README
+      rewritten audit-first from committed results files, tag `v0.1`
+
+*Release 2, Q1 — does a strong ASR lose digits and entities on phone audio?*
+
+- [ ] 3B-17 — number normalisation for scoring; digit-string exact match
+      from the cached logs
+- [ ] 3B-20 — reference arm: hosted Whisper `large-v3`, language forced
+- [ ] 3B-18 — Saaras on the test-split entity rows through the 8 kHz
+      mu-law channel
+- [ ] 3B-21 — the same ASRs on a sample of real telephone Hindi
+
+*Release 2, Q2 — why does the agent fail with perfect transcripts?*
+
+- [ ] 3B-19 — failure breakdown, a meaning-level judge validated against
+      50 owner labels, and the 3B-5 log re-scored under both judges. No
+      "lost to ASR" line anywhere until this is `[x]`
+
+*Release 2, Q3 — what is the real response time?*
+
+- [ ] 3B-9 — end of speech → first agent audio byte on replayed real
+      utterances, per stage; streaming hosted STT vs local `tiny`
+- [!] 3B-10 — one real phone call with barge-in and measured `clear`-to-
       silence latency; mock server does **not** satisfy this item
-- [ ] 3B-11 — one command regenerates every headline number into
-      `results/*.json`; `RESULTS.md` tables rendered from those files
+      blocked: Twilio trial accounts do not allow Media Streams (Twilio
+      docs, read 2026-11-14). One session to pre-flight a Plivo, then an
+      Exotel, trial (`phase-4.md` §5.2 Q3).
 
-**Priority 2 — only if P0 and P1 are done:** 3B-12 corrector hardening
-(best-scoring window, short-acronym guard, stoplist), 3B-13 entity-bearing
-slot-filling task on real Svarah/LAHAJA audio to tie F1 to F2.
+**Parked** (entry conditions in `phase-4.md` §7; none is worked on unless
+promoted at a checkpoint): 3B-6 real jitter model · 3B-7 keyword biasing vs
+post-correction · 3B-8 TTS round-trip · 3B-11 one-command reproducibility ·
+3B-12 fuzzy-matcher hardening (dev rows and a fresh draw only,
+`phase-3b.md` §11.5) · 3B-13 entity-bearing task on real audio.
 
 **Proves:** you audit your own results as hard as anyone else's, and you
 know what speech and telephony teams actually measure.
@@ -357,8 +417,10 @@ is buried in `docs/specs/phase-2.md` §12–16, where no reader will find it.
 Lifting it into a standalone report is the research artifact, without
 needing F5.
 
-*Blocked on Phase 3B Priority 0. Every number in `RESULTS.md` must come from
-a committed `results/*.json` file (3B-11), never be retyped from a spec.*
+*Changed 14 Nov: the README truth pass is 3B-16 and ships in Release 1.
+`RESULTS.md` and the other items in this phase are parked until Release 2
+of `docs/specs/phase-4.md` is complete. Every number must come from a
+committed `results/*.json` file, never be retyped from a spec.*
 
 - [ ] **A named "Measurement audit" section first**: the three bugs found
       on Sep 23, the before/after numbers side by side, and what changed in
@@ -397,7 +459,12 @@ Reorder it.
 Deliberately empty. Phases 2B–4 are ~4.5 weeks of work in 6 weeks; the
 slack is the plan, not an accident.
 
-### Apply: 3 November 2026
+### Apply: 3 November 2026 — missed
+
+Not met: the audit branch sat unmerged from Sep 23 to Nov 12. No calendar
+date replaces it. Applications go out when Release 1 is tagged `v0.1`
+(`docs/specs/phase-4.md` §5.1), which is four working sessions of work on
+data already on disk.
 
 ---
 
@@ -463,6 +530,10 @@ read as sentence boundaries and agents interrupt mid-thought.
 | Phase 3 slips and the Twilio reframe lands half-built | Phases 0–2B alone ship as a credible artifact; the browser transport already works |
 | An agent ticks a box for work it substituted, mocked, or only partly did | Evidence-line rule and `[?]` review state (`phase-3b.md` §0); reviewer diffs `ROADMAP.md` per PR and reverts any tick without evidence in the same diff |
 | Audit re-run shows F2's gains were mostly scoring artifacts | That is a result, not a failure: report it in the audit section; F2 is then reframed (canonicalization for Hindi, decoder biasing comparison from 3B-7) rather than hidden |
+| A Release 2 question comes back null | Every outcome already has its README sentence (`phase-4.md` §5.2); a null is reported and the plan does not change |
+| Sarvam credits run out mid-run | Budget and stop rule in `phase-4.md` §4; an item that does not fit is blocked, never thinned |
+| A new idea or a surprising result tempts a re-plan | It goes to the parking lot and waits for one of the two checkpoints (`phase-4.md` §6) |
+| Corrector changes get tuned on a test split the review has already read | 3B-12 uses dev rows and a fresh draw only (`phase-3b.md` §11.5) |
 | Scope creep back into F3–F5 | They are dated past Nov 3 and stay there. Pulling one forward means cutting Phase 4, not adding a week. |
 
 ## Non-goals

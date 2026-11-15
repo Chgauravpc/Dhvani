@@ -398,8 +398,12 @@ as their own problem.
       evidence (clean half only; the `pstn` half waits for 3B-18): prereg `2b52ff2` ·
       `docs/runs/3b-20-groq-large-v3.md` · `results/f2_eer_*_groq-whisper.json` · Svarah recognition
       error 16.7% [9.6, 27.4] vs Saaras 0.0%; Hindi arm is a broken baseline by the pre-flight rule
-- [ ] 3B-18 — Saaras on the test-split entity rows through the 8 kHz
+- [?] 3B-18 — Saaras on the test-split entity rows through the 8 kHz
       mu-law channel
+      evidence: prereg `1a1212b` (before the run) · `docs/runs/3b-18-phone-channel.md` ·
+      `results/f3_channel_sarvam.json` · 290 rows, 65.05 min; nothing degrades (digit match
+      -2.3 / 0.0 pp, entity recognition -1.5 / -0.4 pp, normalised WER +2.0 / +1.5 pp); simulated
+      codec, read speech; balance not readable by the agent -- owner to read the dashboard
 - [ ] 3B-21 — the same ASRs on a sample of real telephone Hindi
 
 *Release 2, Q2 — why does the agent fail with perfect transcripts?*

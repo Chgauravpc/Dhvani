@@ -143,19 +143,22 @@ Caveats that travel with these numbers:
 The exact-match and list-fix results sit beside these in
 [`results/f1_meaning_judge.json`](results/f1_meaning_judge.json).
 
-## 4. Not yet measured
+## 4. Phone audio, digits and latency: measured so far, and not
 
-- **Phone audio.** The mu-law codec, resampler and telephony channel simulator exist,
-  and the Twilio Media Streams transport is tested against a mock Media Streams server;
-  it has not carried a real call (a Twilio trial account cannot stream). No result on how
-  a phone channel affects a strong ASR has been produced.
-- **Digit strings on phone audio.** On clean audio, Saaras reproduces 92.0% of English
+- **Phone channel (simulated).** Through an 8 kHz mu-law phone leg (no packet loss or
+  jitter), Saaras loses little on read speech: digit-string match 97.7% → 95.5% (English)
+  and 82.1% → 82.1% (Hindi), entity recognition 100% → 98.5% and 95.5% → 95.0%, with no
+  change that passes the preregistered 5-point and McNemar test
+  ([`docs/runs/3b-18-phone-channel.md`](docs/runs/3b-18-phone-channel.md)). The Twilio Media
+  Streams transport is tested only against a mock server (a Twilio trial account cannot
+  stream), so no real call has been made, and no real telephone speech has been
+  transcribed.
+- **Digit strings.** On clean audio, Saaras reproduces 92.0% of English
   and 84.1% of Hindi digit strings exactly (local Whisper `small`, English: 81.3%); the Hindi
   figure is likely an underestimate, and the normaliser was amended after reading misses
   ([`docs/runs/3b-17-digit-strings.md`](docs/runs/3b-17-digit-strings.md)). Hindi WER for
   Saaras is 26.4% as scored and 12.6% once numbers are normalised on both sides, so
-  number formatting accounts for about half of it. Digit strings through a phone channel
-  have not been measured.
+  number formatting accounts for about half of it.
 - **Real response time.** The only latency measured is STT alone: `small`/`int8` at p50
   7.46 s (Svarah) to 13.7 s (LAHAJA), and `tiny` at about 1.2 s, against a 200 ms stage
   budget. There is no voice-to-voice number.

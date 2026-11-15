@@ -1,0 +1,63 @@
+{
+ "item": "3B-21",
+ "preregistration": "docs/runs/3b-21-preregistration.md",
+ "note": "Real telephone Hindi (Gram Vaani, OpenSLR 118 dev), 221 utterances, not paired with the clean rows; dialect, spontaneity and channel are confounded. Bootstrap over utterances.",
+ "codec_share_pp_3b18_saaras_hindi_normalised": 1.4687444026509038,
+ "arms": {
+  "sarvam": {
+   "complete": true,
+   "telephone_raw": {
+    "wer": 0.2717233888486604,
+    "ci95": [
+     0.2532281205164993,
+     0.29076376554174066
+    ],
+    "reference_words": 5524,
+    "utterances": 220
+   },
+   "telephone_number_normalised": {
+    "wer": 0.2652205614290922,
+    "ci95": [
+     0.24682027649769586,
+     0.2846022403645339
+    ],
+    "reference_words": 5486,
+    "utterances": 220
+   },
+   "clean_rows_raw_wer": 0.2635840080126868,
+   "clean_rows_number_normalised_wer": 0.1261854073930714,
+   "gap_normalised_pp": 13.903515403602082,
+   "outcome_row": "far above the clean rows",
+   "broken_baseline_on_clean_rows": false
+  },
+  "groq-whisper": {
+   "complete": true,
+   "telephone_raw": {
+    "wer": 0.555032585083273,
+    "ci95": [
+     0.5285587975243148,
+     0.5825643039465933
+    ],
+    "reference_words": 5524,
+    "utterances": 220
+   },
+   "telephone_number_normalised": {
+    "wer": 0.545205978855268,
+    "ci95": [
+     0.5180899908172636,
+     0.5734614016364283
+    ],
+    "reference_words": 5486,
+    "utterances": 220
+   },
+   "clean_rows_raw_wer": 0.4425340121859611,
+   "clean_rows_number_normalised_wer": 0.3470098703309464,
+   "gap_normalised_pp": 19.819610852432163,
+   "outcome_row": "far above the clean rows",
+   "broken_baseline_on_clean_rows": true
+  }
+ },
+ "utterances_scored": 220,
+ "utterances_in_sample": 221,
+ "excluded_unscored_or_rejected": 1
+}

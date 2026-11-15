@@ -151,8 +151,14 @@ The exact-match and list-fix results sit beside these in
   change that passes the preregistered 5-point and McNemar test
   ([`docs/runs/3b-18-phone-channel.md`](docs/runs/3b-18-phone-channel.md)). The Twilio Media
   Streams transport is tested only against a mock server (a Twilio trial account cannot
-  stream), so no real call has been made, and no real telephone speech has been
-  transcribed.
+  stream), so no real call has been made.
+- **Real telephone speech.** On 220 utterances (35 minutes) of real telephone Hindi from the Gram Vaani
+  corpus, Saaras has a 26.5% word error rate (interval 24.7 to 28.5%) once numbers are normalised,
+  and Whisper `large-v3` 54.5%. The simulated codec alone moved Saaras by 1.5 points on read
+  speech. Do not read the gap to Saaras's 12.6% on the clean read rows as a channel effect: raw
+  WER is 26.4% there and 27.2% here, and the two corpora differ in content (the clean rows are
+  digit-heavy prompts), dialect and spontaneity
+  ([`docs/runs/3b-21-real-telephone-hindi.md`](docs/runs/3b-21-real-telephone-hindi.md)).
 - **Digit strings.** On clean audio, Saaras reproduces 92.0% of English
   and 84.1% of Hindi digit strings exactly (local Whisper `small`, English: 81.3%); the Hindi
   figure is likely an underestimate, and the normaliser was amended after reading misses

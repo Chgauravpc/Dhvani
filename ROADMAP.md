@@ -404,7 +404,11 @@ as their own problem.
       `results/f3_channel_sarvam.json` · 290 rows, 65.05 min; nothing degrades (digit match
       -2.3 / 0.0 pp, entity recognition -1.5 / -0.4 pp, normalised WER +2.0 / +1.5 pp); simulated
       codec, read speech; balance not readable by the agent -- owner to read the dashboard
-- [ ] 3B-21 — the same ASRs on a sample of real telephone Hindi
+- [?] 3B-21 — the same ASRs on a sample of real telephone Hindi
+      evidence: prereg `c8e916c` (before transcription; deviation 1 `d0f62e6`) · `docs/runs/3b-21-real-telephone-hindi.md`
+      · `results/f3_gramvaani.json` · 220 utterances scored; Saaras 26.5% normalised WER, large-v3 54.5%;
+      gap to clean rows not a channel effect (raw WER 26.4% vs 27.2%); digits too few (14) to measure;
+      Sarvam balance not readable by the agent -- owner to read the dashboard
 
 *Release 2, Q2 — why does the agent fail with perfect transcripts?*
 

@@ -1,0 +1,87 @@
+{
+ "item": "3B-9",
+ "utterances": 50,
+ "plus_warmup": 1,
+ "audio_minutes_50": 5.9602,
+ "estimated_cost_rs_at_plan_rate": 2.9801,
+ "machine_fit": "Whisper tiny/int8 + Piper + Silero on CPU, one process; no large model",
+ "live_probe": {
+  "clip_seconds": 1.984,
+  "resolved_config": {
+   "model": "saaras:v4",
+   "language_code": "hi-IN",
+   "encoding": "mulaw",
+   "sample_rate": 8000,
+   "stream_type": "balanced",
+   "mode": "transcribe",
+   "turn_detection": "vad",
+   "threshold": 0.3,
+   "prefix_padding_ms": 300,
+   "silence_duration_ms": 500,
+   "min_speech_duration_ms": 250,
+   "return_timestamps": false,
+   "prompt": null,
+   "keyterms": null
+  },
+  "event_sequence_compact": [
+   "session.begin",
+   "vad.speech_start",
+   "transcript.partial",
+   "vad.speech_end",
+   "transcript.partial",
+   "transcript.final"
+  ],
+  "events": [
+   {
+    "event": "session.begin",
+    "t_s": 0.408
+   },
+   {
+    "event": "vad.speech_start",
+    "t_s": 0.562
+   },
+   {
+    "event": "transcript.partial",
+    "t_s": 1.12
+   },
+   {
+    "event": "transcript.partial",
+    "t_s": 2.092
+   },
+   {
+    "event": "transcript.partial",
+    "t_s": 2.107
+   },
+   {
+    "event": "transcript.partial",
+    "t_s": 2.115
+   },
+   {
+    "event": "vad.speech_end",
+    "t_s": 2.259
+   },
+   {
+    "event": "transcript.partial",
+    "t_s": 2.291
+   },
+   {
+    "event": "transcript.partial",
+    "t_s": 2.296
+   },
+   {
+    "event": "transcript.partial",
+    "t_s": 2.308
+   },
+   {
+    "event": "transcript.partial",
+    "t_s": 2.316
+   },
+   {
+    "event": "transcript.final",
+    "t_s": 2.336
+   }
+  ],
+  "speech_end_after_clip_end_s": 0.2749999999999999,
+  "got_transcript_final": true
+ }
+}

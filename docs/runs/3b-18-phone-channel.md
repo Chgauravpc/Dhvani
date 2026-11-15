@@ -42,6 +42,4 @@ ASR on these utterances."**
 - Read speech; clustered samples (intervals and McNemar tests optimistic); Saaras may have trained
   on IndicVoices `train`; one draw per clip, and Saaras's run-to-run determinism was not checked.
 - The response does not echo the model string, so `saaras:v3` is pinned by the request, not verified.
-- **Spend:** the agent cannot read the Sarvam balance (no API); 65.05 minutes of audio were sent,
-  about Rs 32.5 at the plan's rate. The owner reads the dashboard balance before and after
-  (plan §4); the Rs 40 stop rule is the owner's check on that rate.
+- **Spend:** recorded from the Sarvam dashboard by the owner, 2026-11-15: **21 credits in total across 3B-18, 3B-21 and 3B-9** (no per-item split was given). The plan estimated about 53 (Rs 32.5 + 17.5 + 3) from audio minutes at Rs 30 an hour; the three runs sent 65.05 + 34.96 + 5.96 = 105.97 minutes plus one warm-up clip, so the observed rate is about 0.2 credit a minute, roughly 40% of the plan's, if one credit is one rupee. The plan's stop rule (stop if 3B-18 alone dropped the balance by more than Rs 40) was not triggered: the total for all three is below it.

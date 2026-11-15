@@ -118,6 +118,9 @@ first code or paid call. Each check records what was run and the number.
 | Local compute | CPU only, about 1 GB free RAM | Whisper `tiny`/`small` only, one process per model | — |
 | Owner time | — | 3B-4 review · 3B-16 review · 50 hand labels for 3B-19 (about 1 hour) | — |
 
+**Observed Sarvam spend (owner, from the dashboard, 2026-11-15):** 21 credits for 3B-18, 3B-21
+and 3B-9 together against about 53 estimated.
+
 **Spend order for Sarvam, with the stop rule:** 3B-18 `pstn` first. Read
 the dashboard balance before and after it. If the drop is more than Rs 40
 the rate assumption is wrong: stop, and re-cost the remaining items from

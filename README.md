@@ -10,8 +10,7 @@ this page reports what the measurements say, including where they say no.
 results file (`scripts/render_readme_tables.py --check README.md` verifies the tables).
 The measurement work in [`docs/specs/phase-4.md`](docs/specs/phase-4.md) is done except
 the real phone call (3B-10), which was cut; each result has a preregistration and a
-run record in [`docs/runs/`](docs/runs/). The owner has accepted all of them except 3B-9
-(response time), which awaits review.*
+run record in [`docs/runs/`](docs/runs/), and the owner has accepted all of them.*
 
 **In five lines**
 

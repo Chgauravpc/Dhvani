@@ -60,5 +60,4 @@ each; the LLM's first sentence varies in length and is not controlled; replayed 
 live microphone or a real call; the local endpointer (threshold 0.5) and Sarvam's server VAD (0.3) are
 not the same model, so the endpoint stage is not a like-for-like comparison; first sentence only;
 Sarvam's server resolved the model to `saaras:v4`, not the `saaras:v3` of the accuracy runs.
-**Spend:** 5.96 minutes of audio plus one warm-up clip, about Rs 3 at the plan's rate; the agent cannot
-read the balance, so the owner records the real cost.
+**Spend:** recorded from the Sarvam dashboard by the owner, 2026-11-15: **21 credits in total across 3B-18, 3B-21 and 3B-9** (no per-item split was given). The plan estimated about 53 (Rs 32.5 + 17.5 + 3) from audio minutes at Rs 30 an hour; the three runs sent 65.05 + 34.96 + 5.96 = 105.97 minutes plus one warm-up clip, so the observed rate is about 0.2 credit a minute, roughly 40% of the plan's, if one credit is one rupee. The plan's stop rule (stop if 3B-18 alone dropped the balance by more than Rs 40) was not triggered: the total for all three is below it.

@@ -426,12 +426,12 @@ as their own problem.
 
 *Release 2, Q3 — what is the real response time?*
 
-- [?] 3B-9 — end of speech → first agent audio byte on replayed real
+- [x] 3B-9 — end of speech → first agent audio byte on replayed real
       utterances, per stage; streaming hosted STT vs local `tiny`
       evidence: prereg `68d8e0c` (before the run) · `docs/runs/3b-9-response-time.md` ·
       `results/latency_3b9.json` · Sarvam realtime p50 1.80 s / p90 3.29 s; local Whisper tiny p50
-      7.82 s / p90 22.57 s (6 of 50 empty); premature endpoints 10 and 12; balance not readable by
-      the agent -- owner to read the dashboard
+      7.82 s / p90 22.57 s (6 of 50 empty); premature endpoints 10 and 12. Spend: 21 credits for
+      3B-18 + 3B-21 + 3B-9 together (owner, from the dashboard). Accepted by owner 2026-11-15.
 - [!] 3B-10 — **cut at Checkpoint 2, 2026-11-15 (owner)**: one real phone call with
       barge-in and measured `clear`-to-silence latency; mock server does **not** satisfy
       this item. Stays listed as cut (R6). Plivo trials need a company account, Exotel has

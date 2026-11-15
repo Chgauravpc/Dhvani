@@ -18,8 +18,16 @@
  "estimated_cost_rs_at_plan_rate": 32.52578333333334,
  "live_probe": {
   "probe_seconds": 1.992,
-  "accepted_8khz_wav": false,
-  "status": 402,
-  "error": "ApiError: headers: {'date': 'Sun, 15 Nov 2026 15:33:14 GMT', 'content-type': 'application/json', 'content-length': '140', 'connection': 'keep-alive', 'server': 'uvicorn', 'referrer-policy': 'strict-origin-when-cross-origin', 'permissions-policy': 'geolocation=(), camera=(), microphone=(), payment=()', 'cache-"
+  "accepted_8khz_wav": true,
+  "status": 200,
+  "response_fields": [
+   "language_code",
+   "language_probability",
+   "request_id",
+   "transcript"
+  ],
+  "language_code": "en-IN",
+  "transcript_chars": 28,
+  "headers_seen": {}
  }
 }

@@ -299,6 +299,12 @@ The plan is read and possibly changed at exactly two points:
 - **Checkpoint 2 — after Q1.** Allowed: cut Q2 or Q3 items; promote **one**
   parked item whose entry condition (§7) is met.
 
+**Checkpoint 2 record (2026-11-15, after Q1, at the owner's instruction).** Q1 is closed
+(3B-17, 3B-18, 3B-20, 3B-21 accepted `[x]`). Taken at this checkpoint: **nothing
+promoted from the parking lot** (§7); **3B-9 kept**, uncut; **3B-10 kept** with its one
+pre-flight session, a Plivo trial then an Exotel trial, to be cut and stated in the README
+if neither streams audio on a free trial. No Q2 or Q3 item is cut.
+
 At any other time the only allowed moves are the fallbacks written beside
 each item. A new idea, a new dataset, a better metric or a surprising
 result is written into §7 and waits for a checkpoint. An agent that thinks

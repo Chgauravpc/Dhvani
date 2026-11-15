@@ -1,0 +1,44 @@
+{
+  "item": "3B-1",
+  "reviews": "results/entity_density_gate.json",
+  "method": "Every word-boundary hit for LAHAJA, and every Svarah hit outside ESIC/EPFO/CoWIN, printed with +-40 characters of context and read by Claude on 2026-11-12. Row indices are positions in the concatenated parquet shards as loaded by dhvani.eval.datasets.load_*_ground_truth_texts. Awaiting owner confirmation.",
+  "datasets": [
+    {
+      "dataset": "LAHAJA",
+      "matcher_word_boundary_pairs": 29,
+      "reviewed_entity_pairs": 17,
+      "decision_from_reviewed": "STOP_CHANGE_CORPUS (<30)",
+      "decision_from_matcher": "STOP_CHANGE_CORPUS (<30)",
+      "per_entity": [
+        {
+          "entity": "CoWIN",
+          "matcher": 17,
+          "reviewed": 17,
+          "note": "all genuine: portal login / certificate / registration commands",
+          "rows": [107, 226, 2492, 3045, 3116, 3903, 3923, 3953, 4046, 4135, 4194, 4249, 4250, 4675, 4725, 5279, 5299]
+        },
+        {
+          "entity": "Aadhaar",
+          "matcher": 12,
+          "reviewed": 0,
+          "note": "all 12 are the common Hindi noun आधार 'basis' (mostly 'के आधार पर' = 'on the basis of'), never the ID. A homonym: word boundaries cannot separate it; the bare Devanagari variant is ambiguous on its own.",
+          "rows": [143, 150, 938, 983, 1291, 1360, 1680, 1782, 1930, 4685, 5423, 5460]
+        }
+      ],
+      "substring_only_aadhaar_hits": "11, all false: 9x आधारित 'based on', 1x आधारशिला, 1x आधारभूत. The Sep 23 audit's \\w-regex recount (21 Aadhaar, 38 total) let आधारित through because Python's \\w treats the vowel sign ि as a boundary."
+    },
+    {
+      "dataset": "Svarah",
+      "matcher_word_boundary_pairs": 94,
+      "reviewed_entity_pairs": 94,
+      "reviewed_entity_pairs_excluding_vpa_only": 91,
+      "decision_from_reviewed": "PROCEED_WITH_CI_AND_LEXICON_EXPANSION (30-100)",
+      "decision_from_matcher": "PROCEED_WITH_CI_AND_LEXICON_EXPANSION (30-100)",
+      "notes": [
+        "ESIC (35), EPFO (22), CoWIN (15) are templated command utterances naming the entity; not individually re-read beyond spot checks.",
+        "UPI: 7 of 10 examples say 'UPI' as a word; 3 match only via a payment-address suffix ('...@upi'). Kept in the 94, flagged as borderline: whether ASR output of a VPA counts as recognising the entity is a 3B-2 scoring decision.",
+        "Provident Fund (5), Jan Dhan Yojana (3), Voter ID (2), Aadhaar (1), Ayushman Bharat (1): all genuine. One Provident Fund example also contains the typo 'EFPO' in ground truth."
+      ]
+    }
+  ]
+}

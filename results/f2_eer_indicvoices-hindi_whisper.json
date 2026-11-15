@@ -1,0 +1,347 @@
+{
+  "item": "3B-4",
+  "code_commit": "dc961c4a118e30cd1114b219223dcbe5d1615385",
+  "dataset": "indicvoices-hindi",
+  "stt": "faster-whisper",
+  "model": "small/int8",
+  "seed": 0,
+  "sampling": {
+    "split_unit": "speaker",
+    "sampling": "cluster sample by shard",
+    "shards": [
+      "hindi/train-00041-of-00082.parquet",
+      "hindi/train-00023-of-00082.parquet",
+      "hindi/train-00048-of-00082.parquet",
+      "hindi/train-00059-of-00082.parquet",
+      "hindi/train-00052-of-00082.parquet",
+      "hindi/train-00037-of-00082.parquet",
+      "hindi/train-00077-of-00082.parquet",
+      "hindi/train-00026-of-00082.parquet",
+      "hindi/train-00044-of-00082.parquet",
+      "hindi/train-00024-of-00082.parquet",
+      "hindi/train-00069-of-00082.parquet",
+      "hindi/train-00050-of-00082.parquet",
+      "hindi/train-00008-of-00082.parquet",
+      "hindi/train-00001-of-00082.parquet"
+    ],
+    "n_speakers": 333,
+    "n_dev_speakers": 87
+  },
+  "n_dev": {
+    "entity": 89,
+    "clean": 35
+  },
+  "n_test": {
+    "entity": 225,
+    "clean": 115
+  },
+  "transcript_log": "results/transcripts/f2_indicvoices-hindi_whisper.jsonl",
+  "threshold_objective": "min dev canonical_miss_after + corruption_rate; ties -> higher",
+  "dev_sweep": [
+    {
+      "split": "dev",
+      "threshold": 0.7,
+      "n_entity_mentions": 95,
+      "recognition_eer_before": 0.9368421052631579,
+      "recognition_eer_after": 0.14736842105263157,
+      "canonical_miss_before": 1.0,
+      "canonical_miss_after": 0.14736842105263157,
+      "n_clean_examples": 35,
+      "corruption_rate": 0.2571428571428571,
+      "recognition_fixed": 75,
+      "recognition_broken": 0,
+      "canonical_fixed": 81,
+      "canonical_broken": 0,
+      "n_corrupted": 9,
+      "recognition_eer_before_ci": [
+        0.8689918917654831,
+        0.9707355104619193
+      ],
+      "recognition_eer_after_ci": [
+        0.0898599863410513,
+        0.23228777330670836
+      ],
+      "canonical_miss_before_ci": [
+        0.9611337736337738,
+        1.0
+      ],
+      "canonical_miss_after_ci": [
+        0.0898599863410513,
+        0.23228777330670836
+      ],
+      "corruption_rate_ci": [
+        0.1416286872655014,
+        0.4206962427064873
+      ],
+      "recognition_mcnemar_p": 5.293955920339377e-23,
+      "canonical_mcnemar_p": 8.271806125530277e-25
+    },
+    {
+      "split": "dev",
+      "threshold": 0.75,
+      "n_entity_mentions": 95,
+      "recognition_eer_before": 0.9368421052631579,
+      "recognition_eer_after": 0.22105263157894736,
+      "canonical_miss_before": 1.0,
+      "canonical_miss_after": 0.22105263157894736,
+      "n_clean_examples": 35,
+      "corruption_rate": 0.11428571428571428,
+      "recognition_fixed": 68,
+      "recognition_broken": 0,
+      "canonical_fixed": 74,
+      "canonical_broken": 0,
+      "n_corrupted": 4,
+      "recognition_eer_before_ci": [
+        0.8689918917654831,
+        0.9707355104619193
+      ],
+      "recognition_eer_after_ci": [
+        0.1493724298392572,
+        0.31441609644926916
+      ],
+      "canonical_miss_before_ci": [
+        0.9611337736337738,
+        1.0
+      ],
+      "canonical_miss_after_ci": [
+        0.1493724298392572,
+        0.31441609644926916
+      ],
+      "corruption_rate_ci": [
+        0.0453510585448975,
+        0.2595179478812023
+      ],
+      "recognition_mcnemar_p": 6.776263578034403e-21,
+      "canonical_mcnemar_p": 1.0587911840678754e-22
+    },
+    {
+      "split": "dev",
+      "threshold": 0.8,
+      "n_entity_mentions": 95,
+      "recognition_eer_before": 0.9368421052631579,
+      "recognition_eer_after": 0.29473684210526313,
+      "canonical_miss_before": 1.0,
+      "canonical_miss_after": 0.29473684210526313,
+      "n_clean_examples": 35,
+      "corruption_rate": 0.05714285714285714,
+      "recognition_fixed": 61,
+      "recognition_broken": 0,
+      "canonical_fixed": 67,
+      "canonical_broken": 0,
+      "n_corrupted": 2,
+      "recognition_eer_before_ci": [
+        0.8689918917654831,
+        0.9707355104619193
+      ],
+      "recognition_eer_after_ci": [
+        0.21247799848789717,
+        0.39295129444139576
+      ],
+      "canonical_miss_before_ci": [
+        0.9611337736337738,
+        1.0
+      ],
+      "canonical_miss_after_ci": [
+        0.21247799848789717,
+        0.39295129444139576
+      ],
+      "corruption_rate_ci": [
+        0.015812829614043955,
+        0.1860738073937003
+      ],
+      "recognition_mcnemar_p": 8.673617379884035e-19,
+      "canonical_mcnemar_p": 1.3552527156068805e-20
+    },
+    {
+      "split": "dev",
+      "threshold": 0.82,
+      "n_entity_mentions": 95,
+      "recognition_eer_before": 0.9368421052631579,
+      "recognition_eer_after": 0.3368421052631579,
+      "canonical_miss_before": 1.0,
+      "canonical_miss_after": 0.3368421052631579,
+      "n_clean_examples": 35,
+      "corruption_rate": 0.02857142857142857,
+      "recognition_fixed": 57,
+      "recognition_broken": 0,
+      "canonical_fixed": 63,
+      "canonical_broken": 0,
+      "n_corrupted": 1,
+      "recognition_eer_before_ci": [
+        0.8689918917654831,
+        0.9707355104619193
+      ],
+      "recognition_eer_after_ci": [
+        0.24979108845799552,
+        0.43657578540887837
+      ],
+      "canonical_miss_before_ci": [
+        0.9611337736337738,
+        1.0
+      ],
+      "canonical_miss_after_ci": [
+        0.24979108845799552,
+        0.43657578540887837
+      ],
+      "corruption_rate_ci": [
+        0.005061361365853362,
+        0.1453340909327131
+      ],
+      "recognition_mcnemar_p": 1.3877787807814457e-17,
+      "canonical_mcnemar_p": 2.168404344971009e-19
+    },
+    {
+      "split": "dev",
+      "threshold": 0.85,
+      "n_entity_mentions": 95,
+      "recognition_eer_before": 0.9368421052631579,
+      "recognition_eer_after": 0.4,
+      "canonical_miss_before": 1.0,
+      "canonical_miss_after": 0.4,
+      "n_clean_examples": 35,
+      "corruption_rate": 0.0,
+      "recognition_fixed": 51,
+      "recognition_broken": 0,
+      "canonical_fixed": 57,
+      "canonical_broken": 0,
+      "n_corrupted": 0,
+      "recognition_eer_before_ci": [
+        0.8689918917654831,
+        0.9707355104619193
+      ],
+      "recognition_eer_after_ci": [
+        0.30722742667775993,
+        0.5005458185954855
+      ],
+      "canonical_miss_before_ci": [
+        0.9611337736337738,
+        1.0
+      ],
+      "canonical_miss_after_ci": [
+        0.30722742667775993,
+        0.5005458185954855
+      ],
+      "corruption_rate_ci": [
+        0.0,
+        0.09890426758938868
+      ],
+      "recognition_mcnemar_p": 8.881784197001252e-16,
+      "canonical_mcnemar_p": 1.3877787807814457e-17
+    },
+    {
+      "split": "dev",
+      "threshold": 0.9,
+      "n_entity_mentions": 95,
+      "recognition_eer_before": 0.9368421052631579,
+      "recognition_eer_after": 0.5157894736842106,
+      "canonical_miss_before": 1.0,
+      "canonical_miss_after": 0.5157894736842106,
+      "n_clean_examples": 35,
+      "corruption_rate": 0.0,
+      "recognition_fixed": 40,
+      "recognition_broken": 0,
+      "canonical_fixed": 46,
+      "canonical_broken": 0,
+      "n_corrupted": 0,
+      "recognition_eer_before_ci": [
+        0.8689918917654831,
+        0.9707355104619193
+      ],
+      "recognition_eer_after_ci": [
+        0.41665045171484527,
+        0.6137011411367477
+      ],
+      "canonical_miss_before_ci": [
+        0.9611337736337738,
+        1.0
+      ],
+      "canonical_miss_after_ci": [
+        0.41665045171484527,
+        0.6137011411367477
+      ],
+      "corruption_rate_ci": [
+        0.0,
+        0.09890426758938868
+      ],
+      "recognition_mcnemar_p": 1.8189894035458565e-12,
+      "canonical_mcnemar_p": 2.842170943040401e-14
+    },
+    {
+      "split": "dev",
+      "threshold": 0.95,
+      "n_entity_mentions": 95,
+      "recognition_eer_before": 0.9368421052631579,
+      "recognition_eer_after": 0.8210526315789474,
+      "canonical_miss_before": 1.0,
+      "canonical_miss_after": 0.8210526315789474,
+      "n_clean_examples": 35,
+      "corruption_rate": 0.0,
+      "recognition_fixed": 11,
+      "recognition_broken": 0,
+      "canonical_fixed": 17,
+      "canonical_broken": 0,
+      "n_corrupted": 0,
+      "recognition_eer_before_ci": [
+        0.8689918917654831,
+        0.9707355104619193
+      ],
+      "recognition_eer_after_ci": [
+        0.73198385250479,
+        0.8851652021442648
+      ],
+      "canonical_miss_before_ci": [
+        0.9611337736337738,
+        1.0
+      ],
+      "canonical_miss_after_ci": [
+        0.73198385250479,
+        0.8851652021442648
+      ],
+      "corruption_rate_ci": [
+        0.0,
+        0.09890426758938868
+      ],
+      "recognition_mcnemar_p": 0.0009765625,
+      "canonical_mcnemar_p": 1.52587890625e-05
+    }
+  ],
+  "chosen_threshold": 0.75,
+  "test": {
+    "split": "test",
+    "threshold": 0.75,
+    "n_entity_mentions": 242,
+    "recognition_eer_before": 0.9380165289256198,
+    "recognition_eer_after": 0.17355371900826447,
+    "canonical_miss_before": 1.0,
+    "canonical_miss_after": 0.17355371900826447,
+    "n_clean_examples": 115,
+    "corruption_rate": 0.14782608695652175,
+    "recognition_fixed": 185,
+    "recognition_broken": 0,
+    "canonical_fixed": 200,
+    "canonical_broken": 0,
+    "n_corrupted": 17,
+    "recognition_eer_before_ci": [
+      0.9002626146322834,
+      0.962081268583576
+    ],
+    "recognition_eer_after_ci": [
+      0.13103818234427403,
+      0.2262715650703214
+    ],
+    "canonical_miss_before_ci": [
+      0.9843736780105564,
+      1.0
+    ],
+    "canonical_miss_after_ci": [
+      0.13103818234427403,
+      0.2262715650703214
+    ],
+    "corruption_rate_ci": [
+      0.0943894011574522,
+      0.2240310845983774
+    ],
+    "recognition_mcnemar_p": 4.078315292499078e-56,
+    "canonical_mcnemar_p": 1.2446030555722283e-60
+  }
+}

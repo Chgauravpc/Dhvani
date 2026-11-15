@@ -1,0 +1,3412 @@
+{
+  "item": "3B-1",
+  "code_commit": "df63af1005ee365175042264a23385e686772288",
+  "datasets": [
+    {
+      "dataset": "IndicVoices-Hindi",
+      "n_transcripts": 450690,
+      "transcripts_sha256": "b10097954058f1933a024555fad39503aa0a093daaefa23c6b7da77383088a78",
+      "totals": {
+        "legacy_raw_occurrences": 5088,
+        "substring_pairs": 3073,
+        "word_boundary_pairs": 2677
+      },
+      "examples_with_word_boundary_mention": 2490,
+      "decision": "PROCEED (>=100)",
+      "per_entity": [
+        {
+          "entity": "Aadhaar",
+          "legacy_raw_occurrences": 2936,
+          "substring_pairs": 1706,
+          "word_boundary_pairs": 1446
+        },
+        {
+          "entity": "PAN card",
+          "legacy_raw_occurrences": 1377,
+          "substring_pairs": 683,
+          "word_boundary_pairs": 548
+        },
+        {
+          "entity": "CoWIN",
+          "legacy_raw_occurrences": 202,
+          "substring_pairs": 201,
+          "word_boundary_pairs": 201
+        },
+        {
+          "entity": "DigiLocker",
+          "legacy_raw_occurrences": 240,
+          "substring_pairs": 164,
+          "word_boundary_pairs": 164
+        },
+        {
+          "entity": "Ration card",
+          "legacy_raw_occurrences": 109,
+          "substring_pairs": 97,
+          "word_boundary_pairs": 96
+        },
+        {
+          "entity": "Ayushman Bharat",
+          "legacy_raw_occurrences": 87,
+          "substring_pairs": 86,
+          "word_boundary_pairs": 86
+        },
+        {
+          "entity": "Passport Seva",
+          "legacy_raw_occurrences": 39,
+          "substring_pairs": 39,
+          "word_boundary_pairs": 39
+        },
+        {
+          "entity": "Voter ID",
+          "legacy_raw_occurrences": 40,
+          "substring_pairs": 39,
+          "word_boundary_pairs": 39
+        },
+        {
+          "entity": "Pradhan Mantri Awas Yojana",
+          "legacy_raw_occurrences": 24,
+          "substring_pairs": 24,
+          "word_boundary_pairs": 24
+        },
+        {
+          "entity": "Jan Dhan Yojana",
+          "legacy_raw_occurrences": 10,
+          "substring_pairs": 10,
+          "word_boundary_pairs": 10
+        },
+        {
+          "entity": "Kisan Credit Card",
+          "legacy_raw_occurrences": 9,
+          "substring_pairs": 9,
+          "word_boundary_pairs": 9
+        },
+        {
+          "entity": "ESIC",
+          "legacy_raw_occurrences": 4,
+          "substring_pairs": 4,
+          "word_boundary_pairs": 4
+        },
+        {
+          "entity": "Mudra Yojana",
+          "legacy_raw_occurrences": 4,
+          "substring_pairs": 4,
+          "word_boundary_pairs": 4
+        },
+        {
+          "entity": "Sukanya Samriddhi Yojana",
+          "legacy_raw_occurrences": 3,
+          "substring_pairs": 3,
+          "word_boundary_pairs": 3
+        },
+        {
+          "entity": "Ujjwala Yojana",
+          "legacy_raw_occurrences": 2,
+          "substring_pairs": 2,
+          "word_boundary_pairs": 2
+        },
+        {
+          "entity": "GST",
+          "legacy_raw_occurrences": 1,
+          "substring_pairs": 1,
+          "word_boundary_pairs": 1
+        },
+        {
+          "entity": "UPI",
+          "legacy_raw_occurrences": 1,
+          "substring_pairs": 1,
+          "word_boundary_pairs": 1
+        },
+        {
+          "entity": "EPFO",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "IFSC code",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        },
+        {
+          "entity": "Provident Fund",
+          "legacy_raw_occurrences": 0,
+          "substring_pairs": 0,
+          "word_boundary_pairs": 0
+        }
+      ],
+      "word_boundary_variant_hits": {
+        "Aadhaar :: आधार": 1115,
+        "Aadhaar :: आधार कार्ड": 772,
+        "PAN card :: पैन कार्ड": 574,
+        "DigiLocker :: डिजिलॉकर": 240,
+        "CoWIN :: कोविन": 202,
+        "Ration card :: राशन कार्ड": 108,
+        "Ayushman Bharat :: आयुष्मान भारत": 87,
+        "PAN card :: पैन": 76,
+        "Voter ID :: मतदाता पहचान पत्र": 40,
+        "Passport Seva :: पासपोर्ट सेवा": 39,
+        "Pradhan Mantri Awas Yojana :: प्रधानमंत्री आवास योजना": 24,
+        "Jan Dhan Yojana :: जन धन योजना": 10,
+        "Kisan Credit Card :: किसान क्रेडिट कार्ड": 9,
+        "Mudra Yojana :: मुद्रा योजना": 4,
+        "ESIC :: ईएसआईसी": 4,
+        "Sukanya Samriddhi Yojana :: सुकन्या समृद्धि योजना": 3,
+        "Ujjwala Yojana :: उज्ज्वला योजना": 2,
+        "GST :: जीएसटी": 1,
+        "UPI :: यूपीआई": 1
+      },
+      "substring_only_hits": [
+        {
+          "row": 120,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मेरी मौसम आधारित फसल बीमा योजना पॉलिसी किस प"
+        },
+        {
+          "row": 286,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ं बाढ़ के कारण पुनर्गठित मौसम आधारित फ़सल बीमा योजना के अन्तर्गत"
+        },
+        {
+          "row": 1593,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "होती थी जिससे बाहर गया तो आउट पैनैलटी रखता था लेकिन आउटर लाइन म"
+        },
+        {
+          "row": 2108,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "रूप में से वर्षा आधारित है गेहूँ चना सोयाबीन मक्का "
+        },
+        {
+          "row": 4308,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "्था ज्यादातर कृषि और मदिरा पर आधारित है"
+        },
+        {
+          "row": 5269,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मुझे मौसम आधारित फ़सल बीमा योजना के अंतर्गत "
+        },
+        {
+          "row": 5933,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "ग ओ अभी हम लोगों के यहाँ सोलर पैनल की कोई व्यवस्था नहीं है"
+        },
+        {
+          "row": 5934,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "ं कि सरकार के द्वारा कुछ सोलर पैनल की व्यवस्था की गई है लेकिन औ"
+        },
+        {
+          "row": 6145,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "महिलाओं के बीच एक विकासवाद पर आधारित हथियारों की होड़ का कारण बन"
+        },
+        {
+          "row": 7250,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " सात छः जीरो के साथ आपके मौसम आधारित फसल बीमा योजना आवेदन पर कोई"
+        },
+        {
+          "row": 8259,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": " रहा है और इसके अलावा जो लाइट पैनल लाइट जो है उसमें भी समस्या आ"
+        },
+        {
+          "row": 8260,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "दिक्कत यह आ रही है कि पैनल लाइट सही से चल नहीं रही है क"
+        },
+        {
+          "row": 8263,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "करवात हूँ सही से मैनेजमेंट और पैनल का दोनों मिला कर के"
+        },
+        {
+          "row": 8653,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "कॉटन का सट पैन्ट लेना है"
+        },
+        {
+          "row": 8654,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "जी देखिए कोटन का सर्ट पैन्ट लीजिएगा तो ठीक है लीजिए उसम"
+        },
+        {
+          "row": 8656,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": " से कम आपको पड़ जाएगा ये सर्ट पैन्ट लीजिएगा कॉटन में तो कम से क"
+        },
+        {
+          "row": 9968,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "तिरसठ का उपयोग करके मेरे मौसम आधारित फ़सल बीमा योजना आवेदन की स्"
+        },
+        {
+          "row": 10455,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "़कों का लड़कों का ब्लू कलर का पैन्ट होना चाहिए"
+        },
+        {
+          "row": 11015,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मैं मौसम आधारित सफल बीमा योजना के अंतर्गत अ"
+        },
+        {
+          "row": 11485,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ये हिंदुस्तानी पर आधारित है न कि फारसी पर जैसा कि ना"
+        },
+        {
+          "row": 12986,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "नहीं नहीं मुझे पैन्ट सर्ट में दिखाइए जो बढ़िया अ"
+        },
+        {
+          "row": 12988,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "वही पैन्ट का बत्तिस है"
+        },
+        {
+          "row": 13122,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "क्या आप आग के कारण मौसम आधारित फ़सल बीमा योजना के अन्तर्गत"
+        },
+        {
+          "row": 13144,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मैं अपने मौसम आधारित फसल बीमा योजना पॉलिसी के के"
+        },
+        {
+          "row": 14690,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "को भी सिल सिल लेते हैं और हाफ पैन्ट है बच्चियाँ का वो भी सिल ले"
+        },
+        {
+          "row": 15154,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मैंने पुनर्गठित मौसम आधारित फ़सल बीमा योजना के अंतर्गत "
+        },
+        {
+          "row": 15498,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " पी जे अब्दुल कलाम के जीवन पर आधारित जिसका नाम है अग्नि की उड़ान"
+        },
+        {
+          "row": 15856,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "क्रवात के कारण पुनर्गठित मौसम आधारित फ़सल बीमा योजना के अन्तर्गत"
+        },
+        {
+          "row": 17391,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "नहीं बाल में पैन्ट वैंट नहीं करवाना है टाइमिन्"
+        },
+        {
+          "row": 17971,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "रती है खासकर अगर इसमें मेहसूल आधारित बीमा व्याप्ति शामिल है"
+        },
+        {
+          "row": 21576,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ामन्ती समाज दो सिद्धान्तों पर आधारित है सामन्तवाद और जागीरवाद"
+        },
+        {
+          "row": 21864,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ि रखता हूँ कि क्या यह क्षेत्र आधारित बीमा व्याप्ति को कवर करती ह"
+        },
+        {
+          "row": 23176,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "न डी एस और निन्टेंडो स्विच पर आधारित दर्शाया गया है"
+        },
+        {
+          "row": 28385,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ाइब एट सिक्स के साथ मेरे मौसम आधारित फसल बीमा योजना आवेदन पर कोई"
+        },
+        {
+          "row": 29677,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मुझे अपनी पुनः गठित मौसम आधारित फसल बीमा योजना के लिए अपने "
+        },
+        {
+          "row": 29772,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "कृपया पैनल से पचास हजार रुपये का मासिक "
+        },
+        {
+          "row": 31644,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "क्रवात के कारण पुनर्गठित मौसम आधारित फ़सल बीमा योजना के अंतर्गत "
+        },
+        {
+          "row": 32434,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मुझे अपनी पुनर्गठित मौसम मौसम आधारित फसल बीमा योजना के लिए अपने "
+        },
+        {
+          "row": 33040,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "एक एक का उपयोग करके मेरे मौसम आधारित फ़सल बीमा योजना आवेदन की इस"
+        },
+        {
+          "row": 33104,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "या पैन्ट सर्ट लेना चाहते या कोई"
+        },
+        {
+          "row": 34309,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "शून्य का उपयोग करके मेरे मौसम आधारित फ़सल बीमा योजना आवेदन की स्"
+        },
+        {
+          "row": 34657,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "क्या आप मेरी मौसम आधारित फ़सल बीमा योजना पॉलिसी की व"
+        },
+        {
+          "row": 36598,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मुझे अपनी मौसम आधारित फसल बीमा योजना के लिए अपने "
+        },
+        {
+          "row": 39032,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मैं पुनर्गठित मौसम आधारित फसल बीमा योजना के अंतर्गत अ"
+        },
+        {
+          "row": 39131,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "लवाना है कि सलवार भी है उसमें पैन्ट भी सिलवाना है"
+        },
+        {
+          "row": 39133,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "पैन्ट भी सिलवाना है ठीक है तो हाँ"
+        },
+        {
+          "row": 39366,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "हमारे होटल की लोकेशन है आधारताल के पास है साई जो है यह पेट"
+        },
+        {
+          "row": 40298,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "पया देख सकते हैं कि मेरे मौसम आधारित फसल बीमा योजना आवेदन को संस"
+        },
+        {
+          "row": 44518,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मैंने पुनर्गठित मौसम आधारित फसल बीमा योजना के अंतर फसल "
+        },
+        {
+          "row": 46819,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ह चार का उपयोग करके मेरे मौसम आधारित फ़सल बीमा योजना आवेदन की इस"
+        },
+        {
+          "row": 47947,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "्टेट्स एक वेबसाइट और ब्राउज़र आधारित खेल है ऑनलाइन समुदाय है"
+        },
+        {
+          "row": 49840,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "ग पर हरा रंग ओर नाप चालीस में पैन्टर्स वर्तमान में भंडार में है"
+        },
+        {
+          "row": 50080,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " इक्यानवे एक के साथ मेरे मौसम आधारित फ़सल बीमा योज़ना आवेदन पर क"
+        },
+        {
+          "row": 51359,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "कपड़ा में जो है शर्ट पैन्ट लेना है"
+        },
+        {
+          "row": 52263,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मैं अनावृष्ट के कारण मौसम आधार्य सफल बीमा योजना के अंतर्गत अ"
+        },
+        {
+          "row": 54636,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "हज़ार रुपया बहुत भैया एक शर्ट पैन्ट का जो है मानकर चलिए पाँच सौ"
+        },
+        {
+          "row": 57383,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मैं अपनी मौसम आधारित फ़सल बीमा योजना पॉलिसी के"
+        },
+        {
+          "row": 58220,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "ल पर लाल रंग और नाप चालीस में पैन्ट्स वर्तमान में भण्डार में है"
+        },
+        {
+          "row": 58349,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "आबादी इस कृषि पर आधारित है यहाँ तरह तरह की कृषि प्र"
+        },
+        {
+          "row": 58353,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "पर तथा कुन अन्य और ब्यवसाय पर आधारित है जैसे मिट्टी का बर्तन बना"
+        },
+        {
+          "row": 58593,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "क्या आप मुझे मौसम आधारित फसल बीमा योजना के अंतर्गत म"
+        },
+        {
+          "row": 59235,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "क्या आप मुझे मौसम आधारित फ़सल बीमा योजना के अंतर्गत "
+        },
+        {
+          "row": 64665,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "र यहाँ महसूल <unintelligible> आधारित बीमा प्राप्ति है"
+        },
+        {
+          "row": 64837,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "पैन्ट खरीदे थे हम पैन्ट जीन्स का "
+        },
+        {
+          "row": 64838,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "चुस्त नहीं था ठीक था पैन्ट का दाम भी"
+        },
+        {
+          "row": 64840,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "पैन्ट का कलर भी नहीं जाता था पैन्"
+        },
+        {
+          "row": 64841,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "सुन्दर भी देखने में लगता था पैन्ट वह पहनने में अच्छा था"
+        },
+        {
+          "row": 64842,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "पैन्ट का"
+        },
+        {
+          "row": 65381,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "कि भाई सारी चीज़ें हैं उसी पे आधारित"
+        },
+        {
+          "row": 65787,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "कृपा कर सकते हैं कि मेरे मौसम आधारित फसल बिमा योजना आवेदन को संस"
+        },
+        {
+          "row": 66962,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मैंने मौसम आधारित फसल बीमा योजना के अंतर्गत फ"
+        },
+        {
+          "row": 68101,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ते हैं कि मेरे पुनर्गठित मौसम आधारित फसल बीमा योजना आवेदन को संस"
+        },
+        {
+          "row": 68103,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मैंने मौसम आधारित फसल बीमा योजना के अंतर्गत फ"
+        },
+        {
+          "row": 69315,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ार पढ़ने का मन करता है उसी पर आधारित फिल्म है रामानंद सागर कि श्"
+        },
+        {
+          "row": 69823,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "दो के साथ मेरे पुनर्गठित मौसम आधारित फ़सल बीमा योजना आवेदन पर को"
+        },
+        {
+          "row": 70339,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मुझे अपने पूर्णगठित मौसम आधारित फसल बीमा योजना आवेदन के लिए"
+        },
+        {
+          "row": 70743,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "अच्छा हाफ़ पैन्ट सब"
+        },
+        {
+          "row": 70744,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "हाफ़ पैन्ट लड़का का"
+        },
+        {
+          "row": 71219,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": " कौन सा कपड़ा चाहिए आपको जैसे पैन्ट सर्ट चाहिए या साड़ी चाहिए य"
+        },
+        {
+          "row": 71241,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "पया देख सकते हैं कि मेरे मौसम आधारित फ़सल बीमा योजना आवेदन को सं"
+        },
+        {
+          "row": 74771,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "nintelligible> से उसको इंजोफन पैनाले से एस्प्रे करेंगे उस पे"
+        },
+        {
+          "row": 75347,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "पुनर्गठित मौसम आधारित फसल बीमा योजना के अंतर्गत म"
+        },
+        {
+          "row": 75576,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "क्या आप मुझे मौसम आधारित फसल बीमा योजना के अंतर्गत म"
+        },
+        {
+          "row": 75972,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मौसम आधारित फ़सल बीमा योजना के अन्तर्गत"
+        },
+        {
+          "row": 76529,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "पीसने वाले लोग भी बिजली पर ही आधारित हैं अगर बिजली नहीं आती है त"
+        },
+        {
+          "row": 78554,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मुझे अपने पुनर्गठित मौसम आधारित फ़सल बीमा योजना आवेदन के लि"
+        },
+        {
+          "row": 78731,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मुझे अपनी पुनर्गठित मौसम आधारित फ़सल बीमा योजना के लिए अपने"
+        },
+        {
+          "row": 79169,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " लोग का पूरा जीवन बिजली पे ही आधारित हो गया है"
+        },
+        {
+          "row": 79736,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "और लड़के के लिए पैन्ट शर्ट चाहिए एक छोटी सी बच्ची"
+        },
+        {
+          "row": 81081,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": " लिए भी और लड़कियों के लिए भी पैन्ट सल्ट"
+        },
+        {
+          "row": 81085,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "और कलर रहेगा नीला पैन्ट रहेगा सफेद सल्ट रहेगा"
+        },
+        {
+          "row": 84800,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ाने तक की व्यवस्था कृषि पर भी आधारित है"
+        },
+        {
+          "row": 89068,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ते हैं कि मेरे पुनर्गठित मौसम आधारित फसल बीमा योजना आवेदन को संस"
+        },
+        {
+          "row": 91058,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "संस्कृत पर आधारित हम कई फिल्म फिल्म भी देखना "
+        },
+        {
+          "row": 92372,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "बता सकते हैं कि मैं अपने मौसम आधारित फसल बीमा योजना के लिए अपना "
+        },
+        {
+          "row": 92455,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "र तीन का उपयोग करके मेरे मौसम आधारित सफल बीमा योजना आवेदन की स्थ"
+        },
+        {
+          "row": 93276,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "समय से तो हमें निजी वाहनों पर आधारित रहना पड़ता है और निजी वाहनो"
+        },
+        {
+          "row": 94614,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "क्या आप मुझे पुनर्गठित मौसम आधारित फसल बीमा योजना के अंतर्गत म"
+        },
+        {
+          "row": 95404,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "आदमी हैं वह लोग पैन्ट शर्ट पहन रहे हैं"
+        },
+        {
+          "row": 95696,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मेरी मौसम आधारित फसल बीमा योजना पॉलेसी के प्"
+        },
+        {
+          "row": 95829,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मौसम आधारित फ़सल बीमा योजना के अन्तर्गत"
+        },
+        {
+          "row": 97242,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मैंने मौसम आधारित फ़सल बीमा योजना के अन्तर्गत"
+        },
+        {
+          "row": 97421,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "औ पैन्ट उसके नीचे उसका"
+        },
+        {
+          "row": 97423,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "और पैन्ट उस नीचे पैन्ट वी पैन्ट सलवा"
+        },
+        {
+          "row": 97923,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "गी कितना बोर्ड की जरूरत कितना पैनल का जरूरत पड़ेगा कुछ बताएँगे "
+        },
+        {
+          "row": 98751,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "क्या आप मुझे मौसम आधारित सफल बीमा योजना के अंतर्गत म"
+        },
+        {
+          "row": 100667,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मैं पुनर्गठित मौसम आधारित फ़सल बीमा योजना के तहत अपनी"
+        },
+        {
+          "row": 103312,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "ं तो चाहिए ब्लू शल्ट ऐंड ग्रे पैन्ट और ग्रे इस्कल्ट और ब्लू शल्"
+        },
+        {
+          "row": 103523,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "तो मुझे बच्चों के लिए पैन्ट और शर्ट टाई वगैरह और बेल्ट "
+        },
+        {
+          "row": 106528,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "े हैं तो बिजनेसे पर मन लगा कर आधारित रहें जिससे बिजनेस सफ़ल हो प"
+        },
+        {
+          "row": 106754,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "चीज जो लिखा हुआ था वह सत्य पर आधारित था"
+        },
+        {
+          "row": 107053,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "मैं पेमेन्ट्स मैं पैन्ट्स को नाप चौँतीस और भूरा रंग"
+        },
+        {
+          "row": 107107,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "पुनर्गठित मौसम आधारित फसल बीमा योजना के अंतर्गत म"
+        },
+        {
+          "row": 107588,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": " से यही कहेंगे कि इस पे थोड़ी पैनी नज़र रखें और इसको दूर करें ज"
+        },
+        {
+          "row": 108820,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मुझे अपने मौसम आधारित फ़सल बीमा योजना आवेदन के लि"
+        },
+        {
+          "row": 109400,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "से प्रेमचन्द्र मानव स्वभाव के आधारभूत महत्ता पर बल देते हैं इनकी"
+        },
+        {
+          "row": 110440,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "पयोग करके मेरे पुनर्गठित मौसम आधारित फ़सल बीमा योजना आवेदन की स्"
+        },
+        {
+          "row": 113307,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "पया देख सकते हैं कि मेरे मौसम आधारित फसल बीमा योजना आवेदन को वो "
+        },
+        {
+          "row": 114054,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "जो सिला सिलाया सर्ट पैन्ट चाहिए या थान में कपड़ा चाहि"
+        },
+        {
+          "row": 114058,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "तो एक पैन्ट और एक सर्ट का कम से कम दाम "
+        },
+        {
+          "row": 114441,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " इस्तेमाल कर लेते हैं और कौशल आधारित व्यवसाय है जैसे"
+        },
+        {
+          "row": 115601,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "यह एक महाकाव्य पर आधारित है जिसको कि रामायण कहते हैं"
+        },
+        {
+          "row": 115616,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "भगवान राम के जीवन पर आधारित है भगवान राम के संघर्षों पे"
+        },
+        {
+          "row": 118236,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "आपको शर्ट पैन्ट का जो है ना"
+        },
+        {
+          "row": 118242,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "वह सब भी एक शर्ट पैन्ट का पाँच सौ रुपया लेता है अल"
+        },
+        {
+          "row": 118561,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मैं प पाला के कारण मौसम आधारित फ़सल बीमा योजना के अन्तर्गत"
+        },
+        {
+          "row": 119320,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "रह मतलव ये हमारे क्षेत्रों पर आधारित है जैसे किस तरह"
+        },
+        {
+          "row": 119897,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": " बाद में हम लोग क्या करते हैं पैन्ट और जूता मोज़ा निकालकर सब का"
+        },
+        {
+          "row": 122082,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ं बाढ़ के कारण पुनर्गठित मौसम आधारित फ़सल बीमा योजना के अंतर्गत "
+        },
+        {
+          "row": 123125,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": " बनाओ वो जाता था फिर उसके बाद पैन्ट को सिलते थे पैन्ट सिलने के "
+        },
+        {
+          "row": 123126,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "पैन्ट सिल लेते थे तो उसको गूलते थ"
+        },
+        {
+          "row": 123132,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "ोइन का भी जो देखती थी हीरो का पैन्ट तो पैन्ट भी सिल लेती हूँ सॉ"
+        },
+        {
+          "row": 123133,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "हीरो का जो पैन्ट दिखता था सर्ट ओ सिल देते थे"
+        },
+        {
+          "row": 123139,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "के बाद आदमी लोग का रहता है जो पैन्ट वैन्ट रहता है आदमी लोग का त"
+        },
+        {
+          "row": 123145,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "कच्च पैन्ट वगैरह हो गया कच्छा बनियान य"
+        },
+        {
+          "row": 123158,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "आपका पैन्ट हो गया सर्ट हो गया सब कुछ आ"
+        },
+        {
+          "row": 123495,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "पैन्ट सर्ट के कपड़े पैन्ट सर्ट"
+        },
+        {
+          "row": 124025,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "मैं गलती से आदेश के कारण पैन्ट्स के लिए स्नैपडील पर अपना ह"
+        },
+        {
+          "row": 126491,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "ठीक पैन्ट है शर्ट है बच्चों के लिए"
+        },
+        {
+          "row": 126986,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "पयोग करके मेरे पुनर्गठित मौसम आधारित फसल बीमा योजना आवेदन की स्थ"
+        },
+        {
+          "row": 128283,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "हाँ तो आपको पैन्ट शर्ट सिलवाना है कि सूट सलवा"
+        },
+        {
+          "row": 129362,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "सच्ची आ सच्ची सच्ची घटनाओं पर आधारित होती हैं किसी की जीवनी या क"
+        },
+        {
+          "row": 129363,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "जैसे की जीवनी पर आधारित होती है इन कहानियों में इन "
+        },
+        {
+          "row": 131102,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "नीचे वाला जैसे लैगी वाला पैन्ट आता है ना वह चाहिए नान बच्च"
+        },
+        {
+          "row": 132867,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "जैसे भाई नैन है रोहू है पैना है"
+        },
+        {
+          "row": 132941,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "जो भी न्याय पालिका द्वारा आधारित अनुमानित चीज़ रहता है या अन"
+        },
+        {
+          "row": 134018,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "मुझे एक पैन्ट्स लौटाना होगा क्योंकि यह मे"
+        },
+        {
+          "row": 134922,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "पुनर्गठित मौसम आधारित फ़सल बिमा योजना के अंतर्गत "
+        },
+        {
+          "row": 136307,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "आधारताल से ले कर कमानिया तक का था "
+        },
+        {
+          "row": 136309,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "आधारताल से लेके कमानिया तक के रास्"
+        },
+        {
+          "row": 137916,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "रखना और लड़कों की तो सर्ट में पैन्ट में दोनों में पैकेट में है "
+        },
+        {
+          "row": 140621,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "एशियाई चंद्र सौर कैलेंडरों पर आधारित है"
+        },
+        {
+          "row": 141224,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "सकती मुझे सारी सत्य घटनाओं पर आधारित जो किताबें होती है उसे पढ़न"
+        },
+        {
+          "row": 146516,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "पैनाल्टी लगेगी आपको"
+        },
+        {
+          "row": 146518,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "ाद में आपको जब करना पड़ा आपको पैनाल्टी लगेगी पर डे पचास रुपए की"
+        },
+        {
+          "row": 146524,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "से जल्दी आएँ क्योंकि आपके अगर पैनाल्टी ज़्यादा बढ़ेगी तो आपको द"
+        },
+        {
+          "row": 146528,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "क है तो आज तो हम आपको हालाँकि पैनाल्टी लगा कर छोड़ दे रहे हैं अ"
+        },
+        {
+          "row": 147603,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "पर आधारित एक घटना पर है इस लिए मुझे य"
+        },
+        {
+          "row": 147720,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " अप्रयोग से न्यूनतम प्रयोग पर आधारित है"
+        },
+        {
+          "row": 151124,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मेरे गाँव में कृषि आधारित बिजनस होते हैं जैसे टैक्टर्"
+        },
+        {
+          "row": 152223,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "्रों घरशेर निखंडर और परपति पर आधारित है जो चमकीले कपड़े और शिरोभ"
+        },
+        {
+          "row": 156540,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " एक ही चीज़ करते थे कृषि कृषि आधारित होने के कारण लोग कृषि हर प्"
+        },
+        {
+          "row": 158796,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "जी मेरे को एक शर्ट पैन्ट चाहिए था सूती के कपड़े का व"
+        },
+        {
+          "row": 158798,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "िसाब से आप बता दीजिए अगर शर्ट पैन्ट की जगह कुछ और अगर आप बता सक"
+        },
+        {
+          "row": 158804,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "तो फ़िलहाल आप मेरे को वह शर्ट पैन्ट के ही दो तीन पीस के फ़ोटो भ"
+        },
+        {
+          "row": 160739,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " उपयोगकर्ताओं में सोशल मीडिया आधारित समाचार साइटें लोकप्रिय हो ग"
+        },
+        {
+          "row": 162055,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ि जगहें हैं जैसे भेड़ा घाट धुँआधार गौरी घाट और और भी यहाँ काफ़ी "
+        },
+        {
+          "row": 162146,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "पाल वर्मा की अपराधी दुनिया पर आधारित फिल्म कंपनी में एक आइटम नंब"
+        },
+        {
+          "row": 163070,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "नहीं आपने सोचना था न कि आपको पैनालिटी ब लगेंगी तो आपने आपकी जो"
+        },
+        {
+          "row": 167375,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "ी जाने वाली टेक्निक्स हम सोलर पैनल्स का"
+        },
+        {
+          "row": 168684,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ब सब जो होता है सब स्वास्थ पे आधारित होता है स्वास्थ अगर हमारा स"
+        },
+        {
+          "row": 172323,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "पूर्व शास्त्रीय मधुर रूपों पर आधारित होता है जिसमें पाँच या अधिक"
+        },
+        {
+          "row": 174117,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मध्य प्रदेश एक कृषि आधारित राज्य है इसमें सत्तर प्रतीश"
+        },
+        {
+          "row": 178096,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ार तक हो और वही चीज अगर हमारे आधारताल साइड या बाहर आउटर स्पेस मे"
+        },
+        {
+          "row": 178721,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "े विभिन्न परिवारों के जीवन पर आधारित है यह कार्यक्रम मुझे हँसाने"
+        },
+        {
+          "row": 178722,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ौन बनेगा करोड़पति यह एक ज्ञान आधारित गेम सो है जिसमें प्रतिभागी "
+        },
+        {
+          "row": 178723,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " हैं यह एक सामाजिक मुद्दों पर आधारित कार्यक्रम है जिसमें विभिन्न"
+        },
+        {
+          "row": 182276,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "पंजीकृत मोबाइल नम्बर पैन्सठ सैन्तालीस बाईस दो सड़सठ अट"
+        },
+        {
+          "row": 182504,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "और ये एक सच्ची घटना पर आधारित है"
+        },
+        {
+          "row": 186072,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "र तो लगभग कई सारे फील्म इस पर आधारित कई सारे फील्म भी हैं जिन्हे"
+        },
+        {
+          "row": 187146,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "यहाँ से थोड़ी ही दूरी पर एक धुआधार नामक जल प्रपात है मतलब झरना ह"
+        },
+        {
+          "row": 188348,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ुरा को परेशान कर रही है जिसकी आधारभूत संरचना सीमित है"
+        },
+        {
+          "row": 190705,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "और वो पैन्ट कैसे रखने हैं नीचे से ढीले "
+        },
+        {
+          "row": 192866,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "रना है जो कि जिसे बोलते हैं धुआधार वो भी बहुत ही अच्छा"
+        },
+        {
+          "row": 194437,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "हे हो क्या भैया भैया मैंने वो आधारताल में डोसा ऑर्डर किया था हाँ"
+        },
+        {
+          "row": 195226,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " हज़ार छः सौ लोगों के जनमत पर आधारित थी"
+        },
+        {
+          "row": 195952,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " के बच्चे थे तो भोजपुरी पर ही आधारित थे बाहर भी घूमने जाते थे तो"
+        },
+        {
+          "row": 199580,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "दो हज़ार बारह में वे लूट पर आधारित फ़िल्म प्लेयर्स में दिखाई द"
+        },
+        {
+          "row": 199916,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "आधारित प्रयोग किया जाता है क्योंकि"
+        },
+        {
+          "row": 200063,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "हमारा भारत कृषि पर आधारित है इसे कृषि प्रधान देश भी क"
+        },
+        {
+          "row": 202395,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ि शिक्षित होना जीवन के लिए एक आधारभूत होता है और"
+        },
+        {
+          "row": 205009,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "े अन्य उदाहरण कैन स्लिम और पावपैनिक के साथ साथ पेमडास भी हैं"
+        },
+        {
+          "row": 205630,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ा पसंद आती है सच्ची घटनाओं पर आधारित किताबों की बात करें तो एक ज"
+        },
+        {
+          "row": 205631,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ी होते हैं वो सच्ची घटनाओं पर आधारित होते हैं जो लोग काफ़ी पसंद "
+        },
+        {
+          "row": 209143,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "डोमो एक क्लाउड आधारित प्रबंध प्रणाली है जो छोटे व"
+        },
+        {
+          "row": 213282,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "राथमिक शिक्षा में छात्राओं को आधारभूत ज्ञान कौशल और अभिप्रेरणा प"
+        },
+        {
+          "row": 219523,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "द दिलाता है यह नाम इस तथ्य पर आधारित है कि शिव से शादी करने ए के"
+        },
+        {
+          "row": 223399,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "वहीं कम्पनियाँ कौशल आधारित भर्ती पर ध्यान देती ध्यान द"
+        },
+        {
+          "row": 223671,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "कई समितियाँ आयोग कार्यसमूह या पैनल आई टी टी एफ के गठन या बोर्ड "
+        },
+        {
+          "row": 224341,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "छली बार आ चुके हो हाँ हाँ मैं आधारताल से बोल रहा हूँ पेट्रोल पम्"
+        },
+        {
+          "row": 224964,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "वहन संचालन व्यवसाय भूमि पर ही आधारित है"
+        },
+        {
+          "row": 226117,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "मतलब क्या चाहिए आपको पैन्ट शर्ट चाहिए साड़ी चाहिए"
+        },
+        {
+          "row": 226120,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "नहीं अब पैन्ट सर्ट अब वो सात सौ की कैसे न"
+        },
+        {
+          "row": 227625,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ती हूँ जिसमें सच्ची घटनाओं पर आधारित स्टोरीज़ लिखी जाती हैं और उ"
+        },
+        {
+          "row": 227627,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "वह एक सच्ची घटनाओं पर आधारित रहती है तो हमें बहुत सी चीज"
+        },
+        {
+          "row": 227629,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ऐसा हुआ होगा हुआ था तभी उस पर आधारित जो लेखक रहते हैं जो कभी स्ट"
+        },
+        {
+          "row": 231271,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "्षाओं में दोबारा नया डैन्टिंग पैन्टिंग की गई है जिस से थोड़े दे"
+        },
+        {
+          "row": 232883,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ये आप आधारताल में आंनदनगर में आ जाइएगा"
+        },
+        {
+          "row": 233176,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "और पेंट का रंग उखड़ने के कारण पैन्ट जब पहने तो अच्छा नहीं लगा थ"
+        },
+        {
+          "row": 234148,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "िस्सा इस टाइप का विषयों पर यह आधारित है यह युवाओं के लिए रोज़गार"
+        },
+        {
+          "row": 242034,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": " अगर दूर जाते हैं तो वहा रहने पैने का"
+        },
+        {
+          "row": 245664,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " से ही रामायण पर जो रामायण पर आधारित जो भी आप कह सकते है कि टेली"
+        },
+        {
+          "row": 245708,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "ा हो तो एक कारण ये है कि सोलर पैनल की सहायता से हम कर सके जो कि"
+        },
+        {
+          "row": 247122,
+          "entity": "Ration card",
+          "variant": "राशन कार्ड",
+          "context": "में नाम होता है या जिन के पास राशन कार्ड्स होते हैं तो उस में ये है कि"
+        },
+        {
+          "row": 247227,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "डोरा अर्जेंटीना ऑस्ट्रेलिया स्पैन ग्रीस"
+        },
+        {
+          "row": 247525,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " जाता है कि यह शैली ध्रुपद पर आधारित थी और अन्य संगीत परंपराओं स"
+        },
+        {
+          "row": 247593,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "एक कमज़ोर प्रजाति बेलीथ ट्रैगोपैन नागालैंड का राज्य पक्षी है"
+        },
+        {
+          "row": 248809,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "पैन्ट शर्ट चाहिए हमें मतलब थोड़ा "
+        },
+        {
+          "row": 248813,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "नहीं नहीं मतलब एक कलर मतलब पैन्ट मतलब ऐसा नहीं होना चाहिए डि"
+        },
+        {
+          "row": 248815,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "नहीं नहीं नहीं नहीं पैन्ट शर्ट का नहीं वो मतलब एक ही "
+        },
+        {
+          "row": 249538,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "दैनिक जीवन ही प्रौद्योगिकीपया आधारित हो चुका है वर्तमान समय में "
+        },
+        {
+          "row": 250114,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "टर के एवम जादुई स्कूलों पर ही आधारित होती हैं"
+        },
+        {
+          "row": 250854,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "हाँ तो मेरे को कॉटन के शर्ट पैन्ट दिखा दीजिए"
+        },
+        {
+          "row": 250857,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "पैन्ट सप पैन्ट शर्ट चाहिए कॉटन का"
+        },
+        {
+          "row": 251111,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "बताई गई थी वो सच्ची घटनाओं पर आधारित थी जैसे कि हमारे भारत भारत "
+        },
+        {
+          "row": 251112,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "िया गया तो वो सच्ची घटनाओं पर आधारित थी"
+        },
+        {
+          "row": 254282,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "और पैनासोनिक के भी वायर हैं बहुत अच्"
+        },
+        {
+          "row": 254818,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "पैन्तीस हज़ार सोलह हज़ार पैन्सठ ह"
+        },
+        {
+          "row": 255783,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "श्वेता जैन अच्छा यह ही यह आधारताल में जो रहती हैं"
+        },
+        {
+          "row": 260255,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ुछ है इसलिए वो बिल्कुल फोन पर आधारित हो जाते हैं और फोन ही देखना"
+        },
+        {
+          "row": 265752,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": " के लिए एक बहुत ही संकीर्ण और पैनी नोक का इस्तेमाल किया जाता था"
+        },
+        {
+          "row": 267222,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ो खंभा और माइराओग के थोइबी पर आधारित विरासत का एक हिस्सा है"
+        },
+        {
+          "row": 270351,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "है जो कि एकदम सच्ची घटनाओं पर आधारित होता है किसी भी प्रकार का ब"
+        },
+        {
+          "row": 271057,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "कोण कैसे लोगों में आएगा इस पर आधारित"
+        },
+        {
+          "row": 271073,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "किसी के तर्क को तर्क पर आधारित बात को अपने तर्क पर उसको खर"
+        },
+        {
+          "row": 271516,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "प्रभावित करती है माइंड डोनेशन आधारित <unintelligible> तनाव को कम"
+        },
+        {
+          "row": 271517,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "क अध्ययन से पता चला है कि कला आधारिक हस्तक्षेप ये प्रभावी सावित "
+        },
+        {
+          "row": 271520,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " है जो माइंड <unintelligible> आधारित"
+        },
+        {
+          "row": 271722,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "रदान करती है खासकर अगर यह उपज आधारित बीमा व्याप्ति है"
+        },
+        {
+          "row": 272357,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "स रहा है प्राचीन शिलालेखों पर आधारशिलाएँ जितने भी मिली है उनमें "
+        },
+        {
+          "row": 275302,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " के दुंदिया ने उल्टा चश्मा पर आधारित थे"
+        },
+        {
+          "row": 275983,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मैंने पुनर्गठित मौसम आधारित फसल बीमा योजना के अंतर्गत फ"
+        },
+        {
+          "row": 275993,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "आधारित फसल बीमा योजना के अंतर्गत अ"
+        },
+        {
+          "row": 277250,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "की कौशल आधारित पाठ्यक्रम जो है कि गवरमेंट "
+        },
+        {
+          "row": 277496,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मैं पुनर्गठित मौसम आधारित फसल बीमा योजना के अंतर्गत फ"
+        },
+        {
+          "row": 281252,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "कि वो आधारित होता है गीत के ऊपर"
+        },
+        {
+          "row": 282160,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ै और उसके लिए भी जो अनुबंध पर आधारित जो"
+        },
+        {
+          "row": 282363,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मैं मौसम आधारित फसल बीमा के अंतर्गत अपनी फस"
+        },
+        {
+          "row": 284449,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ैं पढ़ लेती हूँ और जीवन पर जो आधारित बुक होती हैं वो भी बहुत ही "
+        },
+        {
+          "row": 285081,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "पर काला रंग और नाप बयालीस में पैन्ट्स वर्तमान में भण्डार में है"
+        },
+        {
+          "row": 285209,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मुझे अपने मौसम आधारित फ़सल बीमा योजना आवेदन के लि"
+        },
+        {
+          "row": 285580,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "पर आधारित होते हैं क्योंकि जो कार्य ह"
+        },
+        {
+          "row": 287028,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मैंने पुनर्गठित आधारि मौसम आधारित फसल बीमा योजना क"
+        },
+        {
+          "row": 289063,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "है अपने बच्चे को भी हमारे ऊपर आधारित है न वह हम कैसे करेंगे"
+        },
+        {
+          "row": 289067,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "अपने दम पर करना चाहिए किसी के आधारित को कोई क्या कह रहा है क्या "
+        },
+        {
+          "row": 290235,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "क्लाउड वर्क्स में अपने क्लाउड आधारित सेवाओं की ओर एक धूरी के साथ"
+        },
+        {
+          "row": 290345,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "पुनर्गठित मौसम आधारित फसल बीमा योजना के अंतर्गत म"
+        },
+        {
+          "row": 291516,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मौसम आधारित फ़सल बीमा योजना"
+        },
+        {
+          "row": 292056,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "शिल्प कौशल आधारित व्यवसाय जैसे मिट्टी बर्तन म"
+        },
+        {
+          "row": 292058,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "अपने व्यवसाय के आधारित पर ही वह कार्य करते हैं अपन"
+        },
+        {
+          "row": 292063,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "शिल्प या कौशल के आधारित व्यवसाय हैं मिट्टी बर्तन बढ"
+        },
+        {
+          "row": 292068,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "व्यवसाय है उनका शिल्प या कौशल आधारित व्यवसाय है जिससे मिट्टी के "
+        },
+        {
+          "row": 293791,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "न में जो है अभी टेक्नोलॉजी पर आधारित एक ऐसा डिवाइस है जो आपका बह"
+        },
+        {
+          "row": 293921,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "क्या आप कृपया पुनर्गठित मौसम आधारित फसल बीमा योजना के अंतर्गत म"
+        },
+        {
+          "row": 294808,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ी शुरुआत की तब मेरा बहुत सारे आधारभूत ज्ञान और तकनीकों सीखनी पड़"
+        },
+        {
+          "row": 296407,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "करके मेरे मौसम आधारित फसल बीमा योजना आवेदन की स्थ"
+        },
+        {
+          "row": 297585,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मैंने म मैंने मौसम आधारित फसल बीमा योजना के अंतर्गत फ"
+        },
+        {
+          "row": 299552,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "थी जिसके बाद रिवाज़ों को जाति आधारित यानी जाति के"
+        },
+        {
+          "row": 299945,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "हानियाँ बनाकर लोग उस कहानी पर आधारित पर अपना लोग करते हैं"
+        },
+        {
+          "row": 300648,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ली है वह सीधा जो है झूठ ही पर आधारित है यह जो है सत्य जानते ही न"
+        },
+        {
+          "row": 301023,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "मुझे अपने हाल के पैन्ट्स ऑर्डर में एक समस्या का सा"
+        },
+        {
+          "row": 301592,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मुझे सत्य घटना पर आधारित"
+        },
+        {
+          "row": 303666,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "षताएँ नायक नायिकाओं प्रसंग पर आधारित पदम अथवा कविताएँ हैं"
+        },
+        {
+          "row": 303669,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "आधारित भारत के कुछ प्रमुख डांस के "
+        },
+        {
+          "row": 304031,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "रने के चरण चरण एक टी आई एन के आधारित"
+        },
+        {
+          "row": 304032,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "आधारिक रिपोटर पर आए और ऑनलाइन आवेद"
+        },
+        {
+          "row": 308255,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " और अन्य मध्ययुगीन ग्रंथों पर आधारित है"
+        },
+        {
+          "row": 310494,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "बहस की रिपोर्टिंग करने वाले छ पैनलिस्टों में से एक थे"
+        },
+        {
+          "row": 312223,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ा आप मुझे मेरी पुनर्गठित मौसम आधारित फसल बीमा योजना पॉलिसी का वि"
+        },
+        {
+          "row": 315253,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ैसा कमाना है तो आप इंटरनेट पर आधारित छोटा सा बिजनेस कर सकते हैं "
+        },
+        {
+          "row": 316210,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "राने स्टारआपिस स्टापिकवेयर पर आधारित है जिसे सन माइकोसिस्टम द्वा"
+        },
+        {
+          "row": 317806,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "भगवान बुद्ध के धर्म आधारित बहुत सारी ढेर सी किताबें है"
+        },
+        {
+          "row": 317809,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ज के लिए जो संघर्ष किया उस पर आधारित"
+        },
+        {
+          "row": 317830,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "और उस पर आधारित सीरियल भी बने हैं दिखाई दिख"
+        },
+        {
+          "row": 317856,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "बराबरी की बराबरी पर आधारित व्यवस्था है"
+        },
+        {
+          "row": 320904,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "आधारित फसल बीमा योजना के अंतर्गत म"
+        },
+        {
+          "row": 322279,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "ता हो इन्वेटर लगवाया जाए सोलर पैनल लगवाई जाए जिससे कि एमरजेंसी "
+        },
+        {
+          "row": 323097,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " मड़ाई ये सारी चीज़ें मानव पे आधारित थी अब ये सारी चीज़ें कृषि म"
+        },
+        {
+          "row": 327316,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "और यह एक सत्य घटना पर आधारित है"
+        },
+        {
+          "row": 328697,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ोते हैं जो कि स्थानीय भाषा पर आधारित है और उनकी"
+        },
+        {
+          "row": 330458,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मैं मौसम आधारित स फसल बीमा योजना के तहत अपन"
+        },
+        {
+          "row": 330648,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मैं ओला वृष्टि के कारण मौसम आधारित फ़सल बीमा योजना के अन्तर्गत"
+        },
+        {
+          "row": 334185,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "ें है कुकर कढ़ाई भगौनी फ़्राइनपैन माइक्रोवेव ओवन टोस्टर एयर फ़्"
+        },
+        {
+          "row": 334228,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "क जमा कराओ और इसका है ना उसका पैनल्टी और दो"
+        },
+        {
+          "row": 334718,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "की सच्ची घटना पर आधारित है लोग कहते है कि कल सतयुग "
+        },
+        {
+          "row": 336106,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मणिकर्णिका रानी लक्ष्मीबाई पर आधारित मूवी कंगना रनौत ने बनाई है "
+        },
+        {
+          "row": 336221,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " में महिलाओं के साथ भेदभाव और आधारिक्ता के बारे"
+        },
+        {
+          "row": 336223,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "न्नतियाँ नहीं करने देते थे और आधारिक्ता नहीं देते थे पर अब वह बद"
+        },
+        {
+          "row": 336423,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "समें सच्ची घटनाएँ के बारे में आधारित है जैसे कि उसमें लिखा था बे"
+        },
+        {
+          "row": 336425,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "वह इस पर आधारित था कि बेटियों को हमें आगे ब"
+        },
+        {
+          "row": 336430,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "लगी और वह एक सच्ची घटना पर ही आधारित थी"
+        },
+        {
+          "row": 340142,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "हाँ मुझे सच्ची घटना पर आधारित एक किताब बहुत पसंद है झांसी"
+        },
+        {
+          "row": 340489,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "न लग गई एक तरीके से उसका पूरा पैन्ट निकल गया जो लकड़ी थी न बहुत"
+        },
+        {
+          "row": 343707,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "पूछना था कि लड़कों का शर्ट और पैन्ट जैसे भी होता है तो वो हम"
+        },
+        {
+          "row": 343708,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": " कोस्ट पड़ती है एक शर्ट और एक पैन्ट की अगर लड़के की बात करुँ तो"
+        },
+        {
+          "row": 345254,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "िन पहले एक ऑनलाइन ऑर्डर पे एक पैन्ट मंगवाया जो कि मेरे लिए"
+        },
+        {
+          "row": 345255,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "ी और एक दो बात ये भी थी कि यह पैन्ट मेरे लिए बहुत ढीला भी हो गय"
+        },
+        {
+          "row": 345258,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "तो इस वजह से मैं इस पैन्ट से बहुत ही निराश हूँ और ये "
+        },
+        {
+          "row": 346748,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "उदाहरण के लिए पैनमा एक ऐसा स्थान है जहाँ आप लगभ"
+        },
+        {
+          "row": 348405,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "पसंद हैं मैं कुर्ता पैजामा और पैन्ट और कमीज पहनना ही पसंद करता "
+        },
+        {
+          "row": 350073,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "एक फोटो और बैंक डायरी डिटेल्स पैनकार्ड अगर क्रेडिट कार्ड हो तो "
+        },
+        {
+          "row": 351011,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "ध की बात करूँ तो पहले जो इसके पैनल्स आते थे मोनो आते थे अब पोली"
+        },
+        {
+          "row": 351012,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "ीस साल तक कुछ बिगड़ता नहीं है पैनल्स का अच्छा है बढ़िया है"
+        },
+        {
+          "row": 351184,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "त करें तो यह एक सच्ची घटना पर आधारित है हमारे यहाँ एक शक्ति पीठ "
+        },
+        {
+          "row": 353254,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "़ारसी पुर्तगाली फ़्रांसीसी इस्पैनिस रूसी अंग्रेजी आदि विदेशी तथ"
+        },
+        {
+          "row": 353363,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "सत्य घटनाओं पर आधारित वाली किताबें पढ़ने का बहुत "
+        },
+        {
+          "row": 353364,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " मतलब कोई भी इंसान की घटना पर आधारित होती है कि उसने"
+        },
+        {
+          "row": 353886,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "आधारित जो खेल हैं वो बढ़ावा उस ज़्"
+        },
+        {
+          "row": 354054,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ं वो कहानी किसी सच्चे घटना पर आधारित थी जिसको पढ़ के मेरा दिल दह"
+        },
+        {
+          "row": 356247,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "बहादुर शास्त्री जी के जीवन पर आधारित किताब थी"
+        },
+        {
+          "row": 358461,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": " जैसे बता रहे कि आपको शर्ट और पैन्ट के बारे में कोस्ट बता दिया "
+        },
+        {
+          "row": 358660,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "गी और कुछ ऐसी सच्ची घटनाओं पर आधारित लगी"
+        },
+        {
+          "row": 358661,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " उनके जीवन की सच्ची घटनाओं पर आधारित उन्होंने कई कथाएं लिखी हैं"
+        },
+        {
+          "row": 360884,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "आधारित हैं और सनी देवल और हेमा माल"
+        },
+        {
+          "row": 361299,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "सलवार सूट और और लड़कों के लिए पैन्ट शर्ट ये सब सिलाना है"
+        },
+        {
+          "row": 361300,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "्ट होनी चाहिए और ब्लैक कलर का पैन्ट होना चाहिए और है ना लड़कियो"
+        },
+        {
+          "row": 363463,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "अच्छा तो मुझे पैनासॉनिक का आप दिखाओ लैपटॉप"
+        },
+        {
+          "row": 363474,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "पैनासॉनिक है"
+        },
+        {
+          "row": 363782,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "जपैन"
+        },
+        {
+          "row": 363791,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": " बहुत से श बहुत से टी शर्ट और पैन्ट भी पहनते हैं"
+        },
+        {
+          "row": 364745,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ी है और यही मेरी स्टडी के ऊपर आधारित है"
+        },
+        {
+          "row": 366098,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "र चश्मदीद गवाहों से बातचीत पर आधारित है उसके अनुसार आग शायद किसी"
+        },
+        {
+          "row": 366694,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "के भौतीक संसाधनों में संपूर्ण आधारभूत संरचना"
+        },
+        {
+          "row": 368131,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " उस में जैसे लगभग देशभक्ति पर आधारित होती हैं भारत के इतिहास पर "
+        },
+        {
+          "row": 370252,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "तो उन को एक जैसी ड्रेस और पैन्ट पहनाना है या दूसरी दूसरी बत"
+        },
+        {
+          "row": 372242,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " की गई चीज़ों में वन गुड पौधे आधारित डालियों के कुछ डिब्बे गायब "
+        },
+        {
+          "row": 372873,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ो राज राज भाषा कहा जाता है यह आधारित आधिकारिक भाषा भी इसे माना ह"
+        },
+        {
+          "row": 372877,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " मेरी जो पिकअप लोकेशन होगी वो आधारताल से मदन महल की होगी और लौटत"
+        },
+        {
+          "row": 372878,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ाम चार बजे हमारी पिकअप लोकेशन आधारताल चौराहे पे उपस्थित होइएगा म"
+        },
+        {
+          "row": 372879,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "हाँ से आप फिर पिकअप करके हमें आधारताल चौराहे पे ड्राप कर देंगे"
+        },
+        {
+          "row": 373041,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "विता राधा कृष्ण जी के जीवन पर आधारित लगी लिखी तो वह उन्हें बहुत "
+        },
+        {
+          "row": 373760,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "स्पैन"
+        },
+        {
+          "row": 374656,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "जो कि सच्ची सच्ची कहानियों पर आधारित होती हैं"
+        },
+        {
+          "row": 374941,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "कौशल आधारित व्यवसाय ऐसे यह काम बहुत से "
+        },
+        {
+          "row": 376113,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "जन कीर्तन मुख्यतः भगवान पर ही आधारित होती है उनमें उन्हीं के चरि"
+        },
+        {
+          "row": 376441,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ॉकी बजरी प्राकृतिक घास या रेत आधारित या पानी आधारित कृत्रिम टर्फ"
+        },
+        {
+          "row": 379142,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "इनके ऊपर आधारित होता है यह युवाओं के लिए रो"
+        },
+        {
+          "row": 380728,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "ौ पीस शर्ट हैं और डेढ़ सौ पीस पैन्ट हैं"
+        },
+        {
+          "row": 383992,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "ों को निवेशकों या सार्क को एक पैनल के सामने व्यवसाय प्रस्तुतिकर"
+        },
+        {
+          "row": 385418,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "भैया मुझे आधारताल अब यहाँ से मतलब मेरे को रा"
+        },
+        {
+          "row": 386353,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ी जिले में अधिकतर लोग कृषि पर आधारित हो रहते हैं और वहाँ पर कृषि"
+        },
+        {
+          "row": 388127,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "टी छोटी चीज़ें हमारी बिजली पर आधारित है इसकी कटौती से हम बहुत पर"
+        },
+        {
+          "row": 388191,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "िताब है जोकि एक सच्ची घटना पर आधारित है और वे मुझे बहुत अच्छी लग"
+        },
+        {
+          "row": 388811,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "क स्पेसिफिक आईडी जैसे कि आपका आधारकार्ड हो गया आपका अकाउंट नंबर "
+        },
+        {
+          "row": 396066,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "पके कार्ट का आइटम वन गुड पौधे आधारित डालियाँ भंडार में नहीं है"
+        },
+        {
+          "row": 396196,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "मैं बताती हूं देखिए हमारे पास पैनासॉनिक का लैपटॉप है"
+        },
+        {
+          "row": 396208,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "एक पैनासॉनिक है"
+        },
+        {
+          "row": 397127,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "कई समुदाय आधारित दौड़ कार्यक्रम सभी उम्र और "
+        },
+        {
+          "row": 401261,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "िग डेटा नीति निर्माण में डेटा आधारित निर्णय लेना चाहिए संस्था से"
+        },
+        {
+          "row": 401564,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मेने मौसम आधारित फसल बीमा योजना के अंतर्गत फ"
+        },
+        {
+          "row": 401566,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " राजनीति बहुपार्टी प्रणाली पर आधारित है जिसमें राष्टीय ओर क्षेत्"
+        },
+        {
+          "row": 402582,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": " ये हमारे भारत की संस्कृति का आधारभूत है त्यौहार ही हम लोगों का "
+        },
+        {
+          "row": 408805,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "वे अक्सर एक स्पैनियल की तुलना में शिकारी शिकारी"
+        },
+        {
+          "row": 409502,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "अँग्रेजी भाषा पर आधारित है"
+        },
+        {
+          "row": 410270,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "स सिक्स नाइन के साथ मेरे मौसम आधारित फसल बीमा योजना आवेदन पर कोई"
+        },
+        {
+          "row": 411670,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मेरी मौसम आधारित फसल बीमा योजना पॉलिसी किस प"
+        },
+        {
+          "row": 413500,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": " से मैं जाता हूँ उस ट्रेन में पैन्ट्री कार रहती है आवश्यकता पड़"
+        },
+        {
+          "row": 415606,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मैं पुनर्गठित मौसम आधारित फसल बीमा योजना के तहत तरह अ"
+        },
+        {
+          "row": 420408,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ो रहा है स्वसवादी सिद्धांत पर आधारित है और एक दूसरे को शमन करने "
+        },
+        {
+          "row": 420917,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "ाम की फ़ोटोज़ अगर देते हैं तो पैन्टिंग वग़ैरह"
+        },
+        {
+          "row": 422498,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ौ पाँच नौ आठ के साथ मेरे मौसम आधारित फसल बीमा योजना आवेदन पर कोई"
+        },
+        {
+          "row": 424376,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "तरह से जैसे कोई भी चीज़ का हम पैन्ट किए चहे कोई भी चीज़ क्यों न"
+        },
+        {
+          "row": 426808,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "े नहीं जाते मछली के लिए घर से पैन्ट शर्ट पहन अपने जाते हैं मछली"
+        },
+        {
+          "row": 427307,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "पानी ही हम लोग हमारी एक सब से आधारभूत"
+        },
+        {
+          "row": 428661,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "में कार्य कर सकते हैं यह पानी आधारित"
+        },
+        {
+          "row": 428662,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "या तो रासायनिक आधारित तरल पदार्थ है जिससे अल्कोहल"
+        },
+        {
+          "row": 431155,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मुझे मौसम आधारित फ़सल बीमा योजना की अन्तर्गत"
+        },
+        {
+          "row": 431387,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": " का इस्तेमाल किया गया यह बड़े पैना पैमाने में जो सार्वजनिक दबाव"
+        },
+        {
+          "row": 431461,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "क्योंकि उसमें सच्ची घटनाओं पर आधारित कहानियाँ बताई जाती हैं जो क"
+        },
+        {
+          "row": 432143,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "य शून्य पाँच के साथ मेरे मौसम आधारित फसल बीमा योजना आवेदन पर कोई"
+        },
+        {
+          "row": 432868,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ूरी तरह से सत्य और धर्म पर ही आधारित है जिसमें हर वर्ग के लोगों "
+        },
+        {
+          "row": 434821,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "क्या आप मुझे मौसम आधारित फसल बीमा योजना के अंतर्गत म"
+        },
+        {
+          "row": 438692,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ैं कि मैं तूफ़ान के कारण मौसम आधारित फ़सल बीमा योजना के अन्तर्गत"
+        },
+        {
+          "row": 439665,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "मुझे पैन्टिंग से ज़्यादा पैन्सिल स्केच"
+        },
+        {
+          "row": 439666,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "और ये पैन्टिंग थोड़ी ईज़ी हो जाती है स्"
+        },
+        {
+          "row": 439667,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "पैन्टिंग करने में आसानी होती है औ"
+        },
+        {
+          "row": 440169,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "शर्ट पैन्ट साड़ी दक्षिण भारत में प्राय"
+        },
+        {
+          "row": 441390,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "क्या आप मेरी मौसम आधारित फसल बीमा योजना पॉलिस का विश"
+        },
+        {
+          "row": 442038,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "मुझे अपने पुनर्गठित मौसम आधारित फसल बीमा योजना आवेदन के लिए"
+        },
+        {
+          "row": 442380,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "ेर आपका मन है तो आप साइकिल वह पैन्डिल से चलाइए वरना तो दूसरा मन"
+        },
+        {
+          "row": 442800,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "पुनर्गठित मौसम आधारित फसल बीमा योजना के अंतर्गत म"
+        },
+        {
+          "row": 443190,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": "एक मैं ब्लैक कलर का पैन्ट लिया हूँ जिसको जिसको वास कर"
+        },
+        {
+          "row": 443191,
+          "entity": "PAN card",
+          "variant": "पैन",
+          "context": " लोग को कोई प्रॉब्लम ना हो और पैन्ट हमको बहोत अच्छा ही क्वाल्टी"
+        },
+        {
+          "row": 443539,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ी रखता हूँ जैसे कि यह क्षेत्र आधारित बीमा व्य व्यक्ति है या नहीं"
+        },
+        {
+          "row": 447232,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "ं सारे आई सिक्स टेक्नोलॉजी पे आधारित है सेल्फ स्टार्ट है ऑटो गैय"
+        },
+        {
+          "row": 449066,
+          "entity": "Aadhaar",
+          "variant": "आधार",
+          "context": "कृषि पर आधारित है इसलिए हमको और हमारे परिव"
+        }
+      ],
+      "breakdowns": {
+        "split": [
+          {
+            "value": "train",
+            "n_rows": 445160,
+            "word_boundary_pairs": 2643,
+            "by_entity": {
+              "Aadhaar": 1424,
+              "PAN card": 540,
+              "CoWIN": 200,
+              "DigiLocker": 164,
+              "Ration card": 94,
+              "Ayushman Bharat": 86,
+              "Voter ID": 39,
+              "Passport Seva": 38,
+              "Pradhan Mantri Awas Yojana": 24,
+              "Jan Dhan Yojana": 10,
+              "Kisan Credit Card": 9,
+              "Mudra Yojana": 4,
+              "ESIC": 4,
+              "Sukanya Samriddhi Yojana": 3,
+              "Ujjwala Yojana": 2,
+              "GST": 1,
+              "UPI": 1
+            }
+          },
+          {
+            "value": "valid",
+            "n_rows": 5530,
+            "word_boundary_pairs": 34,
+            "by_entity": {
+              "Aadhaar": 22,
+              "PAN card": 8,
+              "Ration card": 2,
+              "CoWIN": 1,
+              "Passport Seva": 1
+            }
+          }
+        ],
+        "scenario": [
+          {
+            "value": "Read",
+            "n_rows": 38614,
+            "word_boundary_pairs": 1464,
+            "by_entity": {
+              "Aadhaar": 600,
+              "PAN card": 337,
+              "CoWIN": 197,
+              "DigiLocker": 164,
+              "Ayushman Bharat": 64,
+              "Voter ID": 39,
+              "Passport Seva": 36,
+              "Ration card": 18,
+              "ESIC": 4,
+              "Jan Dhan Yojana": 3,
+              "Sukanya Samriddhi Yojana": 2
+            }
+          },
+          {
+            "value": "Extempore",
+            "n_rows": 237553,
+            "word_boundary_pairs": 627,
+            "by_entity": {
+              "Aadhaar": 433,
+              "PAN card": 76,
+              "Ration card": 48,
+              "Pradhan Mantri Awas Yojana": 24,
+              "Ayushman Bharat": 17,
+              "Jan Dhan Yojana": 7,
+              "Kisan Credit Card": 7,
+              "Mudra Yojana": 4,
+              "CoWIN": 4,
+              "Passport Seva": 3,
+              "Ujjwala Yojana": 2,
+              "UPI": 1,
+              "Sukanya Samriddhi Yojana": 1
+            }
+          },
+          {
+            "value": "Conversation",
+            "n_rows": 174523,
+            "word_boundary_pairs": 586,
+            "by_entity": {
+              "Aadhaar": 413,
+              "PAN card": 135,
+              "Ration card": 30,
+              "Ayushman Bharat": 5,
+              "Kisan Credit Card": 2,
+              "GST": 1
+            }
+          }
+        ],
+        "task_name": [
+          {
+            "value": "Conversation",
+            "n_rows": 174523,
+            "word_boundary_pairs": 586,
+            "by_entity": {
+              "Aadhaar": 413,
+              "PAN card": 135,
+              "Ration card": 30,
+              "Ayushman Bharat": 5,
+              "Kisan Credit Card": 2,
+              "GST": 1
+            }
+          },
+          {
+            "value": "Aadhaar",
+            "n_rows": 562,
+            "word_boundary_pairs": 414,
+            "by_entity": {
+              "Aadhaar": 413,
+              "PAN card": 1
+            }
+          },
+          {
+            "value": "PAN",
+            "n_rows": 518,
+            "word_boundary_pairs": 318,
+            "by_entity": {
+              "PAN card": 257,
+              "Aadhaar": 34,
+              "Voter ID": 20,
+              "Ration card": 7
+            }
+          },
+          {
+            "value": "Umang Commands",
+            "n_rows": 2864,
+            "word_boundary_pairs": 209,
+            "by_entity": {
+              "CoWIN": 197,
+              "PAN card": 4,
+              "ESIC": 4,
+              "Ration card": 3,
+              "Aadhaar": 1
+            }
+          },
+          {
+            "value": "Digilocker",
+            "n_rows": 494,
+            "word_boundary_pairs": 189,
+            "by_entity": {
+              "DigiLocker": 164,
+              "Voter ID": 9,
+              "Aadhaar": 9,
+              "PAN card": 7
+            }
+          },
+          {
+            "value": "Health Services",
+            "n_rows": 434,
+            "word_boundary_pairs": 65,
+            "by_entity": {
+              "Ayushman Bharat": 64,
+              "CoWIN": 1
+            }
+          },
+          {
+            "value": "Passport Seva",
+            "n_rows": 487,
+            "word_boundary_pairs": 59,
+            "by_entity": {
+              "Passport Seva": 39,
+              "Aadhaar": 8,
+              "Ration card": 6,
+              "PAN card": 4,
+              "Voter ID": 2
+            }
+          },
+          {
+            "value": "ITR Services",
+            "n_rows": 163,
+            "word_boundary_pairs": 55,
+            "by_entity": {
+              "PAN card": 53,
+              "Aadhaar": 2
+            }
+          },
+          {
+            "value": "DOI - Government",
+            "n_rows": 4731,
+            "word_boundary_pairs": 52,
+            "by_entity": {
+              "Pradhan Mantri Awas Yojana": 19,
+              "Ration card": 14,
+              "Aadhaar": 7,
+              "Jan Dhan Yojana": 4,
+              "Kisan Credit Card": 3,
+              "Ayushman Bharat": 2,
+              "Mudra Yojana": 2,
+              "Ujjwala Yojana": 1
+            }
+          },
+          {
+            "value": "DOI - Legal",
+            "n_rows": 2815,
+            "word_boundary_pairs": 51,
+            "by_entity": {
+              "Aadhaar": 29,
+              "PAN card": 12,
+              "Ration card": 10
+            }
+          },
+          {
+            "value": "Gas Booking",
+            "n_rows": 610,
+            "word_boundary_pairs": 40,
+            "by_entity": {
+              "Aadhaar": 40
+            }
+          },
+          {
+            "value": "NPS",
+            "n_rows": 243,
+            "word_boundary_pairs": 37,
+            "by_entity": {
+              "Aadhaar": 37
+            }
+          },
+          {
+            "value": "GK Questions",
+            "n_rows": 10972,
+            "word_boundary_pairs": 36,
+            "by_entity": {
+              "Aadhaar": 26,
+              "Ayushman Bharat": 6,
+              "Pradhan Mantri Awas Yojana": 1,
+              "Jan Dhan Yojana": 1,
+              "CoWIN": 1,
+              "PAN card": 1
+            }
+          },
+          {
+            "value": "DOI - Education",
+            "n_rows": 5533,
+            "word_boundary_pairs": 28,
+            "by_entity": {
+              "Aadhaar": 22,
+              "Ration card": 3,
+              "PAN card": 2,
+              "CoWIN": 1
+            }
+          },
+          {
+            "value": "DOI - Technology",
+            "n_rows": 5298,
+            "word_boundary_pairs": 27,
+            "by_entity": {
+              "Aadhaar": 21,
+              "PAN card": 3,
+              "Ration card": 3
+            }
+          },
+          {
+            "value": "Wikipedia Sentences",
+            "n_rows": 5107,
+            "word_boundary_pairs": 27,
+            "by_entity": {
+              "Aadhaar": 25,
+              "PAN card": 2
+            }
+          },
+          {
+            "value": "Crop Insurance",
+            "n_rows": 484,
+            "word_boundary_pairs": 26,
+            "by_entity": {
+              "Aadhaar": 10,
+              "Voter ID": 7,
+              "PAN card": 5,
+              "Ration card": 4
+            }
+          },
+          {
+            "value": "DOI - Banking And Insurance",
+            "n_rows": 2923,
+            "word_boundary_pairs": 23,
+            "by_entity": {
+              "Aadhaar": 10,
+              "Ayushman Bharat": 5,
+              "PAN card": 2,
+              "Kisan Credit Card": 2,
+              "Jan Dhan Yojana": 1,
+              "Pradhan Mantri Awas Yojana": 1,
+              "Sukanya Samriddhi Yojana": 1,
+              "Ration card": 1
+            }
+          },
+          {
+            "value": "DOI - Art & Craft",
+            "n_rows": 3408,
+            "word_boundary_pairs": 21,
+            "by_entity": {
+              "Aadhaar": 19,
+              "PAN card": 2
+            }
+          },
+          {
+            "value": "District Specific",
+            "n_rows": 9772,
+            "word_boundary_pairs": 21,
+            "by_entity": {
+              "Aadhaar": 13,
+              "Pradhan Mantri Awas Yojana": 3,
+              "Jan Dhan Yojana": 1,
+              "Ayushman Bharat": 1,
+              "Kisan Credit Card": 1,
+              "Ration card": 1,
+              "CoWIN": 1
+            }
+          },
+          {
+            "value": "EPFO",
+            "n_rows": 319,
+            "word_boundary_pairs": 21,
+            "by_entity": {
+              "PAN card": 10,
+              "Aadhaar": 10,
+              "Voter ID": 1
+            }
+          },
+          {
+            "value": "Language Specific",
+            "n_rows": 8773,
+            "word_boundary_pairs": 19,
+            "by_entity": {
+              "Aadhaar": 19
+            }
+          },
+          {
+            "value": "DOI - Agriculture",
+            "n_rows": 5361,
+            "word_boundary_pairs": 18,
+            "by_entity": {
+              "Aadhaar": 16,
+              "PAN card": 1,
+              "Kisan Credit Card": 1
+            }
+          },
+          {
+            "value": "Digital Payment Commands",
+            "n_rows": 2857,
+            "word_boundary_pairs": 18,
+            "by_entity": {
+              "PAN card": 8,
+              "Aadhaar": 5,
+              "Jan Dhan Yojana": 3,
+              "Sukanya Samriddhi Yojana": 2
+            }
+          },
+          {
+            "value": "Bigbasket Commands",
+            "n_rows": 2858,
+            "word_boundary_pairs": 17,
+            "by_entity": {
+              "Aadhaar": 12,
+              "PAN card": 5
+            }
+          },
+          {
+            "value": "Landline Bill Payment",
+            "n_rows": 331,
+            "word_boundary_pairs": 17,
+            "by_entity": {
+              "Aadhaar": 17
+            }
+          },
+          {
+            "value": "DOI - Health",
+            "n_rows": 6517,
+            "word_boundary_pairs": 16,
+            "by_entity": {
+              "Aadhaar": 7,
+              "Ration card": 6,
+              "Ayushman Bharat": 3
+            }
+          },
+          {
+            "value": "KYP - Cooking",
+            "n_rows": 7799,
+            "word_boundary_pairs": 16,
+            "by_entity": {
+              "Aadhaar": 8,
+              "PAN card": 8
+            }
+          },
+          {
+            "value": "KYP - Reading",
+            "n_rows": 3979,
+            "word_boundary_pairs": 14,
+            "by_entity": {
+              "Aadhaar": 14
+            }
+          },
+          {
+            "value": "Electricity Bill Payments",
+            "n_rows": 651,
+            "word_boundary_pairs": 13,
+            "by_entity": {
+              "Aadhaar": 7,
+              "Ration card": 6
+            }
+          },
+          {
+            "value": "DOI - Business",
+            "n_rows": 4842,
+            "word_boundary_pairs": 12,
+            "by_entity": {
+              "Aadhaar": 9,
+              "Mudra Yojana": 2,
+              "PAN card": 1
+            }
+          },
+          {
+            "value": "KYP - Drawing",
+            "n_rows": 3406,
+            "word_boundary_pairs": 12,
+            "by_entity": {
+              "Aadhaar": 10,
+              "PAN card": 2
+            }
+          },
+          {
+            "value": "Alexa Commands",
+            "n_rows": 3674,
+            "word_boundary_pairs": 11,
+            "by_entity": {
+              "Aadhaar": 10,
+              "PAN card": 1
+            }
+          },
+          {
+            "value": "Electronic Shopping",
+            "n_rows": 730,
+            "word_boundary_pairs": 10,
+            "by_entity": {
+              "Aadhaar": 10
+            }
+          },
+          {
+            "value": "Ola/Uber Prompts",
+            "n_rows": 5518,
+            "word_boundary_pairs": 10,
+            "by_entity": {
+              "Aadhaar": 7,
+              "PAN card": 2,
+              "UPI": 1
+            }
+          },
+          {
+            "value": "DOI - News Media",
+            "n_rows": 4397,
+            "word_boundary_pairs": 9,
+            "by_entity": {
+              "Aadhaar": 8,
+              "Ration card": 1
+            }
+          },
+          {
+            "value": "KYP - Gardening",
+            "n_rows": 5083,
+            "word_boundary_pairs": 9,
+            "by_entity": {
+              "Aadhaar": 9
+            }
+          },
+          {
+            "value": "KYP - Yoga",
+            "n_rows": 3439,
+            "word_boundary_pairs": 9,
+            "by_entity": {
+              "Aadhaar": 9
+            }
+          },
+          {
+            "value": "DOI - Culture",
+            "n_rows": 5452,
+            "word_boundary_pairs": 8,
+            "by_entity": {
+              "Aadhaar": 8
+            }
+          },
+          {
+            "value": "DOI - Religion",
+            "n_rows": 5246,
+            "word_boundary_pairs": 8,
+            "by_entity": {
+              "Aadhaar": 8
+            }
+          },
+          {
+            "value": "KYP - Biking",
+            "n_rows": 3165,
+            "word_boundary_pairs": 8,
+            "by_entity": {
+              "Aadhaar": 7,
+              "PAN card": 1
+            }
+          },
+          {
+            "value": "DOI - History",
+            "n_rows": 3316,
+            "word_boundary_pairs": 7,
+            "by_entity": {
+              "Aadhaar": 6,
+              "Ujjwala Yojana": 1
+            }
+          },
+          {
+            "value": "KYP - Writing",
+            "n_rows": 1688,
+            "word_boundary_pairs": 7,
+            "by_entity": {
+              "Aadhaar": 6,
+              "PAN card": 1
+            }
+          },
+          {
+            "value": "PMKVY",
+            "n_rows": 211,
+            "word_boundary_pairs": 7,
+            "by_entity": {
+              "Aadhaar": 6,
+              "PAN card": 1
+            }
+          },
+          {
+            "value": "Daily Life",
+            "n_rows": 10916,
+            "word_boundary_pairs": 6,
+            "by_entity": {
+              "Aadhaar": 4,
+              "PAN card": 2
+            }
+          },
+          {
+            "value": "KYP - Painting",
+            "n_rows": 3356,
+            "word_boundary_pairs": 6,
+            "by_entity": {
+              "Aadhaar": 5,
+              "PAN card": 1
+            }
+          },
+          {
+            "value": "KYP - Photography",
+            "n_rows": 3144,
+            "word_boundary_pairs": 6,
+            "by_entity": {
+              "Aadhaar": 4,
+              "PAN card": 1,
+              "Ration card": 1
+            }
+          },
+          {
+            "value": "KYP - Singing",
+            "n_rows": 2743,
+            "word_boundary_pairs": 6,
+            "by_entity": {
+              "Aadhaar": 6
+            }
+          },
+          {
+            "value": "KYP - Technology",
+            "n_rows": 2979,
+            "word_boundary_pairs": 6,
+            "by_entity": {
+              "Aadhaar": 5,
+              "PAN card": 1
+            }
+          },
+          {
+            "value": "Product Review",
+            "n_rows": 6791,
+            "word_boundary_pairs": 6,
+            "by_entity": {
+              "Aadhaar": 4,
+              "PAN card": 2
+            }
+          },
+          {
+            "value": "DOI - Stem",
+            "n_rows": 1925,
+            "word_boundary_pairs": 5,
+            "by_entity": {
+              "Aadhaar": 5
+            }
+          },
+          {
+            "value": "GST Services",
+            "n_rows": 91,
+            "word_boundary_pairs": 5,
+            "by_entity": {
+              "PAN card": 5
+            }
+          },
+          {
+            "value": "DOI - Animal Husbandry",
+            "n_rows": 4779,
+            "word_boundary_pairs": 4,
+            "by_entity": {
+              "Aadhaar": 4
+            }
+          },
+          {
+            "value": "DOI - Entertainment",
+            "n_rows": 5198,
+            "word_boundary_pairs": 4,
+            "by_entity": {
+              "Aadhaar": 3,
+              "PAN card": 1
+            }
+          },
+          {
+            "value": "DOI - Sports",
+            "n_rows": 3245,
+            "word_boundary_pairs": 4,
+            "by_entity": {
+              "Aadhaar": 4
+            }
+          },
+          {
+            "value": "KYP - Dancing",
+            "n_rows": 3034,
+            "word_boundary_pairs": 4,
+            "by_entity": {
+              "Aadhaar": 4
+            }
+          },
+          {
+            "value": "KYP - Games",
+            "n_rows": 5585,
+            "word_boundary_pairs": 4,
+            "by_entity": {
+              "Aadhaar": 4
+            }
+          },
+          {
+            "value": "DOI - Geography",
+            "n_rows": 2946,
+            "word_boundary_pairs": 3,
+            "by_entity": {
+              "Aadhaar": 3
+            }
+          },
+          {
+            "value": "DOI - Tourism",
+            "n_rows": 3393,
+            "word_boundary_pairs": 3,
+            "by_entity": {
+              "Aadhaar": 3
+            }
+          },
+          {
+            "value": "KYP - Collecting",
+            "n_rows": 297,
+            "word_boundary_pairs": 3,
+            "by_entity": {
+              "Aadhaar": 3
+            }
+          },
+          {
+            "value": "KYP - Traveling",
+            "n_rows": 5924,
+            "word_boundary_pairs": 3,
+            "by_entity": {
+              "Aadhaar": 2,
+              "PAN card": 1
+            }
+          },
+          {
+            "value": "Startup",
+            "n_rows": 94,
+            "word_boundary_pairs": 3,
+            "by_entity": {
+              "Aadhaar": 3
+            }
+          },
+          {
+            "value": "DOI - Poultry",
+            "n_rows": 3002,
+            "word_boundary_pairs": 2,
+            "by_entity": {
+              "Aadhaar": 2
+            }
+          },
+          {
+            "value": "KYP - Basic",
+            "n_rows": 6460,
+            "word_boundary_pairs": 2,
+            "by_entity": {
+              "Aadhaar": 1,
+              "PAN card": 1
+            }
+          },
+          {
+            "value": "KYP - Fishing",
+            "n_rows": 3581,
+            "word_boundary_pairs": 2,
+            "by_entity": {
+              "PAN card": 1,
+              "Aadhaar": 1
+            }
+          },
+          {
+            "value": "KYP - Knitting and Stitchings",
+            "n_rows": 3294,
+            "word_boundary_pairs": 2,
+            "by_entity": {
+              "Aadhaar": 2
+            }
+          },
+          {
+            "value": "KYP - Swimming",
+            "n_rows": 3086,
+            "word_boundary_pairs": 2,
+            "by_entity": {
+              "Aadhaar": 2
+            }
+          },
+          {
+            "value": "Cloth Shopping",
+            "n_rows": 874,
+            "word_boundary_pairs": 1,
+            "by_entity": {
+              "Aadhaar": 1
+            }
+          },
+          {
+            "value": "Flight Booking",
+            "n_rows": 303,
+            "word_boundary_pairs": 1,
+            "by_entity": {
+              "Aadhaar": 1
+            }
+          },
+          {
+            "value": "KYP - Astronomy",
+            "n_rows": 461,
+            "word_boundary_pairs": 1,
+            "by_entity": {
+              "Aadhaar": 1
+            }
+          },
+          {
+            "value": "KYP - Birdwatching",
+            "n_rows": 3558,
+            "word_boundary_pairs": 1,
+            "by_entity": {
+              "Aadhaar": 1
+            }
+          },
+          {
+            "value": "KYP - Running",
+            "n_rows": 2710,
+            "word_boundary_pairs": 1,
+            "by_entity": {
+              "Aadhaar": 1
+            }
+          },
+          {
+            "value": "Task of Fives",
+            "n_rows": 10022,
+            "word_boundary_pairs": 1,
+            "by_entity": {
+              "PAN card": 1
+            }
+          },
+          {
+            "value": "Coordinator Section",
+            "n_rows": 91,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Garbage Services",
+            "n_rows": 120,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Hiking/Trekking",
+            "n_rows": 2470,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Horse riding",
+            "n_rows": 199,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Martial arts",
+            "n_rows": 240,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Rock climbing",
+            "n_rows": 814,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Sculpting (creating 3D art)",
+            "n_rows": 827,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Star gazing",
+            "n_rows": 627,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "KYP - Surfing",
+            "n_rows": 137,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Keywords Spotting",
+            "n_rows": 13988,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Mobile and Bill Payment",
+            "n_rows": 210,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Movie and Show Booking",
+            "n_rows": 325,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "ORS",
+            "n_rows": 133,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Parivahan",
+            "n_rows": 171,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Railway Booking",
+            "n_rows": 175,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Swiggy Prompts",
+            "n_rows": 4693,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          },
+          {
+            "value": "Water Services",
+            "n_rows": 126,
+            "word_boundary_pairs": 0,
+            "by_entity": {}
+          }
+        ]
+      }
+    }
+  ]
+}

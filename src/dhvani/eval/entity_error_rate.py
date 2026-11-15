@@ -1,13 +1,26 @@
 """F2 -- Entity Error Rate: does `dhvani-entity` recover ASR's mangling of
 lexicon entity mentions, and at what cost to text it should leave alone?
 
-Scored with exact (case-folded) match on the *canonical* form, never with
-`phonetic_key` (phase-2 spec section 6.7): the corrector matches by
-phonetic key, so a scorer using the same key would let a weak key pass its
-own test. `corruption_rate` is always reported alongside the EER, on a
-disjoint "clean" arm (examples with no lexicon entity at all) -- an EER
-number alone only measures recall, and can't see a corrector that recovers
-entities while also mangling clean text.
+Two rates per entity mention (phase-3b item 3B-2), both by word-bounded
+exact match on the hand-curated lexicon strings -- never `phonetic_key`
+(phase-2 spec section 6.7): the corrector matches by phonetic key, so a
+scorer using the same key would let a weak key pass its own test.
+
+- **Recognition EER** -- a mention is correct if *any* curated variant of
+  that entity, in any script, appears in the output. The ASR claim: a
+  transcript reading `आधार कार्ड` recognised the entity even though it is
+  not the Latin canonical `Aadhaar`.
+- **Canonical miss rate** -- a mention is correct only if the canonical
+  form itself appears. The downstream claim: a tool call needs `Aadhaar`.
+
+Before 3B-2 only the second existed, under the name "EER", which scored
+every correct Devanagari transcript as an ASR failure (the Sep 23 audit's
+finding A2). Keeping the two apart stops a transliteration step from being
+reported as entity *recovery*.
+
+`corruption_rate` is always reported alongside, on a disjoint "clean" arm
+(examples with no lexicon entity at all) -- a recovery number alone can't
+see a corrector that also mangles clean text.
 """
 
 from __future__ import annotations
@@ -18,8 +31,10 @@ from dataclasses import dataclass
 from dhvani.clock import Clock
 from dhvani.entity.corrector import EntityCorrector
 from dhvani.entity.lexicon import DomainLexicon
+from dhvani.entity.mentions import contains_variant, mentioned_entities
 from dhvani.eval.audio_io import iter_chunks
 from dhvani.eval.datasets import TranscriptExample
+from dhvani.eval.transcript_log import TranscriptLog
 from dhvani.providers.base import STTProvider
 from dhvani.telemetry.span import TurnTrace
 
@@ -32,26 +47,32 @@ class EerReport:
     threshold: float
 
     n_entity_mentions: int
-    eer_before: float
-    eer_after: float
+    recognition_eer_before: float
+    recognition_eer_after: float
+    canonical_miss_before: float
+    canonical_miss_after: float
 
     n_clean_examples: int
     corruption_rate: float
 
+    # Paired per-mention outcomes (3B-4): mentions the corrector turned from
+    # wrong to right ("fixed") and from right to wrong ("broken"). The
+    # discordant pairs an exact McNemar test needs -- before/after rates on
+    # the same mentions are not independent samples.
+    recognition_fixed: int = 0
+    recognition_broken: int = 0
+    canonical_fixed: int = 0
+    canonical_broken: int = 0
+    n_corrupted: int = 0
+
 
 def _mentioned_entities(text: str, lexicon: DomainLexicon) -> set[str]:
-    """Every canonical entity with at least one lexicon variant appearing
-    as a case-insensitive substring of `text`. An entity mentioned more
-    than once in the same example still counts once -- this mirrors the
-    section 2A entity-density gate's own per-example counting, and keeps
-    "how many mentions" answering "how many (example, entity) pairs",
-    not "how many raw string occurrences"."""
-    lowered = text.lower()
-    return {
-        canonical
-        for canonical, _script, variant in lexicon.all_variants()
-        if variant.lower() in lowered
-    }
+    """Every canonical entity the ground truth mentions, word-bounded and
+    deduplicated per example -- the shared definition in
+    `dhvani.entity.mentions` (phase-3b item 3B-1), the same one the
+    entity-density gate counts with. Before 3B-1 this was a substring test,
+    so "company" counted as a PAN card mention."""
+    return mentioned_entities(text, lexicon)
 
 
 async def _transcribe(example: TranscriptExample, stt: STTProvider, clock: Clock) -> str:
@@ -70,7 +91,11 @@ class TranscribedExample:
 
 
 async def transcribe_examples(
-    examples: Sequence[TranscriptExample], stt: STTProvider, clock: Clock
+    examples: Sequence[TranscriptExample],
+    stt: STTProvider,
+    clock: Clock,
+    log: TranscriptLog | None = None,
+    split: str = "",
 ) -> list[TranscribedExample]:
     """Transcribes each example once with `stt`.
 
@@ -79,14 +104,30 @@ async def transcribe_examples(
     transcriptions across every threshold tried instead of re-running STT
     once per threshold -- the raw transcript doesn't depend on the
     correction threshold, only the scoring does.
+
+    With a `log` (3B-3), an example already logged for the same
+    (dataset, example_id, stt, model) is read from it instead of being
+    re-transcribed, and every new transcription is appended to it.
     """
-    return [
-        TranscribedExample(
-            ground_truth_text=example.ground_truth_text,
-            raw_text=await _transcribe(example, stt, clock),
+    out: list[TranscribedExample] = []
+    for example in examples:
+        raw_text = None
+        if log is not None:
+            raw_text = log.lookup(example.dataset, example.example_id)
+        if raw_text is None:
+            raw_text = await _transcribe(example, stt, clock)
+            if log is not None:
+                log.record(
+                    dataset=example.dataset,
+                    example_id=example.example_id,
+                    ground_truth_text=example.ground_truth_text,
+                    raw_text=raw_text,
+                    split=split,
+                )
+        out.append(
+            TranscribedExample(ground_truth_text=example.ground_truth_text, raw_text=raw_text)
         )
-        for example in examples
-    ]
+    return out
 
 
 def score_transcripts(
@@ -100,10 +141,13 @@ def score_transcripts(
     again -- what a threshold sweep should call per threshold.
     """
     n_mentions = 0
-    n_wrong_before = 0
-    n_wrong_after = 0
+    n_unrecognised_before = 0
+    n_unrecognised_after = 0
+    n_noncanonical_before = 0
+    n_noncanonical_after = 0
     n_clean = 0
     n_corrupted = 0
+    rec_fixed = rec_broken = can_fixed = can_broken = 0
 
     for item in transcribed:
         mentioned = _mentioned_entities(item.ground_truth_text, lexicon)
@@ -111,32 +155,45 @@ def score_transcripts(
         corrected_text = corrector.correct(raw_text).text
 
         if mentioned:
-            raw_lower = raw_text.lower()
-            corrected_lower = corrected_text.lower()
+            recognised_before = mentioned_entities(raw_text, lexicon)
+            recognised_after = mentioned_entities(corrected_text, lexicon)
             for canonical in mentioned:
                 n_mentions += 1
-                canonical_lower = canonical.lower()
-                if canonical_lower not in raw_lower:
-                    n_wrong_before += 1
-                if canonical_lower not in corrected_lower:
-                    n_wrong_after += 1
+                rec_b = canonical in recognised_before
+                rec_a = canonical in recognised_after
+                can_b = contains_variant(raw_text, canonical)
+                can_a = contains_variant(corrected_text, canonical)
+                n_unrecognised_before += not rec_b
+                n_unrecognised_after += not rec_a
+                n_noncanonical_before += not can_b
+                n_noncanonical_after += not can_a
+                rec_fixed += rec_a and not rec_b
+                rec_broken += rec_b and not rec_a
+                can_fixed += can_a and not can_b
+                can_broken += can_b and not can_a
         else:
             n_clean += 1
             if corrected_text != raw_text:
                 n_corrupted += 1
 
-    eer_before = n_wrong_before / n_mentions if n_mentions else 0.0
-    eer_after = n_wrong_after / n_mentions if n_mentions else 0.0
-    corruption_rate = n_corrupted / n_clean if n_clean else 0.0
+    def rate(n: int) -> float:
+        return n / n_mentions if n_mentions else 0.0
 
     return EerReport(
         split=split,
         threshold=corrector.threshold,
         n_entity_mentions=n_mentions,
-        eer_before=eer_before,
-        eer_after=eer_after,
+        recognition_eer_before=rate(n_unrecognised_before),
+        recognition_eer_after=rate(n_unrecognised_after),
+        canonical_miss_before=rate(n_noncanonical_before),
+        canonical_miss_after=rate(n_noncanonical_after),
         n_clean_examples=n_clean,
-        corruption_rate=corruption_rate,
+        corruption_rate=n_corrupted / n_clean if n_clean else 0.0,
+        recognition_fixed=rec_fixed,
+        recognition_broken=rec_broken,
+        canonical_fixed=can_fixed,
+        canonical_broken=can_broken,
+        n_corrupted=n_corrupted,
     )
 
 

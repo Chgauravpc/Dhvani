@@ -22,6 +22,7 @@ from dhvani.audio.channel import ChannelConfig, TelephonyChannel
 from dhvani.clock import Clock
 from dhvani.eval.audio_io import iter_chunks
 from dhvani.eval.datasets import TranscriptExample
+from dhvani.eval.transcript_log import TranscriptLog
 from dhvani.eval.wer import corpus_wer
 from dhvani.providers.base import STTProvider
 from dhvani.telemetry.session import SessionTrace
@@ -61,11 +62,14 @@ async def run_degradation_sweep(
     configs: Sequence[ChannelConfig],
     stt: STTProvider,
     clock: Clock,
+    log: TranscriptLog | None = None,
 ) -> list[DegradationPoint]:
     """Transcribes `examples` once per `ChannelConfig`, scoring corpus WER
     and reading STT latency off a `SessionTrace` built from that config's
     per-utterance traces -- the same pattern as `eval.model_sweep.run_sweep`,
-    swept over channel impairment instead of model size/quantization."""
+    swept over channel impairment instead of model size/quantization.
+    Every transcript is appended to `log` if given (3B-3), with the channel
+    config's label as its `condition`."""
     points: list[DegradationPoint] = []
     for config in configs:
         session = SessionTrace()
@@ -77,6 +81,14 @@ async def run_degradation_sweep(
             session.add(trace)
             pairs.append((example.ground_truth_text, hypothesis))
             total_frames_lost += frames_lost
+            if log is not None:
+                log.record(
+                    dataset=example.dataset,
+                    example_id=example.example_id,
+                    ground_truth_text=example.ground_truth_text,
+                    raw_text=hypothesis,
+                    condition=config.label,
+                )
 
         wer_result = corpus_wer(pairs)
         stt_percentiles = session.percentiles(Stage.STT)

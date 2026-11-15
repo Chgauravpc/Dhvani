@@ -261,14 +261,65 @@ as their own problem.
 
 **Priority 0 — make the existing numbers true** (all must be `[x]` before Phase 4's `RESULTS.md` items can start)
 
-- [ ] 3B-1 **GATE** — word-boundary, deduplicated mention counting shared by
+- [x] 3B-1 **GATE** — word-boundary, deduplicated mention counting shared by
       gate and scorer; re-run the gate; restate the decision from it
-- [ ] 3B-2 — two-rate scorer: **recognition EER** (any curated variant, any
+      evidence: 6fa78b2 · `uv run python scripts/entity_density_gate.py` ·
+      `results/entity_density_gate.json` + `results/entity_density_gate_review.json` ·
+      Svarah 212 legacy / 202 substring / **94 word-boundary** -> PROCEED with CI +
+      lexicon expansion; LAHAJA 40 / 40 / **29** matcher, **17 after review**
+      (all 12 bare `आधार` hits are the noun "basis", not the ID) -> **GATE FAILED
+      for LAHAJA** (<30). The audit's own LAHAJA recount (38) was also inflated:
+      its `\w` regex let `आधारित` ("based on") through.
+      Reviewed and accepted by owner 2026-11-12.
+- [x] 3B-1a — LAHAJA pivot required by the failed gate. Owner decision
+      2026-11-12: switch the Hindi arm to IndicVoices' use-case split (not
+      lexicon widening). Gate must be re-run on IndicVoices Hindi first. Also:
+      bare `आधार` is a homonym -- the lexicon needs a context rule or must drop
+      the bare variant before any Hindi EER is scored.
+      evidence: df63af1 · `uv run python scripts/entity_density_gate.py --datasets
+      indicvoices-hindi --out results/entity_density_gate_indicvoices_hindi.json` ·
+      `results/entity_density_gate_indicvoices_hindi.json` + `..._review.json`
+      (results committed in 27b402b; this tick follows in the next commit, a
+      rule-0.2.3 slip, not a re-run) · 450,690 Hindi transcripts; 2,677
+      word-boundary pairs, **1,890** excluding bare-homonym-only pairs,
+      **1,386** in the government use-case tasks -> **PROCEED** on every count.
+      Caveats carried with every number: the gov subset is 94% read speech
+      (lower bound); only 9 gov pairs in `valid` (eval samples `train`, which
+      Saaras may have trained on); bare `आधार`/`पैन` are false outside gov
+      tasks (286 "के आधार पर" pairs, "पैन किलर"). Reviewed and accepted by
+      owner 2026-11-13.
+- [x] 3B-2 — two-rate scorer: **recognition EER** (any curated variant, any
       script) and **canonicalization rate**, both paired with corruption
-- [ ] 3B-3 — cache every raw transcript to committed JSONL so rescoring never
+      evidence: <this commit> · `uv run pytest -m "not integration"` (226 passed) ·
+      `tests/test_entity_error_rate.py` (Devanagari-correct output recognised but
+      not canonical; "company" not a PAN mention; variant spelling recognised
+      but not canonical) · implementation item, no headline number. Decisions
+      made with it: (1) per owner 2026-11-13, bare `आधार`/`पैन`/`pan` dropped
+      from the lexicon instead of restricting Hindi to gov-task rows; compound
+      forms `आधार नंबर`/`पैन नंबर`/`pan number` added; (2) the dev threshold
+      sweep now minimises `canonical_miss_after + corruption_rate` (3B-4 must
+      preregister this before its run). Gate re-run under the new lexicon,
+      beside the old rows: `results/entity_density_gate_lexicon_v2.json` --
+      Svarah 94, LAHAJA 17 (= the manual review), IndicVoices Hindi 2,097.
+      Reviewed and accepted by owner 2026-11-13.
+- [x] 3B-3 — cache every raw transcript to committed JSONL so rescoring never
       needs re-transcription or API credits
-- [ ] 3B-4 — preregister, then re-run F2 EER, 2 datasets × 2 ASRs; old rows
+      evidence: <this commit> · `uv run pytest -m "not integration"` (233 passed) ·
+      `tests/test_transcript_log.py` · implementation item. New
+      `dhvani.eval.transcript_log.TranscriptLog`: append-only JSONL, flushed per
+      line, keyed (dataset, example_id, stt, model, condition), ground truth
+      stored beside each transcript. Wired into all four eval paths (F2 reads
+      back and skips re-transcription; model/degradation sweeps only record,
+      since a cached transcript has no latency; F1 logs `real`/`corrected`).
+      Loaders now give every row `example_id = <shard>#<row>`; every run script
+      takes `--transcripts`, default `results/transcripts/<script>_<dataset>_<stt>.jsonl`.
+      No real run has written a committed transcript file yet -- the first one
+      lands with 3B-4. Also fixed: `run_f1_ablation.py` still counted lexicon
+      mentions by substring (a fourth copy 3B-1 missed). Accepted by owner 2026-11-13.
+- [~] 3B-4 — preregister, then re-run F2 EER, 2 datasets × 2 ASRs; old rows
       kept as superseded
+      preregistered: `docs/specs/phase-3b.md` §9 (own commit, before any run).
+      Arms: Svarah + IndicVoices Hindi (LAHAJA's gate failed) × Whisper + Saaras.
 - [ ] 3B-5 — F1 noise floor: ground-truth A/A run, k≥3 repeats, paired
       bootstrap CI + McNemar, full `single_tool` set
 - [ ] 3B-6 — real jitter model (arrival times + jitter buffer, real-time

@@ -1,0 +1,1949 @@
+{
+ "n": 216,
+ "items": [
+  {
+   "language": "english",
+   "example_id": "single_tool_105",
+   "query": "What's the role of ferritin in liver cells, specifically its iron storage function?",
+   "function": "cell_biology.function_lookup",
+   "parameter": "organelle",
+   "accepted_values": "liver cells",
+   "returned_value": "\"liver cell\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_107",
+   "query": "Can you check if the BRCA1 gene sequence from a patient in Kerala has any substitutions compared to the standard reference sequence?",
+   "function": "analyze_dna_sequence",
+   "parameter": "reference_sequence",
+   "accepted_values": "<REFERENCE_BRCA1_SEQUENCE>",
+   "returned_value": "\"ATGCGTACGTAGCTAGCTAGCTAGCTAGCTACG\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_107",
+   "query": "Can you check if the BRCA1 gene sequence from a patient in Kerala has any substitutions compared to the standard reference sequence?",
+   "function": "analyze_dna_sequence",
+   "parameter": "reference_sequence",
+   "accepted_values": "<REFERENCE_BRCA1_SEQUENCE>",
+   "returned_value": "\"ATGGCGGCCGCCGCGGTGGCTGGCAGGAGGTCGGCTCCTGACGGCCTCCTCGACAA\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_107",
+   "query": "Can you check if the BRCA1 gene sequence from a patient in Kerala has any substitutions compared to the standard reference sequence?",
+   "function": "analyze_dna_sequence",
+   "parameter": "sequence",
+   "accepted_values": "<PATIENT_BRCA1_SEQUENCE>",
+   "returned_value": "\"ATGCGTACGTAGCTAGCTAGCTAGCTAGCTACG\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_107",
+   "query": "Can you check if the BRCA1 gene sequence from a patient in Kerala has any substitutions compared to the standard reference sequence?",
+   "function": "analyze_dna_sequence",
+   "parameter": "sequence",
+   "accepted_values": "<PATIENT_BRCA1_SEQUENCE>",
+   "returned_value": "\"ATGGCGGCCGCCGCGGTGGCTGGCAGGAGGTCGGCTCCTGACGGCCCTCCTCGACAA\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_109",
+   "query": "My desi cow has good milk yield, disease resistance, and heat tolerance. What's its overall fitness score?",
+   "function": "calculate_fitness",
+   "parameter": "trait_contributions",
+   "accepted_values": "0.4 | 0.3 | 0.3",
+   "returned_value": "[0.3333, 0.3333, 0.3334]"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_109",
+   "query": "My desi cow has good milk yield, disease resistance, and heat tolerance. What's its overall fitness score?",
+   "function": "calculate_fitness",
+   "parameter": "trait_contributions",
+   "accepted_values": "0.4 | 0.3 | 0.3",
+   "returned_value": "[0.4, 0.35, 0.25]"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_109",
+   "query": "My desi cow has good milk yield, disease resistance, and heat tolerance. What's its overall fitness score?",
+   "function": "calculate_fitness",
+   "parameter": "trait_values",
+   "accepted_values": "0.8 | 0.75 | 0.9",
+   "returned_value": "[0.8, 0.9, 0.7]"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_109",
+   "query": "My desi cow has good milk yield, disease resistance, and heat tolerance. What's its overall fitness score?",
+   "function": "calculate_fitness",
+   "parameter": "trait_values",
+   "accepted_values": "0.8 | 0.75 | 0.9",
+   "returned_value": "[0.8, 0.9, 0.85]"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_109",
+   "query": "My desi cow has good milk yield, disease resistance, and heat tolerance. What's its overall fitness score?",
+   "function": "calculate_fitness",
+   "parameter": "trait_values",
+   "accepted_values": "0.8 | 0.75 | 0.9",
+   "returned_value": "[0.9, 0.8, 0.85]"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_110",
+   "query": "What's the diabetes risk for my uncle, he's 85kg and 5'10 feet",
+   "function": "diabetes_prediction",
+   "parameter": "activity_level",
+   "accepted_values": "sedentary",
+   "returned_value": "\"moderately active\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_110",
+   "query": "What's the diabetes risk for my uncle, he's 85kg and 5'10 feet",
+   "function": "diabetes_prediction",
+   "parameter": "weight",
+   "accepted_values": "187",
+   "returned_value": "85"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_112",
+   "query": "What's the entropy change if we heat 2 moles of rice from 300 Kelvin to 373 Kelvin, assuming a heat capacity of 75 Joule per kelvin per mole?",
+   "function": "calculate_entropy_change",
+   "parameter": "heat_capacity",
+   "accepted_values": "150",
+   "returned_value": "75"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_113",
+   "query": "What's the population density of India in 2024, roughly? Population is 142.86 crore, land area is 32.87 lakh square kilometers.",
+   "function": "calculate_density",
+   "parameter": "land_area",
+   "accepted_values": "3287000",
+   "returned_value": "328700"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_114",
+   "query": "What's the absolute pressure if the gauge pressure in my tyre is 32 psi, and the current atmospheric pressure in Delhi is 1 atm?",
+   "function": "calc_absolute_pressure",
+   "parameter": "gauge_pressure",
+   "accepted_values": "2",
+   "returned_value": "32"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_115",
+   "query": "What's the resonant frequency if I have a 20 milli Henries inductor and a 100 pico farads capacitor? Round to nearest whole number.",
+   "function": "calculate_resonant_frequency",
+   "parameter": "capacitance",
+   "accepted_values": "1e-07",
+   "returned_value": "1e-10"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_12",
+   "query": "I want a quick vegan soup recipe, something I can make in under 30 minutes, and preferably with tomatoes.",
+   "function": "get_vegan_recipe",
+   "parameter": "ingredient_preference",
+   "accepted_values": "tomatoes",
+   "returned_value": "[\"tomato\"]"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_120",
+   "query": "What's the final speed of a Tata Nano after accelerating at 2 mere per square for 100 meters from standstill?",
+   "function": "kinematics.final_velocity_from_distance",
+   "parameter": "initial_velocity",
+   "accepted_values": "0.0",
+   "returned_value": "0"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_122",
+   "query": "What are Neeraj Chopra's biggest wins?",
+   "function": "sports_celebrity.get_major_achievements",
+   "parameter": "team",
+   "accepted_values": "all",
+   "returned_value": "\"India\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_127",
+   "query": "Who was the ruler of Mysore in 1881?",
+   "function": "monarch.getMonarchOfYear",
+   "parameter": "fullName",
+   "accepted_values": "False",
+   "returned_value": "true"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_129",
+   "query": "Tell me about how Raman discovered the Raman Effect, specifically the method he used.",
+   "function": "science_history.get_discovery_details",
+   "parameter": "method_used",
+   "accepted_values": "spectroscopy",
+   "returned_value": "\"default\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_132",
+   "query": "How much Asian Paints Royale paint do I need for a 12feet x 10feet wall in my new flat in Gurgaon?",
+   "function": "calculate_paint_needed",
+   "parameter": "coverage_rate",
+   "accepted_values": "350",
+   "returned_value": "400"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_132",
+   "query": "How much Asian Paints Royale paint do I need for a 12feet x 10feet wall in my new flat in Gurgaon?",
+   "function": "calculate_paint_needed",
+   "parameter": "height",
+   "accepted_values": "10",
+   "returned_value": "12"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_132",
+   "query": "How much Asian Paints Royale paint do I need for a 12feet x 10feet wall in my new flat in Gurgaon?",
+   "function": "calculate_paint_needed",
+   "parameter": "length",
+   "accepted_values": "12",
+   "returned_value": "10"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_137",
+   "query": "Can you check the structural integrity of floors 3, 5, and 7 of the Taj Mahal Palace Hotel building, please?",
+   "function": "analyze_structure",
+   "parameter": "building_id",
+   "accepted_values": "Taj Mahal Palace Hotel",
+   "returned_value": "\"TajMahalPalaceHotel\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_14",
+   "query": "Find good South Indian restaurants in Bangalore that take cards and have at least a 4-star rating.",
+   "function": "restaurant_search",
+   "parameter": "location",
+   "accepted_values": "Bangalore, Karnataka",
+   "returned_value": "\"Bangalore\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_141",
+   "query": "What personality traits are common amongst people who enjoy playing cricket regularly?",
+   "function": "get_personality_traits",
+   "parameter": "hobby",
+   "accepted_values": "cricket",
+   "returned_value": "\"playing cricket\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_16",
+   "query": "What's the price of Alphonso mangoes and cashew nuts at the Whole Foods in Select Citywalk, Saket?",
+   "function": "whole_foods.check_price",
+   "parameter": "location",
+   "accepted_values": "Select Citywalk, Saket",
+   "returned_value": "\"Whole Foods Select Citywalk, Saket\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_19",
+   "query": "What's the total cost of 2 kilogram rice, 1 litre sunflower oil, and 500 gram Tata Tea Premium at the Walmart in Gurgaon?",
+   "function": "walmart.check_price",
+   "parameter": "items",
+   "accepted_values": "rice | sunflower oil | Tata Tea Premium",
+   "returned_value": "[\"2 kilogram rice\", \"1 litre sunflower oil\", \"500 gram Tata Tea Premium\"]"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_19",
+   "query": "What's the total cost of 2 kilogram rice, 1 litre sunflower oil, and 500 gram Tata Tea Premium at the Walmart in Gurgaon?",
+   "function": "walmart.check_price",
+   "parameter": "quantities",
+   "accepted_values": "2 | 1 | 1",
+   "returned_value": "[1, 1, 1]"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_20",
+   "query": "What's the calorie and protein content of Amool butter from Reliance Fresh?",
+   "function": "grocery_info.nutritional_info",
+   "parameter": "food",
+   "accepted_values": "Amul butter",
+   "returned_value": "\"Amool butter\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_21",
+   "query": "Order 2 kilograms onions, 1 litre Amool milk, and a pack of Britannia biscuits from Safeway in Gurgaon.",
+   "function": "safeway.order",
+   "parameter": "items",
+   "accepted_values": "onions | Amul milk | Britannia biscuits",
+   "returned_value": "[\"onions\", \"Amool milk\", \"Britannia biscuits\"]"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_3",
+   "query": "Need a quick veg recipe, under 30 minutes, for a Diwali snack?",
+   "function": "find_recipe",
+   "parameter": "dietary_restrictions",
+   "accepted_values": "vegetarian",
+   "returned_value": "\"vegan\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_30",
+   "query": "Book a room at The Taj,Mumbai from 24th December to 26th December for Diwali.",
+   "function": "hotel_booking",
+   "parameter": "end_date",
+   "accepted_values": "2024-12-26",
+   "returned_value": "\"2025-12-26\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_30",
+   "query": "Book a room at The Taj,Mumbai from 24th December to 26th December for Diwali.",
+   "function": "hotel_booking",
+   "parameter": "location",
+   "accepted_values": "Mumbai, Maharashtra",
+   "returned_value": "\"Mumbai\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_30",
+   "query": "Book a room at The Taj,Mumbai from 24th December to 26th December for Diwali.",
+   "function": "hotel_booking",
+   "parameter": "start_date",
+   "accepted_values": "2024-12-24",
+   "returned_value": "\"2025-12-24\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_31",
+   "query": "Book a deluxe room at The Taj,Mumbai for 3 nights starting 15th August, want a sea view if possible.",
+   "function": "book_hotel",
+   "parameter": "view",
+   "accepted_values": "sea view",
+   "returned_value": "\"Sea\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_43",
+   "query": "What movies are playing in PVR Icon, Velachery for the next 7 days?",
+   "function": "get_theater_movie_releases",
+   "parameter": "location",
+   "accepted_values": "Chennai",
+   "returned_value": "\"PVR Icon, Velachery\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_43",
+   "query": "What movies are playing in PVR Icon, Velachery for the next 7 days?",
+   "function": "get_theater_movie_releases",
+   "parameter": "location",
+   "accepted_values": "Chennai",
+   "returned_value": "\"Velachery\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_44",
+   "query": "Any good rock concerts happening in Bangalore around Diwali?",
+   "function": "concert_info.get",
+   "parameter": "date",
+   "accepted_values": "around Diwali",
+   "returned_value": "\"2023-10-25\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_44",
+   "query": "Any good rock concerts happening in Bangalore around Diwali?",
+   "function": "concert_info.get",
+   "parameter": "date",
+   "accepted_values": "around Diwali",
+   "returned_value": "\"2023-11-25\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_44",
+   "query": "Any good rock concerts happening in Bangalore around Diwali?",
+   "function": "concert_info.get",
+   "parameter": "date",
+   "accepted_values": "around Diwali",
+   "returned_value": "\"Diwali 2026\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_47",
+   "query": "Any good Bollywood concerts happening in Pune this month?",
+   "function": "concert.find_nearby",
+   "parameter": "location",
+   "accepted_values": "Pune, Maharashtra",
+   "returned_value": "\"Pune\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_47",
+   "query": "Any good Bollywood concerts happening in Pune this month?",
+   "function": "concert.find_nearby",
+   "parameter": "location",
+   "accepted_values": "Pune, Maharashtra",
+   "returned_value": "\"Pune, India\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_48",
+   "query": "Any AR Rahman concerts happening in Chennai this December?",
+   "function": "concert.find_details",
+   "parameter": "artist",
+   "accepted_values": "AR Rahman",
+   "returned_value": "\"A.R. Rahman\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_48",
+   "query": "Any AR Rahman concerts happening in Chennai this December?",
+   "function": "concert.find_details",
+   "parameter": "year",
+   "accepted_values": "2022",
+   "returned_value": "2024"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_48",
+   "query": "Any AR Rahman concerts happening in Chennai this December?",
+   "function": "concert.find_details",
+   "parameter": "year",
+   "accepted_values": "2022",
+   "returned_value": "2026"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_51",
+   "query": "What are the ticket prices and opening hours for the Salar Jung Museum in Hyderabad on Republic Day, 2024?",
+   "function": "museum_info",
+   "parameter": "date",
+   "accepted_values": "2024-01-26",
+   "returned_value": "\"2024-01-25\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_51",
+   "query": "What are the ticket prices and opening hours for the Salar Jung Museum in Hyderabad on Republic Day, 2024?",
+   "function": "museum_info",
+   "parameter": "date",
+   "accepted_values": "2024-01-26",
+   "returned_value": "\"2024-12-01\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_64",
+   "query": "What's the average temperature in Pune for the next 7 days?",
+   "function": "average_temperature",
+   "parameter": "temp_unit",
+   "accepted_values": "Fahrenheit",
+   "returned_value": "\"Celsius\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_65",
+   "query": "What's the air quality in Delhi on Diwali this year?",
+   "function": "air_quality",
+   "parameter": "date",
+   "accepted_values": "11-01-2024",
+   "returned_value": "\"11-04-2026\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_65",
+   "query": "What's the air quality in Delhi on Diwali this year?",
+   "function": "air_quality",
+   "parameter": "date",
+   "accepted_values": "11-01-2024",
+   "returned_value": "\"2023-10-24\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_65",
+   "query": "What's the air quality in Delhi on Diwali this year?",
+   "function": "air_quality",
+   "parameter": "date",
+   "accepted_values": "11-01-2024",
+   "returned_value": "\"31-10-2026\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_66",
+   "query": "What's the AQI in Delhi NCR today evening around 7 PM?",
+   "function": "get_air_quality_index",
+   "parameter": "time",
+   "accepted_values": "7 PM",
+   "returned_value": "\"2024-11-14T19:00:00\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_66",
+   "query": "What's the AQI in Delhi NCR today evening around 7 PM?",
+   "function": "get_air_quality_index",
+   "parameter": "time",
+   "accepted_values": "7 PM",
+   "returned_value": "\"2026-11-14T19:00:00\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_66",
+   "query": "What's the AQI in Delhi NCR today evening around 7 PM?",
+   "function": "get_air_quality_index",
+   "parameter": "time",
+   "accepted_values": "7 PM",
+   "returned_value": "\"2026-11-14T19:00:00Z\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_68",
+   "query": "I weigh 75 kg and work as a delivery guy in Delhi. How much water should I drink daily?",
+   "function": "calculate_daily_water_intake",
+   "parameter": "activity_level",
+   "accepted_values": "high",
+   "returned_value": "\"moderate\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_68",
+   "query": "I weigh 75 kg and work as a delivery guy in Delhi. How much water should I drink daily?",
+   "function": "calculate_daily_water_intake",
+   "parameter": "climate",
+   "accepted_values": "hot",
+   "returned_value": "\"tropical\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_69",
+   "query": "What's the air quality in Delhi today? Need to know if I should skip my morning walk.",
+   "function": "get_air_quality",
+   "parameter": "detail",
+   "accepted_values": "False",
+   "returned_value": "true"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_72",
+   "query": "How much carbon does my Tata Nexon diesel car emit yearly if I drive around 12,000 km?",
+   "function": "calculate_vehicle_emission",
+   "parameter": "miles_driven",
+   "accepted_values": "7456",
+   "returned_value": "7452"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_72",
+   "query": "How much carbon does my Tata Nexon diesel car emit yearly if I drive around 12,000 km?",
+   "function": "calculate_vehicle_emission",
+   "parameter": "miles_driven",
+   "accepted_values": "7456",
+   "returned_value": "7465"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_75",
+   "query": "What's the price of gold right now in rupees per 10 grams?",
+   "function": "get_metal_price",
+   "parameter": "measure",
+   "accepted_values": "kg",
+   "returned_value": "\"gram\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_79",
+   "query": "What's the INR to Riyal rate with a 1.5% service charge?",
+   "function": "get_exchange_rate_with_fee",
+   "parameter": "target_currency",
+   "accepted_values": "SAR",
+   "returned_value": "\"Riyal\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_8",
+   "query": "Find top 3 sushi places in Bandra,Mumbai, with at least 4 star rating.",
+   "function": "get_best_sushi_places",
+   "parameter": "review_rate",
+   "accepted_values": "4.0",
+   "returned_value": "4"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_81",
+   "query": "How much is 5000 Rupees in US Dollars today?",
+   "function": "currency_converter",
+   "parameter": "amount",
+   "accepted_values": "5000.0",
+   "returned_value": "5000"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_83",
+   "query": "What's the rate for 5000 Rupees to Dirham right now?",
+   "function": "latest_exchange_rate",
+   "parameter": "amount",
+   "accepted_values": "5000.0",
+   "returned_value": "5000"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_87",
+   "query": "Tell me about major events in Sikhism between 1700 and 1850, especially any reforms.",
+   "function": "get_religion_history",
+   "parameter": "event_type",
+   "accepted_values": "reform",
+   "returned_value": "\"all\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_91",
+   "query": "Draft a rental agreement for a shop in Chandni Chowk, Delhi between me and Rajesh Kumar.",
+   "function": "generate_law_contract",
+   "parameter": "parties",
+   "accepted_values": "Me | Rajesh Kumar",
+   "returned_value": "[\"<Your Name>\", \"Rajesh Kumar\"]"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_91",
+   "query": "Draft a rental agreement for a shop in Chandni Chowk, Delhi between me and Rajesh Kumar.",
+   "function": "generate_law_contract",
+   "parameter": "parties",
+   "accepted_values": "Me | Rajesh Kumar",
+   "returned_value": "[\"[Your Name]\", \"Rajesh Kumar\"]"
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_93",
+   "query": "Find cases related to land acquisition disputes in Kerala between 1980 and 1995.",
+   "function": "law_case_search.find_historical",
+   "parameter": "subject",
+   "accepted_values": "land acquisition",
+   "returned_value": "\"land acquisition disputes\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_96",
+   "query": "Need a good divorce lawyer in Bangalore, someone charging around ₹2000 per hour.",
+   "function": "lawyer.find_nearby",
+   "parameter": "city",
+   "accepted_values": "Bangalore, Karnataka",
+   "returned_value": "\"Bangalore\""
+  },
+  {
+   "language": "english",
+   "example_id": "single_tool_99",
+   "query": "Saw a bright yellow bird near the rice paddies in Kerala. Roughly sparrow sized, what is it?",
+   "function": "identify_bird",
+   "parameter": "habitat",
+   "accepted_values": "rice paddies",
+   "returned_value": "\"wetland\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_0",
+   "query": "दिल्ली में अच्छे south indian रेस्टोरेंट दिखाओ, अधिकतम दूरी 3 मील।",
+   "function": "restaurant.find_nearby",
+   "parameter": "location",
+   "accepted_values": "Delhi",
+   "returned_value": "\"Delhi, India\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_1",
+   "query": "वाराणसी में अच्छे ५ vegetarian रेस्टोरेंट दिखाओ",
+   "function": "find_restaurants",
+   "parameter": "location",
+   "accepted_values": "Varanasi, Uttar Pradesh",
+   "returned_value": "\"Banaras, India\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_1",
+   "query": "वाराणसी में अच्छे ५ vegetarian रेस्टोरेंट दिखाओ",
+   "function": "find_restaurants",
+   "parameter": "location",
+   "accepted_values": "Varanasi, Uttar Pradesh",
+   "returned_value": "\"वाराणसी, भारत\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_1",
+   "query": "वाराणसी में अच्छे ५ vegetarian रेस्टोरेंट दिखाओ",
+   "function": "find_restaurants",
+   "parameter": "location",
+   "accepted_values": "Varanasi, Uttar Pradesh",
+   "returned_value": "\"वाराणसी, वाराणसी\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_10",
+   "query": "दिल्ली में शाकाहारी रेस्टोरेंट ढूंढो।",
+   "function": "find_restaurant",
+   "parameter": "type",
+   "accepted_values": "vegetarian",
+   "returned_value": "\"restaurant\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_100",
+   "query": "लाल रंग का, गाँव में दिखने वाला पक्षी कौन सा है?",
+   "function": "identify_bird",
+   "parameter": "color",
+   "accepted_values": "red",
+   "returned_value": "\"लाल\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_100",
+   "query": "लाल रंग का, गाँव में दिखने वाला पक्षी कौन सा है?",
+   "function": "identify_bird",
+   "parameter": "habitat",
+   "accepted_values": "village",
+   "returned_value": "\"गाँव\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_101",
+   "query": "वर्तमान में कॉर्बेट नेशनल पार्क में हाथियों की संख्या लगभग 600 है, 5% की वार्षिक वृद्धि दर मानते हुए 10 साल बाद अनुमानित आबादी क्या होगी?",
+   "function": "elephant_population_estimate",
+   "parameter": "growth_rate",
+   "accepted_values": "0.05",
+   "returned_value": "5"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_102",
+   "query": "हिमालयी blue sheep की अगले ५० वर्षों में विकास दर क्या होगी?",
+   "function": "prediction.evolution",
+   "parameter": "species",
+   "accepted_values": "Himalayan blue sheep",
+   "returned_value": "\"हिमालयी blue sheep\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_104",
+   "query": "माइटोकॉन्ड्रिया में पाए जाने वाले प्रोटीन बताइए।",
+   "function": "cellbio.get_proteins",
+   "parameter": "include_description",
+   "accepted_values": "False",
+   "returned_value": "true"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_105",
+   "query": "ऑप्टिकल डेंसिटी 0.85 है और डाइल्यूशन 100 है, सेल डेंसिटी क्या होगी?",
+   "function": "calculate_cell_density",
+   "parameter": "calibration_factor",
+   "accepted_values": "1000000000.0",
+   "returned_value": "1000000000"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_109",
+   "query": "दिल्ली में 300 केल्विन से 310 केल्विन तक एक आदर्श गैस के लिए एन्ट्रॉपी परिवर्तन ज्ञात करें, जिसकी ऊष्मा क्षमता 20 जूल प्रति केल्विन है।",
+   "function": "calculate_entropy_change",
+   "parameter": "isothermal",
+   "accepted_values": "True",
+   "returned_value": "false"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_11",
+   "query": "वाराणसी में अच्छे south indian रेस्टोरेंट बताइये।",
+   "function": "restaurant_finder",
+   "parameter": "city",
+   "accepted_values": "Varanasi",
+   "returned_value": "\"वाराणसी\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_110",
+   "query": "भारत की 2023 में जनसंख्या घनत्व ज्ञात करें, जनसंख्या 142.86 करोड़ और क्षेत्रफल 32,87,263 वर्ग किलोमीटर है।",
+   "function": "calculate_density",
+   "parameter": "country",
+   "accepted_values": "India",
+   "returned_value": "\"भारत\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_115",
+   "query": "एक स्कूटर 5 meter per second की गति से चल रहा है, 2 meter per second square की गति से 10 सेकंड तक त्वरित होता है। अंतिम वेग क्या होगा?",
+   "function": "calculate_final_velocity",
+   "parameter": "acceleration",
+   "accepted_values": "2.0",
+   "returned_value": "2"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_116",
+   "query": "एक स्कूटर दिल्ली से जयपुर की दूरी 300 मीटर की दूरी तय करता है, जिसकी गति 2 meter per second square है। अंतिम वेग क्या होगा?",
+   "function": "kinematics.final_velocity_from_distance",
+   "parameter": "initial_velocity",
+   "accepted_values": "0.0",
+   "returned_value": "0"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_118",
+   "query": "विराट कोहली के मुख्य खेल उपलब्धियाँ बताइये।",
+   "function": "sports_celebrity.get_major_achievements",
+   "parameter": "celebrity_name",
+   "accepted_values": "Virat Kohli",
+   "returned_value": "\"विराट कोहली\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_118",
+   "query": "विराट कोहली के मुख्य खेल उपलब्धियाँ बताइये।",
+   "function": "sports_celebrity.get_major_achievements",
+   "parameter": "team",
+   "accepted_values": "all",
+   "returned_value": "\"India\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_122",
+   "query": "सूर्यकुमार यादव के २०२० में टी२० मैचों में कितने रन बने और कितने गेंदें खेलीं? औसत निकालो।",
+   "function": "calculate_batting_average",
+   "parameter": "at_bats",
+   "accepted_values": "44",
+   "returned_value": "0"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_122",
+   "query": "सूर्यकुमार यादव के २०२० में टी२० मैचों में कितने रन बने और कितने गेंदें खेलीं? औसत निकालो।",
+   "function": "calculate_batting_average",
+   "parameter": "hits",
+   "accepted_values": "39",
+   "returned_value": "0"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_126",
+   "query": "चावल की खेती का जनक कौन था?",
+   "function": "get_scientist_for_discovery",
+   "parameter": "discovery",
+   "accepted_values": "Origin of rice cultivation",
+   "returned_value": "\"chawal ki kheti ka janak\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_126",
+   "query": "चावल की खेती का जनक कौन था?",
+   "function": "get_scientist_for_discovery",
+   "parameter": "discovery",
+   "accepted_values": "Origin of rice cultivation",
+   "returned_value": "\"चावल की खेती\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_127",
+   "query": "गणेश चतुर्थी के लिए नारंगी और लाल रंग मिलाकर एक हल्का रंग चाहिए।",
+   "function": "mix_paint_color",
+   "parameter": "lightness",
+   "accepted_values": "70",
+   "returned_value": "35"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_127",
+   "query": "गणेश चतुर्थी के लिए नारंगी और लाल रंग मिलाकर एक हल्का रंग चाहिए।",
+   "function": "mix_paint_color",
+   "parameter": "lightness",
+   "accepted_values": "70",
+   "returned_value": "50"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_128",
+   "query": "राम किंकर बैज की 'विषाद' मूर्तिकला के बारे में जानकारी चाहिए।",
+   "function": "sculpture.get_details",
+   "parameter": "artist",
+   "accepted_values": "Ram Kinker Baij",
+   "returned_value": "\"Ram Kinker Baj\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_128",
+   "query": "राम किंकर बैज की 'विषाद' मूर्तिकला के बारे में जानकारी चाहिए।",
+   "function": "sculpture.get_details",
+   "parameter": "title",
+   "accepted_values": "Vishad",
+   "returned_value": "\"विषाद\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_129",
+   "query": "क्या 'यामाहा पैसिफिका 112V' गिटार की कीमत बता सकते हैं, जिसका रंग 'ब्लैक' है?",
+   "function": "instrument_price.get",
+   "parameter": "brand",
+   "accepted_values": "Yamaha",
+   "returned_value": "\"यामाहा\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_129",
+   "query": "क्या 'यामाहा पैसिफिका 112V' गिटार की कीमत बता सकते हैं, जिसका रंग 'ब्लैक' है?",
+   "function": "instrument_price.get",
+   "parameter": "finish",
+   "accepted_values": "Black",
+   "returned_value": "\"ब्लैक\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_129",
+   "query": "क्या 'यामाहा पैसिफिका 112V' गिटार की कीमत बता सकते हैं, जिसका रंग 'ब्लैक' है?",
+   "function": "instrument_price.get",
+   "parameter": "model",
+   "accepted_values": "Pacifica 112V",
+   "returned_value": "\"112V\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_129",
+   "query": "क्या 'यामाहा पैसिफिका 112V' गिटार की कीमत बता सकते हैं, जिसका रंग 'ब्लैक' है?",
+   "function": "instrument_price.get",
+   "parameter": "model",
+   "accepted_values": "Pacifica 112V",
+   "returned_value": "\"पैसिफिका 112V\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_13",
+   "query": "मुझे नाश्ते के लिए सूजी और गाजर से बनने वाली रेसिपी चाहिए।",
+   "function": "find_recipes",
+   "parameter": "diet",
+   "accepted_values": "vegetarian",
+   "returned_value": "\"\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_13",
+   "query": "मुझे नाश्ते के लिए सूजी और गाजर से बनने वाली रेसिपी चाहिए।",
+   "function": "find_recipes",
+   "parameter": "diet",
+   "accepted_values": "vegetarian",
+   "returned_value": "\"none\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_13",
+   "query": "मुझे नाश्ते के लिए सूजी और गाजर से बनने वाली रेसिपी चाहिए।",
+   "function": "find_recipes",
+   "parameter": "ingredients",
+   "accepted_values": "suji | carrot",
+   "returned_value": "[\"सूजी\", \"गाजर\"]"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_13",
+   "query": "मुझे नाश्ते के लिए सूजी और गाजर से बनने वाली रेसिपी चाहिए।",
+   "function": "find_recipes",
+   "parameter": "meal_type",
+   "accepted_values": "breakfast",
+   "returned_value": "\"नाश्ता\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_130",
+   "query": "राम वनजी की पत्थर की मूर्तियाँ कहाँ मिलेंगी?",
+   "function": "sculpture_locator.find_by_artist",
+   "parameter": "artist",
+   "accepted_values": "Ram Vanji",
+   "returned_value": "\"राम वनजी\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_130",
+   "query": "राम वनजी की पत्थर की मूर्तियाँ कहाँ मिलेंगी?",
+   "function": "sculpture_locator.find_by_artist",
+   "parameter": "material",
+   "accepted_values": "stone",
+   "returned_value": "\"पत्थर\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_131",
+   "query": "लाल किले की लम्बाई और चौड़ाई फ़ीट में बताइये।",
+   "function": "building.get_dimensions",
+   "parameter": "building_name",
+   "accepted_values": "Red Fort",
+   "returned_value": "\"लाल किला\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_132",
+   "query": "दिल्ली में लाल किले की संरचना का विश्लेषण करें, मंज़िल 1 और 2 के लिए।",
+   "function": "analyze_structure",
+   "parameter": "building_id",
+   "accepted_values": "Red Fort, Delhi",
+   "returned_value": "\"red fort delhi\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_132",
+   "query": "दिल्ली में लाल किले की संरचना का विश्लेषण करें, मंज़िल 1 और 2 के लिए।",
+   "function": "analyze_structure",
+   "parameter": "building_id",
+   "accepted_values": "Red Fort, Delhi",
+   "returned_value": "\"red_fort\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_134",
+   "query": "मुझे 'श्यामल' ब्रांड का, 'ओपन होल' और 'सी फुट' वाला बांसुरी ढूंढ कर दो।",
+   "function": "find_flute",
+   "parameter": "brand",
+   "accepted_values": "Shyamal",
+   "returned_value": "\"श्यामल\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_14",
+   "query": "दिल्ली में अच्छे south indian रेस्टोरेंट बताओ, जिनकी रेटिंग 4 से ऊपर हो और क्रेडिट कार्ड से पेमेंट स्वीकार करते हों।",
+   "function": "restaurant_search",
+   "parameter": "location",
+   "accepted_values": "Delhi",
+   "returned_value": "\"Delhi, India\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_15",
+   "query": "दिल्ली में organic फल और सब्जियां कहाँ मिलेंगी?",
+   "function": "grocery_store.find_nearby",
+   "parameter": "location",
+   "accepted_values": "Delhi",
+   "returned_value": "\"Delhi, India\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_16",
+   "query": "दिल्ली के एरोसिटी वाले होल फूड्स में ऑर्गेनिक बाजरा और देसी घी का दाम क्या है?",
+   "function": "whole_foods.check_price",
+   "parameter": "items",
+   "accepted_values": "organic bajra | desi ghee",
+   "returned_value": "[\"ऑर्गेनिक बाजरा\", \"देसी घी\"]"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_16",
+   "query": "दिल्ली के एरोसिटी वाले होल फूड्स में ऑर्गेनिक बाजरा और देसी घी का दाम क्या है?",
+   "function": "whole_foods.check_price",
+   "parameter": "location",
+   "accepted_values": "Delhi Aerocity",
+   "returned_value": "\"Delhi AeroCity Whole Foods\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_16",
+   "query": "दिल्ली के एरोसिटी वाले होल फूड्स में ऑर्गेनिक बाजरा और देसी घी का दाम क्या है?",
+   "function": "whole_foods.check_price",
+   "parameter": "location",
+   "accepted_values": "Delhi Aerocity",
+   "returned_value": "\"Delhi, AeroCity\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_16",
+   "query": "दिल्ली के एरोसिटी वाले होल फूड्स में ऑर्गेनिक बाजरा और देसी घी का दाम क्या है?",
+   "function": "whole_foods.check_price",
+   "parameter": "location",
+   "accepted_values": "Delhi Aerocity",
+   "returned_value": "\"दिल्ली एरोसिटी\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_17",
+   "query": "मुझे हल्दी पाउडर के top ब्रांड बताइए।",
+   "function": "whole_foods.find_top_brands",
+   "parameter": "product",
+   "accepted_values": "turmeric powder",
+   "returned_value": "\"haldi powder\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_18",
+   "query": "दिल्ली में दिवाली के लिए सूखे मेवे और घी की उपलब्धता जांचो।",
+   "function": "walmart.purchase",
+   "parameter": "loc",
+   "accepted_values": "Delhi",
+   "returned_value": "\"दिल्ली\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_18",
+   "query": "दिल्ली में दिवाली के लिए सूखे मेवे और घी की उपलब्धता जांचो।",
+   "function": "walmart.purchase",
+   "parameter": "product_list",
+   "accepted_values": "dry fruits | ghee",
+   "returned_value": "[\"सूखे मेवे\", \"घी\"]"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_19",
+   "query": "दिल्ली वाले Walmart में २ किलो चीनी और ५ पैकेट बिस्किट का कुल दाम बताओ।",
+   "function": "walmart.check_price",
+   "parameter": "items",
+   "accepted_values": "sugar | biscuits",
+   "returned_value": "[\"2 किलो चीनी\", \"5 पैकेट बिस्किट\"]"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_19",
+   "query": "दिल्ली वाले Walmart में २ किलो चीनी और ५ पैकेट बिस्किट का कुल दाम बताओ।",
+   "function": "walmart.check_price",
+   "parameter": "items",
+   "accepted_values": "sugar | biscuits",
+   "returned_value": "[\"सफेद चीनी\", \"बिस्किट\"]"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_19",
+   "query": "दिल्ली वाले Walmart में २ किलो चीनी और ५ पैकेट बिस्किट का कुल दाम बताओ।",
+   "function": "walmart.check_price",
+   "parameter": "quantities",
+   "accepted_values": "2 | 5",
+   "returned_value": "[1, 1]"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_19",
+   "query": "दिल्ली वाले Walmart में २ किलो चीनी और ५ पैकेट बिस्किट का कुल दाम बताओ।",
+   "function": "walmart.check_price",
+   "parameter": "store_location",
+   "accepted_values": "Delhi",
+   "returned_value": "\"दिल्ली\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_2",
+   "query": "वाराणसी में अच्छे शाकाहारी रेस्टोरेंट बताओ जो रविवार को खुले रहें।",
+   "function": "get_restaurant",
+   "parameter": "condition",
+   "accepted_values": "open on Sunday",
+   "returned_value": "\"open on Sundays\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_20",
+   "query": "दिल्ली के बिग बाज़ार में बेसन के पोषक तत्व बताओ। प्रोटीन और कार्बोहाइड्रेट की जानकारी चाहिए।",
+   "function": "grocery_info.nutritional_info",
+   "parameter": "food",
+   "accepted_values": "Besan",
+   "returned_value": "\"बेसन\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_20",
+   "query": "दिल्ली के बिग बाज़ार में बेसन के पोषक तत्व बताओ। प्रोटीन और कार्बोहाइड्रेट की जानकारी चाहिए।",
+   "function": "grocery_info.nutritional_info",
+   "parameter": "store",
+   "accepted_values": "Big Bazaar Delhi",
+   "returned_value": "\"बिग बाज़ार\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_21",
+   "query": "दिल्ली से वाराणसी तक सबसे तेज़ रास्ता बताइये।",
+   "function": "get_directions",
+   "parameter": "end_location",
+   "accepted_values": "Varanasi",
+   "returned_value": "\"वाराणसी\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_21",
+   "query": "दिल्ली से वाराणसी तक सबसे तेज़ रास्ता बताइये।",
+   "function": "get_directions",
+   "parameter": "start_location",
+   "accepted_values": "Delhi",
+   "returned_value": "\"दिल्ली\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_22",
+   "query": "दिल्ली से वाराणसी तक सबसे तेज़ रास्ता बताओ, टोल से बचें।",
+   "function": "map_routing.fastest_route",
+   "parameter": "end_location",
+   "accepted_values": "Varanasi",
+   "returned_value": "\"वाराणसी\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_22",
+   "query": "दिल्ली से वाराणसी तक सबसे तेज़ रास्ता बताओ, टोल से बचें।",
+   "function": "map_routing.fastest_route",
+   "parameter": "start_location",
+   "accepted_values": "Delhi",
+   "returned_value": "\"दिल्ली\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_23",
+   "query": "दिल्ली से वाराणसी तक जाने का रास्ता बताओ, टोल से बचते हुए।",
+   "function": "map_service.get_directions",
+   "parameter": "end",
+   "accepted_values": "Varanasi",
+   "returned_value": "\"वाराणसी\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_23",
+   "query": "दिल्ली से वाराणसी तक जाने का रास्ता बताओ, टोल से बचते हुए।",
+   "function": "map_service.get_directions",
+   "parameter": "start",
+   "accepted_values": "Delhi",
+   "returned_value": "\"दिल्ली\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_24",
+   "query": "दिल्ली से वाराणसी तक सबसे छोटा रास्ता बताओ।",
+   "function": "calculate_shortest_distance",
+   "parameter": "end_location",
+   "accepted_values": "Varanasi",
+   "returned_value": "\"वाराणसी\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_24",
+   "query": "दिल्ली से वाराणसी तक सबसे छोटा रास्ता बताओ।",
+   "function": "calculate_shortest_distance",
+   "parameter": "start_location",
+   "accepted_values": "Delhi",
+   "returned_value": "\"दिल्ली\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_25",
+   "query": "दिल्ली से वाराणसी तक कार से जाने में कितना समय लगेगा?",
+   "function": "maps.get_distance_duration",
+   "parameter": "traffic",
+   "accepted_values": "False",
+   "returned_value": "true"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_26",
+   "query": "वाराणसी से गोरखपुर तक बस से जाने में कितना समय लगेगा?",
+   "function": "city_distance.find_shortest",
+   "parameter": "end_city",
+   "accepted_values": "Gorakhpur",
+   "returned_value": "\"गोरखपुर\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_26",
+   "query": "वाराणसी से गोरखपुर तक बस से जाने में कितना समय लगेगा?",
+   "function": "city_distance.find_shortest",
+   "parameter": "start_city",
+   "accepted_values": "Varanasi",
+   "returned_value": "\"वाराणसी\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_29",
+   "query": "वाराणसी में 'गंगा व्यू होटल' के लिए 15-11-2024 से 18-11-2024 तक दो कमरे बुक करो।",
+   "function": "hotel_booking",
+   "parameter": "location",
+   "accepted_values": "Varanasi, Uttar Pradesh",
+   "returned_value": "\"वाराणसी\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_29",
+   "query": "वाराणसी में 'गंगा व्यू होटल' के लिए 15-11-2024 से 18-11-2024 तक दो कमरे बुक करो।",
+   "function": "hotel_booking",
+   "parameter": "location",
+   "accepted_values": "Varanasi, Uttar Pradesh",
+   "returned_value": "\"वाराणसी, UP\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_3",
+   "query": "मुझे जैन भोजन के लिए, 30 मिनट में बनने वाली कोई मिठाई बताइये।",
+   "function": "find_recipe",
+   "parameter": "dietary_restrictions",
+   "accepted_values": "Jain",
+   "returned_value": "\"जैन\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_30",
+   "query": "वाराणसी में 'गंगा व्यू होटल' में 15-08-2024 से 3 रात के लिए डीलक्स कमरा बुक करो।",
+   "function": "book_hotel",
+   "parameter": "view",
+   "accepted_values": "No preference",
+   "returned_value": "\"गंगा व्यू\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_30",
+   "query": "वाराणसी में 'गंगा व्यू होटल' में 15-08-2024 से 3 रात के लिए डीलक्स कमरा बुक करो।",
+   "function": "book_hotel",
+   "parameter": "view",
+   "accepted_values": "No preference",
+   "returned_value": "\"गंगा\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_31",
+   "query": "जयपुर में रामबाग पैलेस में २ रात के लिए डीलक्स कमरा बुक करो।",
+   "function": "book_room",
+   "parameter": "hotel_name",
+   "accepted_values": "Rambagh Palace",
+   "returned_value": "\"Ram Bagh Palace\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_34",
+   "query": "जयपुर में दिवाली के लिए 01-11-2024 से 05-11-2024 तक 2 adults के लिए हिल्टन होटल में availability जांचें।",
+   "function": "hilton_hotel.check_availability",
+   "parameter": "location",
+   "accepted_values": "Jaipur",
+   "returned_value": "\"जयपुर\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_35",
+   "query": "दिल्ली हाट के पास 2 मील के दायरे में पार्किंग ढूंढो।",
+   "function": "parking_lot.find_nearest",
+   "parameter": "location",
+   "accepted_values": "Delhi Haat",
+   "returned_value": "\"Delhi Hat\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_35",
+   "query": "दिल्ली हाट के पास 2 मील के दायरे में पार्किंग ढूंढो।",
+   "function": "parking_lot.find_nearest",
+   "parameter": "location",
+   "accepted_values": "Delhi Haat",
+   "returned_value": "\"दिल्ली हाट\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_36",
+   "query": "दिल्ली में टेनिस कोर्ट वाले पार्क दिखाइए।",
+   "function": "parks.find_nearby",
+   "parameter": "location",
+   "accepted_values": "Delhi, India",
+   "returned_value": "\"Delhi\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_4",
+   "query": "मुझे दिवाली के लिए बेसन के लड्डू की रेसिपी चाहिए, जिसमें 10 लोगों के लिए पर्याप्त सामग्री हो।",
+   "function": "recipe_search",
+   "parameter": "dietary_restriction",
+   "accepted_values": "Vegetarian",
+   "returned_value": "\"N/A\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_4",
+   "query": "मुझे दिवाली के लिए बेसन के लड्डू की रेसिपी चाहिए, जिसमें 10 लोगों के लिए पर्याप्त सामग्री हो।",
+   "function": "recipe_search",
+   "parameter": "dietary_restriction",
+   "accepted_values": "Vegetarian",
+   "returned_value": "\"Vegan\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_4",
+   "query": "मुझे दिवाली के लिए बेसन के लड्डू की रेसिपी चाहिए, जिसमें 10 लोगों के लिए पर्याप्त सामग्री हो।",
+   "function": "recipe_search",
+   "parameter": "ingredients",
+   "accepted_values": "besan | sugar | ghee | cardamom | nuts",
+   "returned_value": "[\"Besan (gram flour)\", \"Ghee\", \"Sugar\", \"Cardamom powder\", \"Dry fruits (almonds, pistachios, cashews)\", \"Saffron (optional)\", \"Water\", \"Coconut flakes (optional)\"]"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_4",
+   "query": "मुझे दिवाली के लिए बेसन के लड्डू की रेसिपी चाहिए, जिसमें 10 लोगों के लिए पर्याप्त सामग्री हो।",
+   "function": "recipe_search",
+   "parameter": "ingredients",
+   "accepted_values": "besan | sugar | ghee | cardamom | nuts",
+   "returned_value": "[\"besan\", \"ghee\", \"sugar\", \"cardamom\"]"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_4",
+   "query": "मुझे दिवाली के लिए बेसन के लड्डू की रेसिपी चाहिए, जिसमें 10 लोगों के लिए पर्याप्त सामग्री हो।",
+   "function": "recipe_search",
+   "parameter": "ingredients",
+   "accepted_values": "besan | sugar | ghee | cardamom | nuts",
+   "returned_value": "[]"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_40",
+   "query": "दिल्ली में अगले 10 दिनों में होने वाले शास्त्रीय संगीत कार्यक्रम बताइये।",
+   "function": "event_finder.find_upcoming",
+   "parameter": "genre",
+   "accepted_values": "Classical Music",
+   "returned_value": "\"classical\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_40",
+   "query": "दिल्ली में अगले 10 दिनों में होने वाले शास्त्रीय संगीत कार्यक्रम बताइये।",
+   "function": "event_finder.find_upcoming",
+   "parameter": "genre",
+   "accepted_values": "Classical Music",
+   "returned_value": "\"शास्त्रीय संगीत\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_40",
+   "query": "दिल्ली में अगले 10 दिनों में होने वाले शास्त्रीय संगीत कार्यक्रम बताइये।",
+   "function": "event_finder.find_upcoming",
+   "parameter": "location",
+   "accepted_values": "Delhi, Delhi",
+   "returned_value": "\"Delhi\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_40",
+   "query": "दिल्ली में अगले 10 दिनों में होने वाले शास्त्रीय संगीत कार्यक्रम बताइये।",
+   "function": "event_finder.find_upcoming",
+   "parameter": "location",
+   "accepted_values": "Delhi, Delhi",
+   "returned_value": "\"दिल्ली\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_41",
+   "query": "“विक्रम वेधा” फिल्म के बारे में जानकारी चाहिए।",
+   "function": "movie_details.brief",
+   "parameter": "title",
+   "accepted_values": "Vikram Vedha",
+   "returned_value": "\"विक्रम वेधा\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_42",
+   "query": "अमिताभ बच्चन की 2023 में आई फ़िल्में बताइये।",
+   "function": "imdb.find_movies_by_actor",
+   "parameter": "actor_name",
+   "accepted_values": "Amitabh Bachchan",
+   "returned_value": "\"अमिताभ बच्चन\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_43",
+   "query": "पुणे में अगले ५ दिनों के लिए मूवी रिलीज़ दिखाओ।",
+   "function": "get_theater_movie_releases",
+   "parameter": "location",
+   "accepted_values": "Pune",
+   "returned_value": "\"pn\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_44",
+   "query": "दिल्ली में शास्त्रीय संगीत कार्यक्रम कब हैं?",
+   "function": "concert_info.get",
+   "parameter": "date",
+   "accepted_values": "now",
+   "returned_value": "\"2026-11-14\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_5",
+   "query": "मुझे swiggy पर दाल मखनी की कैलोरी बताइये।",
+   "function": "recipe_info.get_calories",
+   "parameter": "recipe",
+   "accepted_values": "dal makhani",
+   "returned_value": "\"दाल मखनी\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_51",
+   "query": "दिल्ली में national museum का २६ जनवरी २०२४ को खुलने का समय क्या है?",
+   "function": "museum_info",
+   "parameter": "museum",
+   "accepted_values": "National Museum, Delhi",
+   "returned_value": "\"National Museum\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_53",
+   "query": "दिल्ली में राष्ट्रीय संग्रहालय के रविवार के खुलने का समय क्या है?",
+   "function": "museum_working_hours.get",
+   "parameter": "location",
+   "accepted_values": "Delhi",
+   "returned_value": "\"दिल्ली\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_53",
+   "query": "दिल्ली में राष्ट्रीय संग्रहालय के रविवार के खुलने का समय क्या है?",
+   "function": "museum_working_hours.get",
+   "parameter": "museum",
+   "accepted_values": "National Museum",
+   "returned_value": "\"राष्ट्रीय संग्रहालय\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_54",
+   "query": "मुझे दीवाली के लिए राग भैरवी में 120 बीपीएम पर 2 बीट की एक स्केल प्रोग्रेशन चाहिए।",
+   "function": "music_generator.generate_scale_progression",
+   "parameter": "key",
+   "accepted_values": "Bhairavi",
+   "returned_value": "\"भैरवी\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_54",
+   "query": "मुझे दीवाली के लिए राग भैरवी में 120 बीपीएम पर 2 बीट की एक स्केल प्रोग्रेशन चाहिए।",
+   "function": "music_generator.generate_scale_progression",
+   "parameter": "scale_type",
+   "accepted_values": "major",
+   "returned_value": "\"rag\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_54",
+   "query": "मुझे दीवाली के लिए राग भैरवी में 120 बीपीएम पर 2 बीट की एक स्केल प्रोग्रेशन चाहिए।",
+   "function": "music_generator.generate_scale_progression",
+   "parameter": "scale_type",
+   "accepted_values": "major",
+   "returned_value": "\"raga\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_57",
+   "query": "राग भैरवी का स्केल बताइये।",
+   "function": "musical_scale",
+   "parameter": "key",
+   "accepted_values": "Bhairavi",
+   "returned_value": "\"भैरवी\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_59",
+   "query": "कोरमंगला में अगले ३ दिनों का तापमान और बारिश की संभावना बताइये।",
+   "function": "detailed_weather_forecast",
+   "parameter": "details",
+   "accepted_values": "high_low_temperature | precipitation",
+   "returned_value": "[\"high_low_temperature\", \"humidity\", \"precipitation\"]"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_59",
+   "query": "कोरमंगला में अगले ३ दिनों का तापमान और बारिश की संभावना बताइये।",
+   "function": "detailed_weather_forecast",
+   "parameter": "location",
+   "accepted_values": "Koramangala",
+   "returned_value": "\"Korumangla\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_59",
+   "query": "कोरमंगला में अगले ३ दिनों का तापमान और बारिश की संभावना बताइये।",
+   "function": "detailed_weather_forecast",
+   "parameter": "location",
+   "accepted_values": "Koramangala",
+   "returned_value": "\"कोरमंगला\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_6",
+   "query": "मुझे ४ लोगों के लिए दाल मखनी की रेसिपी चाहिए, जो बनाने में 45 मिनट से कम लगे।",
+   "function": "recipe_finder.find",
+   "parameter": "diet",
+   "accepted_values": "vegetarian",
+   "returned_value": "\"\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_6",
+   "query": "मुझे ४ लोगों के लिए दाल मखनी की रेसिपी चाहिए, जो बनाने में 45 मिनट से कम लगे।",
+   "function": "recipe_finder.find",
+   "parameter": "diet",
+   "accepted_values": "vegetarian",
+   "returned_value": "\"none\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_60",
+   "query": "पुणे में आज मौसम कैसा है?",
+   "function": "current_weather_condition",
+   "parameter": "city",
+   "accepted_values": "Pune",
+   "returned_value": "\"पुणे\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_60",
+   "query": "पुणे में आज मौसम कैसा है?",
+   "function": "current_weather_condition",
+   "parameter": "country",
+   "accepted_values": "India",
+   "returned_value": "\"भारत\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_62",
+   "query": "मनाली में अगले ५ दिनों का मौसम कैसा रहेगा?",
+   "function": "weather_forecast_detailed",
+   "parameter": "details",
+   "accepted_values": "False",
+   "returned_value": "true"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_63",
+   "query": "वाराणसी में अगले ३ दिनों की नमी का पूर्वानुमान बताइये।",
+   "function": "weather.humidity_forecast",
+   "parameter": "location",
+   "accepted_values": "Varanasi",
+   "returned_value": "\"वाराणसी\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_65",
+   "query": "दिल्ली में दिवाली के दिन air quality कैसी थी?",
+   "function": "air_quality",
+   "parameter": "date",
+   "accepted_values": "11-12-2024",
+   "returned_value": "\"22-10-2023\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_65",
+   "query": "दिल्ली में दिवाली के दिन air quality कैसी थी?",
+   "function": "air_quality",
+   "parameter": "date",
+   "accepted_values": "11-12-2024",
+   "returned_value": "\"24-10-2023\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_65",
+   "query": "दिल्ली में दिवाली के दिन air quality कैसी थी?",
+   "function": "air_quality",
+   "parameter": "date",
+   "accepted_values": "11-12-2024",
+   "returned_value": "\"25-10-2023\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_66",
+   "query": "दिल्ली में आज सुबह 9 बजे air quality कैसी है?",
+   "function": "get_air_quality_index",
+   "parameter": "time",
+   "accepted_values": "9:00 AM",
+   "returned_value": "\"2023-10-04 09:00\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_66",
+   "query": "दिल्ली में आज सुबह 9 बजे air quality कैसी है?",
+   "function": "get_air_quality_index",
+   "parameter": "time",
+   "accepted_values": "9:00 AM",
+   "returned_value": "\"2024-11-14T09:00:00Z\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_66",
+   "query": "दिल्ली में आज सुबह 9 बजे air quality कैसी है?",
+   "function": "get_air_quality_index",
+   "parameter": "time",
+   "accepted_values": "9:00 AM",
+   "returned_value": "\"2026-11-14T09:00:00\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_67",
+   "query": "पुणे में पिछले ५ दिनों का air quality बताइए।",
+   "function": "environmental_data.air_quality_index",
+   "parameter": "location",
+   "accepted_values": "Delhi",
+   "returned_value": "\"पुणे\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_7",
+   "query": "मुझे दिवाली के लिए बेसन के लड्डू की रेसिपी चाहिए।",
+   "function": "get_recipe",
+   "parameter": "dish_name",
+   "accepted_values": "Besan Laddu",
+   "returned_value": "\"basen ke laddoo\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_7",
+   "query": "मुझे दिवाली के लिए बेसन के लड्डू की रेसिपी चाहिए।",
+   "function": "get_recipe",
+   "parameter": "dish_name",
+   "accepted_values": "Besan Laddu",
+   "returned_value": "\"basen laddo\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_7",
+   "query": "मुझे दिवाली के लिए बेसन के लड्डू की रेसिपी चाहिए।",
+   "function": "get_recipe",
+   "parameter": "dish_name",
+   "accepted_values": "Besan Laddu",
+   "returned_value": "\"Besan Ladoo\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_71",
+   "query": "गंगा नदी में कछुओं की संख्या क्या है?",
+   "function": "ecology.get_turtle_population",
+   "parameter": "location",
+   "accepted_values": "Ganga River",
+   "returned_value": "\"गंगा नदी\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_71",
+   "query": "गंगा नदी में कछुओं की संख्या क्या है?",
+   "function": "ecology.get_turtle_population",
+   "parameter": "year",
+   "accepted_values": "2001",
+   "returned_value": "2023"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_72",
+   "query": "मैंने मारुति सुजुकी स्विफ्ट डीज़ल कार पिछले साल 12000 किलोमीटर चलाई। carbon emission कितना होगा?",
+   "function": "calculate_vehicle_emission",
+   "parameter": "miles_driven",
+   "accepted_values": "7456",
+   "returned_value": "7467"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_74",
+   "query": "वाराणसी में पिछले छह महीनों में कितनी बारिश हुई?",
+   "function": "ecology_data.precipitation_stats",
+   "parameter": "location",
+   "accepted_values": "Varanasi",
+   "returned_value": "\"वाराणसी\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_77",
+   "query": "रिलायंस और टाटा मोटर्स के पिछले 2 महीने के शेयर की कीमतें बताइये।",
+   "function": "get_stock_prices",
+   "parameter": "companies",
+   "accepted_values": "Reliance | Tata Motors",
+   "returned_value": "[\"Reliance Industries\", \"Tata Motors\"]"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_78",
+   "query": "पिछले 30 दिनों में निफ्टी 50 और बैंक निफ्टी का प्रदर्शन कैसा रहा?",
+   "function": "market_performance.get_data",
+   "parameter": "detailed",
+   "accepted_values": "False",
+   "returned_value": "true"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_79",
+   "query": "दिल्ली से बैंकॉक के लिए ₹10,000 का बदलाव दर क्या होगी, 2% शुल्क के साथ?",
+   "function": "get_exchange_rate_with_fee",
+   "parameter": "fee",
+   "accepted_values": "2.0",
+   "returned_value": "2"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_8",
+   "query": "मुंबई में 3 सुशी रेस्टोरेंट बताओ जिनकी रेटिंग 4.5 से ऊपर हो।",
+   "function": "get_best_sushi_places",
+   "parameter": "city",
+   "accepted_values": "Mumbai",
+   "returned_value": "\"मुंबई\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_81",
+   "query": "₹5000 को अमेरिकी डॉलर में बदलो।",
+   "function": "currency_converter",
+   "parameter": "amount",
+   "accepted_values": "5000.0",
+   "returned_value": "5000"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_86",
+   "query": "दिल्ली और पोर्ट ब्लेयर के बीच समय का अंतर बताओ।",
+   "function": "get_time_difference",
+   "parameter": "place1",
+   "accepted_values": "Delhi",
+   "returned_value": "\"दिल्ली\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_86",
+   "query": "दिल्ली और पोर्ट ब्लेयर के बीच समय का अंतर बताओ।",
+   "function": "get_time_difference",
+   "parameter": "place2",
+   "accepted_values": "Port Blair",
+   "returned_value": "\"पोर्ट ब्लेयर\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_87",
+   "query": "बौद्ध धर्म में मौर्य साम्राज्य के दौरान क्या महत्वपूर्ण घटनाएँ हुईं?",
+   "function": "get_religion_history",
+   "parameter": "end_year",
+   "accepted_values": "-185",
+   "returned_value": "185"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_87",
+   "query": "बौद्ध धर्म में मौर्य साम्राज्य के दौरान क्या महत्वपूर्ण घटनाएँ हुईं?",
+   "function": "get_religion_history",
+   "parameter": "end_year",
+   "accepted_values": "-185",
+   "returned_value": "550"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_87",
+   "query": "बौद्ध धर्म में मौर्य साम्राज्य के दौरान क्या महत्वपूर्ण घटनाएँ हुईं?",
+   "function": "get_religion_history",
+   "parameter": "religion",
+   "accepted_values": "Buddhism",
+   "returned_value": "\"बौद्ध धर्म\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_87",
+   "query": "बौद्ध धर्म में मौर्य साम्राज्य के दौरान क्या महत्वपूर्ण घटनाएँ हुईं?",
+   "function": "get_religion_history",
+   "parameter": "start_year",
+   "accepted_values": "-322",
+   "returned_value": "250"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_87",
+   "query": "बौद्ध धर्म में मौर्य साम्राज्य के दौरान क्या महत्वपूर्ण घटनाएँ हुईं?",
+   "function": "get_religion_history",
+   "parameter": "start_year",
+   "accepted_values": "-322",
+   "returned_value": "322"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_88",
+   "query": "जैन धर्म का संक्षिप्त इतिहास बताइये।",
+   "function": "retrieve_religion_info",
+   "parameter": "religion_name",
+   "accepted_values": "Jainism",
+   "returned_value": "\"जैन धर्म\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_90",
+   "query": "महाराणा प्रताप का सबसे पुराना संदर्भ क्या है?",
+   "function": "get_earliest_reference",
+   "parameter": "name",
+   "accepted_values": "Maharana Pratap",
+   "returned_value": "\"महाराणा प्रताप\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_90",
+   "query": "महाराणा प्रताप का सबसे पुराना संदर्भ क्या है?",
+   "function": "get_earliest_reference",
+   "parameter": "source",
+   "accepted_values": "historical records",
+   "returned_value": "\"scriptures\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_91",
+   "query": "मुंबई में एक rental agreement बनाने के लिए, मालिक और किरायेदार के बीच, क्या कर सकते हैं?",
+   "function": "generate_law_contract",
+   "parameter": "parties",
+   "accepted_values": "Landlord | Tenant",
+   "returned_value": "[\"Owner\", \"Tenant\"]"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_93",
+   "query": "१९५० से १९६० के बीच ज़मीन के अधिकार से जुड़े मामले खोजो।",
+   "function": "law_case_search.find_historical",
+   "parameter": "subject",
+   "accepted_values": "land rights",
+   "returned_value": "\"जमीन के अधिकार\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_94",
+   "query": "दिल्ली उच्च न्यायालय में मामला संख्या 2023001234 की जानकारी चाहिए।",
+   "function": "lawsuit_info",
+   "parameter": "location",
+   "accepted_values": "Delhi High Court",
+   "returned_value": "\"Delhi\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_95",
+   "query": "वाराणसी, उत्तर प्रदेश में पिछले साल चोरी की दर क्या थी?",
+   "function": "get_crime_rate",
+   "parameter": "city",
+   "accepted_values": "Varanasi",
+   "returned_value": "\"वाराणसी\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_95",
+   "query": "वाराणसी, उत्तर प्रदेश में पिछले साल चोरी की दर क्या थी?",
+   "function": "get_crime_rate",
+   "parameter": "state",
+   "accepted_values": "Uttar Pradesh",
+   "returned_value": "\"उत्तर प्रदेश\""
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_95",
+   "query": "वाराणसी, उत्तर प्रदेश में पिछले साल चोरी की दर क्या थी?",
+   "function": "get_crime_rate",
+   "parameter": "year",
+   "accepted_values": "2023",
+   "returned_value": "2022"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_95",
+   "query": "वाराणसी, उत्तर प्रदेश में पिछले साल चोरी की दर क्या थी?",
+   "function": "get_crime_rate",
+   "parameter": "year",
+   "accepted_values": "2023",
+   "returned_value": "2025"
+  },
+  {
+   "language": "hindi",
+   "example_id": "single_tool_98",
+   "query": "दिल्ली उच्च न्यायालय में मामला संख्या 2023001234 का विवरण चाहिए।",
+   "function": "get_lawsuit_details",
+   "parameter": "with_verdict",
+   "accepted_values": "False",
+   "returned_value": "true"
+  }
+ ]
+}

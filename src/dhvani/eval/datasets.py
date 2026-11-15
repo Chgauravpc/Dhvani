@@ -40,9 +40,10 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import pyarrow.parquet as pq
-from huggingface_hub import hf_hub_download, list_repo_files
+from huggingface_hub import HfFileSystem, hf_hub_download, list_repo_files
 
 from dhvani.entity.lexicon import DomainLexicon
+from dhvani.entity.mentions import find_mentions
 from dhvani.eval.audio_io import decode_audio_bytes_to_chunks
 from dhvani.types import AudioChunk
 
@@ -143,6 +144,15 @@ def load_voiceagentbench_subset(
 class TranscriptExample:
     audio_chunks: Sequence[AudioChunk]
     ground_truth_text: str
+    dataset: str = ""
+    """Hugging Face repo id the row came from."""
+    example_id: str = ""
+    """`<parquet shard>#<row index in shard>` -- stable across runs, so a
+    logged transcript (`eval.transcript_log`, 3B-3) can be matched back to
+    its audio and ground truth."""
+    speaker_id: str = ""
+    """Where the dataset provides one (IndicVoices); dev/test splits by
+    speaker so no voice is tuned on and then reported on (3B-4)."""
 
 
 def _pick_column(available: Sequence[str], candidates: Sequence[str], purpose: str) -> str:
@@ -189,12 +199,17 @@ def _load_hf_audio_parquet_examples(
         text_column = _pick_column(schema_names, _TEXT_COLUMN_CANDIDATES, "text")
         audio_column = _pick_column(schema_names, _AUDIO_COLUMN_CANDIDATES, "audio")
         table = pq.read_table(shard_path, columns=[text_column, audio_column])
-        for row in table.to_pylist():
+        for index, row in enumerate(table.to_pylist()):
             audio_value = row[audio_column]
             audio_bytes = audio_value["bytes"] if isinstance(audio_value, dict) else audio_value
             chunks = decode_audio_bytes_to_chunks(audio_bytes)
             examples.append(
-                TranscriptExample(audio_chunks=chunks, ground_truth_text=str(row[text_column]))
+                TranscriptExample(
+                    audio_chunks=chunks,
+                    ground_truth_text=str(row[text_column]),
+                    dataset=repo_id,
+                    example_id=f"{shard}#{index}",
+                )
             )
     return examples
 
@@ -215,8 +230,9 @@ class FilteredExamples:
 
 
 def _has_lexicon_mention(text: str, lexicon: DomainLexicon) -> bool:
-    lowered = text.lower()
-    return any(variant.lower() in lowered for _, _, variant in lexicon.all_variants())
+    """Word-bounded, via the shared `dhvani.entity.mentions` definition
+    (phase-3b 3B-1) -- the same test the gate and the EER scorer use."""
+    return bool(find_mentions(text, lexicon))
 
 
 _STREAM_BATCH_ROWS = 64
@@ -286,14 +302,21 @@ def _load_hf_audio_parquet_filtered(
                 i - row_offset for i in wanted_indices if row_offset <= i < row_offset + batch_len
             ]
             if local_indices:
-                for row in batch.take(local_indices).to_pylist():
+                for local, row in zip(
+                    local_indices, batch.take(local_indices).to_pylist(), strict=True
+                ):
                     text = str(row[text_column])
                     audio_value = row[audio_column]
                     audio_bytes = (
                         audio_value["bytes"] if isinstance(audio_value, dict) else audio_value
                     )
                     chunks = decode_audio_bytes_to_chunks(audio_bytes)
-                    example = TranscriptExample(audio_chunks=chunks, ground_truth_text=text)
+                    example = TranscriptExample(
+                        audio_chunks=chunks,
+                        ground_truth_text=text,
+                        dataset=repo_id,
+                        example_id=f"{shard}#{row_offset + local}",
+                    )
                     if _has_lexicon_mention(text, lexicon):
                         entity_examples.append(example)
                     else:
@@ -345,3 +368,234 @@ def load_lahaja_filtered(
 ) -> FilteredExamples:
     """Same as `load_svarah_filtered`, for LAHAJA."""
     return _load_hf_audio_parquet_filtered(_LAHAJA_REPO, lexicon, cache_dir, n_clean_sample, seed)
+
+
+_INDICVOICES_REPO = "ai4bharat/IndicVoices"
+_INDICVOICES_COLUMNS = ("text", "scenario", "task_name")
+
+
+@dataclass(frozen=True, slots=True)
+class IndicVoicesTextRow:
+    """One IndicVoices row without audio: enough to count entity mentions
+    per use case (phase-3b 3B-1a) and to re-find the row later for audio."""
+
+    split: str
+    shard: str
+    row: int
+    text: str
+    scenario: str
+    task_name: str
+
+
+def _indicvoices_cache_dir(language: str, cache_dir: Path | None) -> Path:
+    base = cache_dir if cache_dir is not None else Path.home() / ".cache" / "dhvani"
+    return base / f"indicvoices_{language}_text"
+
+
+def _fetch_indicvoices_shard(fs: HfFileSystem, shard: str, out: Path) -> None:
+    """Text/metadata columns of one shard to `out` (JSONL), one parquet row
+    group at a time so only a single row group's text is ever in memory.
+    Written to a temp file and renamed, so a killed run leaves no partial
+    shard behind and a rerun resumes at the first missing shard."""
+    split = shard.split("/")[1].split("-")[0]
+    tmp = out.with_suffix(".tmp")
+    row = 0
+    with (
+        fs.open(f"datasets/{_INDICVOICES_REPO}/{shard}", "rb") as f,
+        tmp.open("w", encoding="utf-8") as w,
+    ):
+        parquet = pq.ParquetFile(f)
+        for rg in range(parquet.num_row_groups):
+            table = parquet.read_row_group(rg, columns=list(_INDICVOICES_COLUMNS))
+            for text, scenario, task in zip(
+                table["text"].to_pylist(),
+                table["scenario"].to_pylist(),
+                table["task_name"].to_pylist(),
+                strict=True,
+            ):
+                record = {
+                    "split": split,
+                    "shard": shard,
+                    "row": row,
+                    "text": str(text or ""),
+                    "scenario": str(scenario or ""),
+                    "task_name": str(task or ""),
+                }
+                w.write(json.dumps(record, ensure_ascii=False) + "\n")
+                row += 1
+            del table
+    tmp.replace(out)
+
+
+def load_indicvoices_text_rows(
+    language: str = "hindi",
+    cache_dir: Path | None = None,
+    max_shards: int | None = None,
+) -> list[IndicVoicesTextRow]:
+    """Every row of one IndicVoices language config, text and use-case
+    metadata only.
+
+    Unlike `_load_hf_audio_parquet_transcripts` this never downloads a
+    shard: IndicVoices Hindi is ~50 GB, nearly all of it audio, so it opens
+    each parquet file through `HfFileSystem` and reads only the
+    `text`/`scenario`/`task_name` column chunks via HTTP range requests,
+    one row group at a time. Each shard is cached as its own JSONL file
+    (outside the repo), so an interrupted fetch resumes instead of
+    restarting. `max_shards` limits how many shards are fetched/returned
+    (smoke tests).
+    """
+    out_dir = _indicvoices_cache_dir(language, cache_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    shards = [f for f in _repo_parquet_files(_INDICVOICES_REPO) if f.startswith(f"{language}/")]
+    if max_shards is not None:
+        shards = shards[:max_shards]
+
+    fs: HfFileSystem | None = None
+    rows: list[IndicVoicesTextRow] = []
+    for n, shard in enumerate(shards, start=1):
+        cached = out_dir / (shard.replace("/", "__") + ".jsonl")
+        if not cached.exists():
+            fs = fs or HfFileSystem()
+            print(f"  fetching {shard} ({n}/{len(shards)})", flush=True)
+            _fetch_indicvoices_shard(fs, shard, cached)
+        with cached.open(encoding="utf-8") as f:
+            rows.extend(IndicVoicesTextRow(**json.loads(line)) for line in f)
+    return rows
+
+
+@dataclass(frozen=True, slots=True)
+class IndicVoicesSelection:
+    """The rows a 3B-4 IndicVoices eval run uses, and how they were drawn."""
+
+    shards: list[str]
+    """Shards in the seeded order they were drawn, until enough entity rows."""
+    entity_rows: list[IndicVoicesTextRow]
+    clean_rows: list[IndicVoicesTextRow]
+
+
+def select_indicvoices_eval_rows(
+    rows: Sequence[IndicVoicesTextRow],
+    lexicon: DomainLexicon,
+    min_entity_rows: int = 300,
+    n_clean: int = 150,
+    seed: int = 0,
+) -> IndicVoicesSelection:
+    """Cluster sample by shard (preregistered in docs/specs/phase-3b.md 3B-4).
+
+    Random rows across IndicVoices would touch hundreds of ~91 MB audio row
+    groups; measured remote reads run at ~0.6 MB/s and full-shard downloads
+    at ~2 MB/s with 7 GB of disk free. So shards are shuffled with `seed` and
+    taken in order until their entity-bearing rows reach `min_entity_rows`;
+    *every* entity row in a drawn shard is used, and `n_clean` entity-free
+    rows are drawn uniformly from the same shards for the corruption arm.
+    Shards are the sampling unit, which the report must say.
+    """
+    rng = random.Random(seed)
+    by_shard: dict[str, list[IndicVoicesTextRow]] = {}
+    for r in rows:
+        by_shard.setdefault(r.shard, []).append(r)
+    order = sorted(by_shard)
+    rng.shuffle(order)
+
+    drawn: list[str] = []
+    entity: list[IndicVoicesTextRow] = []
+    clean_pool: list[IndicVoicesTextRow] = []
+    for shard in order:
+        drawn.append(shard)
+        for r in by_shard[shard]:
+            (entity if find_mentions(r.text, lexicon) else clean_pool).append(r)
+        if len(entity) >= min_entity_rows:
+            break
+    clean = rng.sample(clean_pool, min(n_clean, len(clean_pool)))
+    clean.sort(key=lambda r: (r.shard, r.row))
+    return IndicVoicesSelection(shards=drawn, entity_rows=entity, clean_rows=clean)
+
+
+def _indicvoices_audio_dir(language: str, cache_dir: Path | None) -> Path:
+    base = cache_dir if cache_dir is not None else Path.home() / ".cache" / "dhvani"
+    return base / f"indicvoices_{language}_audio"
+
+
+def _audio_cache_name(shard: str, row: int) -> str:
+    return f"{shard.replace('/', '__')}__{row}"
+
+
+def load_indicvoices_examples(
+    rows: Sequence[IndicVoicesTextRow],
+    language: str = "hindi",
+    cache_dir: Path | None = None,
+) -> list[TranscriptExample]:
+    """Audio for exactly `rows`, decoded into `TranscriptExample`s.
+
+    Per shard: if any wanted row's audio isn't cached yet, download the
+    whole shard, copy just the wanted rows' encoded audio bytes (plus
+    speaker id) into a small per-row cache, then **delete the shard** before
+    the next one -- disk never holds more than one ~600 MB shard. Each row's
+    text is checked against the text cache it was selected from, so a
+    row-index drift can't silently pair audio with the wrong transcript.
+    """
+    audio_dir = _indicvoices_audio_dir(language, cache_dir)
+    audio_dir.mkdir(parents=True, exist_ok=True)
+    by_shard: dict[str, list[IndicVoicesTextRow]] = {}
+    for r in rows:
+        by_shard.setdefault(r.shard, []).append(r)
+
+    for n, (shard, wanted) in enumerate(sorted(by_shard.items()), start=1):
+        missing = [
+            r
+            for r in wanted
+            if not (audio_dir / (_audio_cache_name(shard, r.row) + ".json")).exists()
+        ]
+        if not missing:
+            continue
+        print(f"  downloading {shard} for {len(missing)} rows ({n}/{len(by_shard)})", flush=True)
+        local = Path(hf_hub_download(_INDICVOICES_REPO, shard, repo_type="dataset"))
+        parquet = pq.ParquetFile(local)
+        try:
+            starts = []
+            offset = 0
+            for rg in range(parquet.num_row_groups):
+                starts.append(offset)
+                offset += parquet.metadata.row_group(rg).num_rows
+            wanted_by_rg: dict[int, list[IndicVoicesTextRow]] = {}
+            for r in missing:
+                rg = max(i for i, start in enumerate(starts) if start <= r.row)
+                wanted_by_rg.setdefault(rg, []).append(r)
+            for rg, rg_rows in sorted(wanted_by_rg.items()):
+                table = parquet.read_row_group(rg, columns=["audio_filepath", "speaker_id", "text"])
+                for r in rg_rows:
+                    rec = table.slice(r.row - starts[rg], 1).to_pylist()[0]
+                    if str(rec["text"] or "") != r.text:
+                        raise ValueError(f"text mismatch at {shard}#{r.row}: row index drifted")
+                    audio_value = rec["audio_filepath"]
+                    audio_bytes = (
+                        audio_value["bytes"] if isinstance(audio_value, dict) else audio_value
+                    )
+                    name = _audio_cache_name(shard, r.row)
+                    (audio_dir / (name + ".audio")).write_bytes(audio_bytes)
+                    meta = {"speaker_id": str(rec["speaker_id"] or ""), "text": r.text}
+                    (audio_dir / (name + ".json")).write_text(
+                        json.dumps(meta, ensure_ascii=False), encoding="utf-8"
+                    )
+                del table
+        finally:
+            # Windows refuses to unlink a file with an open handle.
+            parquet.close()
+            local.unlink(missing_ok=True)
+
+    examples: list[TranscriptExample] = []
+    for r in rows:
+        name = _audio_cache_name(r.shard, r.row)
+        meta = json.loads((audio_dir / (name + ".json")).read_text(encoding="utf-8"))
+        examples.append(
+            TranscriptExample(
+                audio_chunks=decode_audio_bytes_to_chunks(
+                    (audio_dir / (name + ".audio")).read_bytes()
+                ),
+                ground_truth_text=r.text,
+                dataset=_INDICVOICES_REPO,
+                example_id=f"{r.shard}#{r.row}",
+                speaker_id=meta["speaker_id"],
+            )
+        )
+    return examples

@@ -27,6 +27,7 @@ from dataclasses import dataclass
 from dhvani.clock import Clock
 from dhvani.eval.audio_io import decode_audio_file_to_chunks, iter_chunks
 from dhvani.eval.datasets import ExpectedToolCall, VoiceAgentBenchExample
+from dhvani.eval.transcript_log import TranscriptLog
 from dhvani.providers.base import LLMProvider, STTProvider
 from dhvani.telemetry.span import TurnTrace
 from dhvani.types import AudioChunk, Message, ToolCall, Transcript
@@ -126,10 +127,12 @@ async def _run_condition(
     stt: STTProvider,
     llm: LLMProvider,
     clock: Clock,
-) -> bool:
+) -> tuple[bool, str | None]:
     """Runs one example through one STT/LLM condition and judges the
-    result. A provider failure counts as a task failure rather than
-    aborting the whole ablation run -- verified necessary by a real run:
+    result. Returns (success, final transcript), the transcript being None
+    when the STT itself failed before producing one. A provider failure
+    counts as a task failure rather than aborting the whole ablation run --
+    verified necessary by a real run:
     Groq occasionally rejects its *own* generated tool call server-side
     when an argument doesn't strictly match the declared schema (observed:
     `expected integer, but got number` on a real `walmart.check_price`
@@ -137,11 +140,13 @@ async def _run_condition(
     bug to fix here -- one bad example shouldn't lose the other 79.
     """
     trace = TurnTrace(clock)
+    final_transcript: str | None = None
     try:
-        final_transcript = ""
+        heard = ""
         async for transcript in stt.stream(iter_chunks(audio_chunks), trace=trace):
             if transcript.is_final:
-                final_transcript = transcript.text
+                heard = transcript.text
+        final_transcript = heard
 
         tools = _to_groq_tools(example.functions)
         messages = [Message(role="user", content=final_transcript)]
@@ -153,9 +158,9 @@ async def _run_condition(
         logger.warning(
             "provider error on example %s, counting as failure", example.id, exc_info=True
         )
-        return False
+        return False, final_transcript
 
-    return judge_tool_call(tool_call, example.expected_tool_call)
+    return judge_tool_call(tool_call, example.expected_tool_call), final_transcript
 
 
 @dataclass(frozen=True, slots=True)
@@ -177,6 +182,7 @@ async def run_ablation(
     llm: LLMProvider,
     clock: Clock,
     make_corrected_stt: Callable[[], STTProvider] | None = None,
+    log: TranscriptLog | None = None,
 ) -> AblationReport:
     """For each example, runs the LLM against (a) `GroundTruthSTT`, (b) a
     fresh real STT, and (c), if `make_corrected_stt` is given, a fresh
@@ -184,7 +190,23 @@ async def run_ablation(
     `WhisperSTT` and `CorrectedSTT` are not guaranteed reusable across
     concurrent/sequential streams with independent state. Aggregates task
     success (`judge_tool_call`) per language per condition.
+
+    With a `log` (3B-3), the real and corrected ASR transcripts are
+    appended to it (conditions `real` / `corrected`); the ground-truth arm
+    has nothing to log.
     """
+
+    def _log(example: VoiceAgentBenchExample, condition: str, text: str | None) -> None:
+        if log is not None and text is not None:
+            log.record(
+                dataset="voiceagentbench",
+                example_id=example.id,
+                ground_truth_text=example.query,
+                raw_text=text,
+                split=example.language,
+                condition=condition,
+            )
+
     by_language: dict[str, list[VoiceAgentBenchExample]] = {}
     for example in examples:
         by_language.setdefault(example.language, []).append(example)
@@ -198,17 +220,19 @@ async def run_ablation(
             audio_chunks = decode_audio_file_to_chunks(example.audio_path)
 
             gt = GroundTruthSTT(example.query)
-            if await _run_condition(example, audio_chunks, gt, llm, clock):
-                gt_successes += 1
+            ok, _ = await _run_condition(example, audio_chunks, gt, llm, clock)
+            gt_successes += ok
 
             real_stt = make_real_stt()
-            if await _run_condition(example, audio_chunks, real_stt, llm, clock):
-                real_successes += 1
+            ok, heard = await _run_condition(example, audio_chunks, real_stt, llm, clock)
+            real_successes += ok
+            _log(example, "real", heard)
 
             if make_corrected_stt is not None:
                 corrected_stt = make_corrected_stt()
-                if await _run_condition(example, audio_chunks, corrected_stt, llm, clock):
-                    corrected_successes += 1
+                ok, heard = await _run_condition(example, audio_chunks, corrected_stt, llm, clock)
+                corrected_successes += ok
+                _log(example, "corrected", heard)
 
         n = len(lang_examples)
         per_language[language] = LanguageResult(

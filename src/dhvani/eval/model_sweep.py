@@ -17,6 +17,7 @@ from dataclasses import dataclass
 from dhvani.clock import Clock
 from dhvani.eval.audio_io import iter_chunks
 from dhvani.eval.datasets import TranscriptExample
+from dhvani.eval.transcript_log import TranscriptLog
 from dhvani.eval.wer import corpus_wer
 from dhvani.providers.whisper_stt import WhisperSTT
 from dhvani.telemetry.session import SessionTrace
@@ -53,14 +54,22 @@ async def run_sweep(
     model_sizes: Sequence[str],
     compute_types: Sequence[str],
     clock: Clock,
+    log: TranscriptLog | None = None,
 ) -> list[SweepPoint]:
     """Transcribes `examples` once per (model_size, compute_type) grid cell
     with a fresh `WhisperSTT`, scoring corpus WER and reading STT latency off
-    a `SessionTrace` built from that run's per-utterance traces."""
+    a `SessionTrace` built from that run's per-utterance traces. Every
+    transcript is appended to `log` if given (3B-3); never read back from it,
+    since a cached transcript carries no latency."""
     points: list[SweepPoint] = []
     for model_size in model_sizes:
         for compute_type in compute_types:
             stt = WhisperSTT(model_size, clock, compute_type=compute_type)
+            cell_log = (
+                log.for_model(stt=stt.name, model=f"{model_size}/{compute_type}")
+                if log is not None
+                else None
+            )
             session = SessionTrace()
             pairs: list[tuple[str, str]] = []
             total_audio_ms = 0.0
@@ -70,6 +79,15 @@ async def run_sweep(
                 session.add(trace)
                 pairs.append((example.ground_truth_text, hypothesis))
                 total_audio_ms += sum(chunk.duration_ms for chunk in example.audio_chunks)
+                if cell_log is not None:
+                    cell_log.record(
+                        dataset=example.dataset,
+                        example_id=example.example_id,
+                        ground_truth_text=example.ground_truth_text,
+                        raw_text=hypothesis,
+                    )
+            if cell_log is not None:
+                cell_log.close()
 
             wer_result = corpus_wer(pairs)
             stt_percentiles = session.percentiles(Stage.STT)

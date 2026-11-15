@@ -44,15 +44,23 @@ def render_milestone_report(ablation: AblationReport, eer: EerReport | None) -> 
     lines.append(
         f"- {eer.n_entity_mentions} lexicon entity mentions found across the evaluated set"
     )
-    lines.append(f"- Entity Error Rate before correction: {eer.eer_before:.1%}")
-    lines.append(f"- Entity Error Rate after correction: {eer.eer_after:.1%}")
+    lines.append(
+        f"- Recognition EER (any curated variant, any script): "
+        f"{eer.recognition_eer_before:.1%} before correction, "
+        f"{eer.recognition_eer_after:.1%} after"
+    )
+    lines.append(
+        f"- Canonical miss rate (canonical form absent): "
+        f"{eer.canonical_miss_before:.1%} before correction, "
+        f"{eer.canonical_miss_after:.1%} after"
+    )
     lines.append(
         f"- Corruption rate on {eer.n_clean_examples} entity-free examples: "
         f"{eer.corruption_rate:.1%}"
     )
     lines.append("")
 
-    eer_recovery = eer.eer_before - eer.eer_after
+    eer_recovery = eer.recognition_eer_before - eer.recognition_eer_after
     for language, result in ablation.per_language.items():
         gap = result.success_rate_ground_truth - result.success_rate_real_asr
         if gap <= 0 or result.success_rate_corrected_asr is None:
@@ -63,6 +71,6 @@ def render_milestone_report(ablation: AblationReport, eer: EerReport | None) -> 
             f"gap lost to ASR"
         )
     if eer_recovery:
-        lines.append(f"- Entity-level recovery: {eer_recovery:.1%} of the pre-correction EER")
+        lines.append(f"- Entity-level recovery: {eer_recovery:.1%} points of recognition EER")
 
     return "\n".join(lines)

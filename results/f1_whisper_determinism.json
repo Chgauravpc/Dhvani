@@ -1,0 +1,129 @@
+{
+  "item": "3B-5",
+  "check": "whisper small/int8 re-transcription, 30 examples, seed 0",
+  "n": 30,
+  "n_identical": 8,
+  "fraction_identical": 0.26666666666666666,
+  "rows": [
+    {
+      "example_id": "hindi:single_tool_57",
+      "identical": false
+    },
+    {
+      "example_id": "hindi:single_tool_75",
+      "identical": true
+    },
+    {
+      "example_id": "english:single_tool_21",
+      "identical": false
+    },
+    {
+      "example_id": "english:single_tool_133",
+      "identical": false
+    },
+    {
+      "example_id": "hindi:single_tool_122",
+      "identical": false
+    },
+    {
+      "example_id": "hindi:single_tool_109",
+      "identical": false
+    },
+    {
+      "example_id": "hindi:single_tool_67",
+      "identical": false
+    },
+    {
+      "example_id": "hindi:single_tool_14",
+      "identical": false
+    },
+    {
+      "example_id": "hindi:single_tool_105",
+      "identical": false
+    },
+    {
+      "example_id": "hindi:single_tool_42",
+      "identical": false
+    },
+    {
+      "example_id": "english:single_tool_112",
+      "identical": true
+    },
+    {
+      "example_id": "hindi:single_tool_119",
+      "identical": true
+    },
+    {
+      "example_id": "english:single_tool_72",
+      "identical": true
+    },
+    {
+      "example_id": "hindi:single_tool_3",
+      "identical": false
+    },
+    {
+      "example_id": "hindi:single_tool_123",
+      "identical": false
+    },
+    {
+      "example_id": "english:single_tool_49",
+      "identical": true
+    },
+    {
+      "example_id": "english:single_tool_129",
+      "identical": true
+    },
+    {
+      "example_id": "english:single_tool_76",
+      "identical": false
+    },
+    {
+      "example_id": "hindi:single_tool_17",
+      "identical": false
+    },
+    {
+      "example_id": "english:single_tool_51",
+      "identical": false
+    },
+    {
+      "example_id": "hindi:single_tool_45",
+      "identical": true
+    },
+    {
+      "example_id": "english:single_tool_19",
+      "identical": false
+    },
+    {
+      "example_id": "hindi:single_tool_91",
+      "identical": false
+    },
+    {
+      "example_id": "hindi:single_tool_78",
+      "identical": false
+    },
+    {
+      "example_id": "hindi:single_tool_34",
+      "identical": false
+    },
+    {
+      "example_id": "english:single_tool_85",
+      "identical": false
+    },
+    {
+      "example_id": "english:single_tool_121",
+      "identical": false
+    },
+    {
+      "example_id": "hindi:single_tool_2",
+      "identical": false
+    },
+    {
+      "example_id": "english:single_tool_26",
+      "identical": false
+    },
+    {
+      "example_id": "english:single_tool_91",
+      "identical": true
+    }
+  ]
+}

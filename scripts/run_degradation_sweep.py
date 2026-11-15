@@ -19,6 +19,7 @@ import argparse
 import asyncio
 import os
 import random
+from pathlib import Path
 
 from dhvani.audio.channel import default_sweep
 from dhvani.clock import Clock, RealClock
@@ -26,6 +27,12 @@ from dhvani.config import load_dotenv
 from dhvani.entity.lexicon import DEFAULT_LEXICON
 from dhvani.eval.datasets import TranscriptExample, load_lahaja_filtered, load_svarah_filtered
 from dhvani.eval.degradation import render_table, run_degradation_sweep
+from dhvani.eval.transcript_log import (
+    TranscriptLog,
+    default_log_path,
+    run_label,
+    stt_model_label,
+)
 from dhvani.providers.base import STTProvider
 from dhvani.providers.sarvam_stt import DEFAULT_MODEL as DEFAULT_SARVAM_MODEL
 from dhvani.providers.sarvam_stt import SarvamSTT
@@ -40,6 +47,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--stt", choices=["whisper", "sarvam"], default="whisper")
     parser.add_argument("--n-examples", type=int, default=30)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--transcripts", type=Path, default=None)
     return parser.parse_args()
 
 
@@ -76,7 +84,15 @@ async def main() -> None:
     configs = default_sweep()
 
     print(f"running degradation sweep [stt={stt.name}] over {len(configs)} channel configs...")
-    points = await run_degradation_sweep(examples, configs, stt, clock)
+    log = TranscriptLog(
+        args.transcripts or default_log_path("degradation", args.dataset, args.stt),
+        stt=stt.name,
+        model=stt_model_label(args.stt, DEFAULT_SARVAM_MODEL),
+        run=run_label("degradation", args.dataset),
+    )
+    print(f"transcript log: {log.path}")
+    points = await run_degradation_sweep(examples, configs, stt, clock, log=log)
+    log.close()
 
     print()
     print(render_table(points))

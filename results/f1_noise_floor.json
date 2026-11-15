@@ -1,0 +1,332 @@
+{
+  "k": 3,
+  "incomplete_cells": {},
+  "languages": {
+    "english": {
+      "n_gt_complete": 141,
+      "gt_rate_per_run_pct": {
+        "1": 56.73758865248227,
+        "2": 50.35460992907801,
+        "3": 52.4822695035461
+      },
+      "gt_aa_pairs": [
+        {
+          "runs": [
+            1,
+            2
+          ],
+          "diff_pp": 6.382978723404264,
+          "flip_rate": 0.10638297872340426
+        },
+        {
+          "runs": [
+            1,
+            3
+          ],
+          "diff_pp": 4.255319148936176,
+          "flip_rate": 0.09929078014184398
+        },
+        {
+          "runs": [
+            2,
+            3
+          ],
+          "diff_pp": -2.127659574468088,
+          "flip_rate": 0.07801418439716312
+        }
+      ],
+      "noise_floor_pp": 6.382978723404264,
+      "arms": {
+        "whisper": {
+          "n": 141,
+          "mean_loss_pp": 19.62174940898345,
+          "loss_ci_pp": [
+            13.238770685579196,
+            26.47754137115839
+          ],
+          "majority_gt_pass_real_fail": 29,
+          "majority_gt_fail_real_pass": 2,
+          "mcnemar_p": 4.628673195838928e-07,
+          "real_rate_per_run_pct": {
+            "1": 35.46099290780142,
+            "2": 32.62411347517731,
+            "3": 32.62411347517731
+          },
+          "real_aa_pairs": [
+            {
+              "runs": [
+                1,
+                2
+              ],
+              "diff_pp": 2.8368794326241122,
+              "flip_rate": 0.07092198581560284
+            },
+            {
+              "runs": [
+                1,
+                3
+              ],
+              "diff_pp": 2.8368794326241122,
+              "flip_rate": 0.07092198581560284
+            },
+            {
+              "runs": [
+                2,
+                3
+              ],
+              "diff_pp": 0.0,
+              "flip_rate": 0.05673758865248227
+            }
+          ],
+          "first_n_subset": {
+            "n": 40,
+            "mean_loss_pp": 22.5,
+            "loss_ci_pp": [
+              10.833333333333332,
+              35.833333333333336
+            ],
+            "majority_gt_pass_real_fail": 9,
+            "majority_gt_fail_real_pass": 0,
+            "mcnemar_p": 0.00390625
+          },
+          "rule_a_ci_excludes_zero": true,
+          "rule_b_mcnemar_p_lt_0.05": true,
+          "rule_c_loss_exceeds_noise_floor": true,
+          "verdict": "ASR costs task success"
+        },
+        "sarvam": {
+          "n": 141,
+          "mean_loss_pp": 12.293144208037825,
+          "loss_ci_pp": [
+            7.092198581560284,
+            17.73049645390071
+          ],
+          "majority_gt_pass_real_fail": 20,
+          "majority_gt_fail_real_pass": 3,
+          "mcnemar_p": 0.00048828125,
+          "real_rate_per_run_pct": {
+            "1": 39.71631205673759,
+            "2": 37.5886524822695,
+            "3": 45.39007092198582
+          },
+          "real_aa_pairs": [
+            {
+              "runs": [
+                1,
+                2
+              ],
+              "diff_pp": 2.127659574468088,
+              "flip_rate": 0.12056737588652482
+            },
+            {
+              "runs": [
+                1,
+                3
+              ],
+              "diff_pp": -5.6737588652482245,
+              "flip_rate": 0.11347517730496454
+            },
+            {
+              "runs": [
+                2,
+                3
+              ],
+              "diff_pp": -7.801418439716312,
+              "flip_rate": 0.12056737588652482
+            }
+          ],
+          "first_n_subset": {
+            "n": 40,
+            "mean_loss_pp": 16.666666666666668,
+            "loss_ci_pp": [
+              5.833333333333333,
+              28.333333333333332
+            ],
+            "majority_gt_pass_real_fail": 9,
+            "majority_gt_fail_real_pass": 1,
+            "mcnemar_p": 0.021484375
+          },
+          "rule_a_ci_excludes_zero": true,
+          "rule_b_mcnemar_p_lt_0.05": true,
+          "rule_c_loss_exceeds_noise_floor": true,
+          "verdict": "ASR costs task success"
+        }
+      }
+    },
+    "hindi": {
+      "n_gt_complete": 134,
+      "gt_rate_per_run_pct": {
+        "1": 31.343283582089555,
+        "2": 32.08955223880597,
+        "3": 32.83582089552239
+      },
+      "gt_aa_pairs": [
+        {
+          "runs": [
+            1,
+            2
+          ],
+          "diff_pp": -0.7462686567164145,
+          "flip_rate": 0.12686567164179105
+        },
+        {
+          "runs": [
+            1,
+            3
+          ],
+          "diff_pp": -1.4925373134328346,
+          "flip_rate": 0.14925373134328357
+        },
+        {
+          "runs": [
+            2,
+            3
+          ],
+          "diff_pp": -0.7462686567164201,
+          "flip_rate": 0.12686567164179105
+        }
+      ],
+      "noise_floor_pp": 1.4925373134328346,
+      "arms": {
+        "whisper": {
+          "n": 134,
+          "mean_loss_pp": 10.199004975124378,
+          "loss_ci_pp": [
+            3.731343283582089,
+            16.91542288557214
+          ],
+          "majority_gt_pass_real_fail": 25,
+          "majority_gt_fail_real_pass": 7,
+          "mcnemar_p": 0.0021024015732109547,
+          "real_rate_per_run_pct": {
+            "1": 18.65671641791045,
+            "2": 22.388059701492537,
+            "3": 24.62686567164179
+          },
+          "real_aa_pairs": [
+            {
+              "runs": [
+                1,
+                2
+              ],
+              "diff_pp": -3.731343283582089,
+              "flip_rate": 0.17164179104477612
+            },
+            {
+              "runs": [
+                1,
+                3
+              ],
+              "diff_pp": -5.970149253731341,
+              "flip_rate": 0.16417910447761194
+            },
+            {
+              "runs": [
+                2,
+                3
+              ],
+              "diff_pp": -2.2388059701492518,
+              "flip_rate": 0.20149253731343283
+            }
+          ],
+          "first_n_subset": {
+            "n": 40,
+            "mean_loss_pp": -1.666666666666667,
+            "loss_ci_pp": [
+              -11.666666666666666,
+              8.333333333333334
+            ],
+            "majority_gt_pass_real_fail": 4,
+            "majority_gt_fail_real_pass": 3,
+            "mcnemar_p": 1.0
+          },
+          "rule_a_ci_excludes_zero": true,
+          "rule_b_mcnemar_p_lt_0.05": true,
+          "rule_c_loss_exceeds_noise_floor": true,
+          "verdict": "ASR costs task success"
+        },
+        "sarvam": {
+          "n": 134,
+          "mean_loss_pp": 5.970149253731343,
+          "loss_ci_pp": [
+            0.995024875621891,
+            10.945273631840797
+          ],
+          "majority_gt_pass_real_fail": 16,
+          "majority_gt_fail_real_pass": 7,
+          "mcnemar_p": 0.0931396484375,
+          "real_rate_per_run_pct": {
+            "1": 26.119402985074625,
+            "2": 26.865671641791046,
+            "3": 25.37313432835821
+          },
+          "real_aa_pairs": [
+            {
+              "runs": [
+                1,
+                2
+              ],
+              "diff_pp": -0.7462686567164201,
+              "flip_rate": 0.2462686567164179
+            },
+            {
+              "runs": [
+                1,
+                3
+              ],
+              "diff_pp": 0.7462686567164145,
+              "flip_rate": 0.20149253731343283
+            },
+            {
+              "runs": [
+                2,
+                3
+              ],
+              "diff_pp": 1.4925373134328346,
+              "flip_rate": 0.1791044776119403
+            }
+          ],
+          "first_n_subset": {
+            "n": 40,
+            "mean_loss_pp": 2.5,
+            "loss_ci_pp": [
+              -2.5,
+              8.333333333333332
+            ],
+            "majority_gt_pass_real_fail": 3,
+            "majority_gt_fail_real_pass": 1,
+            "mcnemar_p": 0.625
+          },
+          "rule_a_ci_excludes_zero": true,
+          "rule_b_mcnemar_p_lt_0.05": false,
+          "rule_c_loss_exceeds_noise_floor": true,
+          "verdict": "not distinguishable from LLM sampling noise"
+        }
+      }
+    }
+  },
+  "pooled_secondary": {
+    "whisper": {
+      "n": 275,
+      "mean_loss_pp": 15.03030303030303,
+      "loss_ci_pp": [
+        10.424242424242426,
+        19.636363636363637
+      ],
+      "majority_gt_pass_real_fail": 54,
+      "majority_gt_fail_real_pass": 9,
+      "mcnemar_p": 6.108279451688681e-09
+    },
+    "sarvam": {
+      "n": 275,
+      "mean_loss_pp": 9.212121212121213,
+      "loss_ci_pp": [
+        5.575757575757576,
+        12.848484848484851
+      ],
+      "majority_gt_pass_real_fail": 36,
+      "majority_gt_fail_real_pass": 10,
+      "mcnemar_p": 0.00015641720852954677
+    }
+  }
+}

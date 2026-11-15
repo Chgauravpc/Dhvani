@@ -1,0 +1,347 @@
+{
+  "item": "3B-4",
+  "code_commit": "897cbde621392b390a772c7a8223f6942d19779b",
+  "dataset": "indicvoices-hindi",
+  "stt": "sarvam",
+  "model": "saaras:v3",
+  "seed": 0,
+  "sampling": {
+    "split_unit": "speaker",
+    "sampling": "cluster sample by shard",
+    "shards": [
+      "hindi/train-00041-of-00082.parquet",
+      "hindi/train-00023-of-00082.parquet",
+      "hindi/train-00048-of-00082.parquet",
+      "hindi/train-00059-of-00082.parquet",
+      "hindi/train-00052-of-00082.parquet",
+      "hindi/train-00037-of-00082.parquet",
+      "hindi/train-00077-of-00082.parquet",
+      "hindi/train-00026-of-00082.parquet",
+      "hindi/train-00044-of-00082.parquet",
+      "hindi/train-00024-of-00082.parquet",
+      "hindi/train-00069-of-00082.parquet",
+      "hindi/train-00050-of-00082.parquet",
+      "hindi/train-00008-of-00082.parquet",
+      "hindi/train-00001-of-00082.parquet"
+    ],
+    "n_speakers": 333,
+    "n_dev_speakers": 87
+  },
+  "n_dev": {
+    "entity": 89,
+    "clean": 35
+  },
+  "n_test": {
+    "entity": 225,
+    "clean": 115
+  },
+  "transcript_log": "results/transcripts/f2_indicvoices-hindi_sarvam.jsonl",
+  "threshold_objective": "min dev canonical_miss_after + corruption_rate; ties -> higher",
+  "dev_sweep": [
+    {
+      "split": "dev",
+      "threshold": 0.7,
+      "n_entity_mentions": 95,
+      "recognition_eer_before": 0.06315789473684211,
+      "recognition_eer_after": 0.010526315789473684,
+      "canonical_miss_before": 1.0,
+      "canonical_miss_after": 0.010526315789473684,
+      "n_clean_examples": 35,
+      "corruption_rate": 0.3142857142857143,
+      "recognition_fixed": 6,
+      "recognition_broken": 1,
+      "canonical_fixed": 94,
+      "canonical_broken": 0,
+      "n_corrupted": 11,
+      "recognition_eer_before_ci": [
+        0.029264489538080835,
+        0.13100810823451697
+      ],
+      "recognition_eer_after_ci": [
+        0.0018605283639709959,
+        0.05724009323665061
+      ],
+      "canonical_miss_before_ci": [
+        0.9611337736337738,
+        1.0
+      ],
+      "canonical_miss_after_ci": [
+        0.0018605283639709959,
+        0.05724009323665061
+      ],
+      "corruption_rate_ci": [
+        0.18550658059782457,
+        0.47980071879251973
+      ],
+      "recognition_mcnemar_p": 0.125,
+      "canonical_mcnemar_p": 1.0097419586828951e-28
+    },
+    {
+      "split": "dev",
+      "threshold": 0.75,
+      "n_entity_mentions": 95,
+      "recognition_eer_before": 0.06315789473684211,
+      "recognition_eer_after": 0.010526315789473684,
+      "canonical_miss_before": 1.0,
+      "canonical_miss_after": 0.010526315789473684,
+      "n_clean_examples": 35,
+      "corruption_rate": 0.08571428571428572,
+      "recognition_fixed": 6,
+      "recognition_broken": 1,
+      "canonical_fixed": 94,
+      "canonical_broken": 0,
+      "n_corrupted": 3,
+      "recognition_eer_before_ci": [
+        0.029264489538080835,
+        0.13100810823451697
+      ],
+      "recognition_eer_after_ci": [
+        0.0018605283639709959,
+        0.05724009323665061
+      ],
+      "canonical_miss_before_ci": [
+        0.9611337736337738,
+        1.0
+      ],
+      "canonical_miss_after_ci": [
+        0.0018605283639709959,
+        0.05724009323665061
+      ],
+      "corruption_rate_ci": [
+        0.029581831005296905,
+        0.22379599071162518
+      ],
+      "recognition_mcnemar_p": 0.125,
+      "canonical_mcnemar_p": 1.0097419586828951e-28
+    },
+    {
+      "split": "dev",
+      "threshold": 0.8,
+      "n_entity_mentions": 95,
+      "recognition_eer_before": 0.06315789473684211,
+      "recognition_eer_after": 0.010526315789473684,
+      "canonical_miss_before": 1.0,
+      "canonical_miss_after": 0.010526315789473684,
+      "n_clean_examples": 35,
+      "corruption_rate": 0.05714285714285714,
+      "recognition_fixed": 6,
+      "recognition_broken": 1,
+      "canonical_fixed": 94,
+      "canonical_broken": 0,
+      "n_corrupted": 2,
+      "recognition_eer_before_ci": [
+        0.029264489538080835,
+        0.13100810823451697
+      ],
+      "recognition_eer_after_ci": [
+        0.0018605283639709959,
+        0.05724009323665061
+      ],
+      "canonical_miss_before_ci": [
+        0.9611337736337738,
+        1.0
+      ],
+      "canonical_miss_after_ci": [
+        0.0018605283639709959,
+        0.05724009323665061
+      ],
+      "corruption_rate_ci": [
+        0.015812829614043955,
+        0.1860738073937003
+      ],
+      "recognition_mcnemar_p": 0.125,
+      "canonical_mcnemar_p": 1.0097419586828951e-28
+    },
+    {
+      "split": "dev",
+      "threshold": 0.82,
+      "n_entity_mentions": 95,
+      "recognition_eer_before": 0.06315789473684211,
+      "recognition_eer_after": 0.010526315789473684,
+      "canonical_miss_before": 1.0,
+      "canonical_miss_after": 0.010526315789473684,
+      "n_clean_examples": 35,
+      "corruption_rate": 0.05714285714285714,
+      "recognition_fixed": 6,
+      "recognition_broken": 1,
+      "canonical_fixed": 94,
+      "canonical_broken": 0,
+      "n_corrupted": 2,
+      "recognition_eer_before_ci": [
+        0.029264489538080835,
+        0.13100810823451697
+      ],
+      "recognition_eer_after_ci": [
+        0.0018605283639709959,
+        0.05724009323665061
+      ],
+      "canonical_miss_before_ci": [
+        0.9611337736337738,
+        1.0
+      ],
+      "canonical_miss_after_ci": [
+        0.0018605283639709959,
+        0.05724009323665061
+      ],
+      "corruption_rate_ci": [
+        0.015812829614043955,
+        0.1860738073937003
+      ],
+      "recognition_mcnemar_p": 0.125,
+      "canonical_mcnemar_p": 1.0097419586828951e-28
+    },
+    {
+      "split": "dev",
+      "threshold": 0.85,
+      "n_entity_mentions": 95,
+      "recognition_eer_before": 0.06315789473684211,
+      "recognition_eer_after": 0.010526315789473684,
+      "canonical_miss_before": 1.0,
+      "canonical_miss_after": 0.010526315789473684,
+      "n_clean_examples": 35,
+      "corruption_rate": 0.0,
+      "recognition_fixed": 6,
+      "recognition_broken": 1,
+      "canonical_fixed": 94,
+      "canonical_broken": 0,
+      "n_corrupted": 0,
+      "recognition_eer_before_ci": [
+        0.029264489538080835,
+        0.13100810823451697
+      ],
+      "recognition_eer_after_ci": [
+        0.0018605283639709959,
+        0.05724009323665061
+      ],
+      "canonical_miss_before_ci": [
+        0.9611337736337738,
+        1.0
+      ],
+      "canonical_miss_after_ci": [
+        0.0018605283639709959,
+        0.05724009323665061
+      ],
+      "corruption_rate_ci": [
+        0.0,
+        0.09890426758938868
+      ],
+      "recognition_mcnemar_p": 0.125,
+      "canonical_mcnemar_p": 1.0097419586828951e-28
+    },
+    {
+      "split": "dev",
+      "threshold": 0.9,
+      "n_entity_mentions": 95,
+      "recognition_eer_before": 0.06315789473684211,
+      "recognition_eer_after": 0.021052631578947368,
+      "canonical_miss_before": 1.0,
+      "canonical_miss_after": 0.021052631578947368,
+      "n_clean_examples": 35,
+      "corruption_rate": 0.0,
+      "recognition_fixed": 4,
+      "recognition_broken": 0,
+      "canonical_fixed": 93,
+      "canonical_broken": 0,
+      "n_corrupted": 0,
+      "recognition_eer_before_ci": [
+        0.029264489538080835,
+        0.13100810823451697
+      ],
+      "recognition_eer_after_ci": [
+        0.0057923854515239195,
+        0.07354263138349293
+      ],
+      "canonical_miss_before_ci": [
+        0.9611337736337738,
+        1.0
+      ],
+      "canonical_miss_after_ci": [
+        0.0057923854515239195,
+        0.07354263138349293
+      ],
+      "corruption_rate_ci": [
+        0.0,
+        0.09890426758938868
+      ],
+      "recognition_mcnemar_p": 0.125,
+      "canonical_mcnemar_p": 2.0194839173657902e-28
+    },
+    {
+      "split": "dev",
+      "threshold": 0.95,
+      "n_entity_mentions": 95,
+      "recognition_eer_before": 0.06315789473684211,
+      "recognition_eer_after": 0.042105263157894736,
+      "canonical_miss_before": 1.0,
+      "canonical_miss_after": 0.042105263157894736,
+      "n_clean_examples": 35,
+      "corruption_rate": 0.0,
+      "recognition_fixed": 2,
+      "recognition_broken": 0,
+      "canonical_fixed": 91,
+      "canonical_broken": 0,
+      "n_corrupted": 0,
+      "recognition_eer_before_ci": [
+        0.029264489538080835,
+        0.13100810823451697
+      ],
+      "recognition_eer_after_ci": [
+        0.016493505976432808,
+        0.10331030132737451
+      ],
+      "canonical_miss_before_ci": [
+        0.9611337736337738,
+        1.0
+      ],
+      "canonical_miss_after_ci": [
+        0.016493505976432808,
+        0.10331030132737451
+      ],
+      "corruption_rate_ci": [
+        0.0,
+        0.09890426758938868
+      ],
+      "recognition_mcnemar_p": 0.5,
+      "canonical_mcnemar_p": 8.077935669463161e-28
+    }
+  ],
+  "chosen_threshold": 0.85,
+  "test": {
+    "split": "test",
+    "threshold": 0.85,
+    "n_entity_mentions": 242,
+    "recognition_eer_before": 0.045454545454545456,
+    "recognition_eer_after": 0.008264462809917356,
+    "canonical_miss_before": 0.9958677685950413,
+    "canonical_miss_after": 0.008264462809917356,
+    "n_clean_examples": 115,
+    "corruption_rate": 0.0,
+    "recognition_fixed": 9,
+    "recognition_broken": 0,
+    "canonical_fixed": 239,
+    "canonical_broken": 0,
+    "n_corrupted": 0,
+    "recognition_eer_before_ci": [
+      0.025567561958883746,
+      0.07954727621333771
+    ],
+    "recognition_eer_after_ci": [
+      0.0022692998150906363,
+      0.02962766148031258
+    ],
+    "canonical_miss_before_ci": [
+      0.9769681526921359,
+      0.999270205665441
+    ],
+    "canonical_miss_after_ci": [
+      0.0022692998150906363,
+      0.02962766148031258
+    ],
+    "corruption_rate_ci": [
+      0.0,
+      0.03232538101136302
+    ],
+    "recognition_mcnemar_p": 0.00390625,
+    "canonical_mcnemar_p": 2.263919769706678e-72
+  }
+}

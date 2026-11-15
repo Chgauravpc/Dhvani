@@ -1,0 +1,329 @@
+{
+  "item": "3B-4",
+  "code_commit": "b47d29f8cda44cfba71b6477ae9bcc43a96dc16d",
+  "dataset": "svarah",
+  "stt": "faster-whisper",
+  "model": "small/int8",
+  "seed": 0,
+  "sampling": {
+    "split_unit": "row",
+    "sampling": "all entity rows"
+  },
+  "n_dev": {
+    "entity": 28,
+    "clean": 45
+  },
+  "n_test": {
+    "entity": 65,
+    "clean": 105
+  },
+  "transcript_log": "results/transcripts/f2_svarah_whisper.jsonl",
+  "threshold_objective": "min dev canonical_miss_after + corruption_rate; ties -> higher",
+  "dev_sweep": [
+    {
+      "split": "dev",
+      "threshold": 0.7,
+      "n_entity_mentions": 28,
+      "recognition_eer_before": 0.2857142857142857,
+      "recognition_eer_after": 0.07142857142857142,
+      "canonical_miss_before": 0.35714285714285715,
+      "canonical_miss_after": 0.07142857142857142,
+      "n_clean_examples": 45,
+      "corruption_rate": 0.13333333333333333,
+      "recognition_fixed": 6,
+      "recognition_broken": 0,
+      "canonical_fixed": 8,
+      "canonical_broken": 0,
+      "n_corrupted": 6,
+      "recognition_eer_before_ci": [
+        0.15253815848329969,
+        0.470596357370175
+      ],
+      "recognition_eer_after_ci": [
+        0.019811647447770794,
+        0.2264573842591786
+      ],
+      "canonical_miss_before_ci": [
+        0.20705611972458876,
+        0.5417002241777278
+      ],
+      "canonical_miss_after_ci": [
+        0.019811647447770794,
+        0.2264573842591786
+      ],
+      "corruption_rate_ci": [
+        0.0625706363434968,
+        0.2617758224129731
+      ],
+      "recognition_mcnemar_p": 0.03125,
+      "canonical_mcnemar_p": 0.0078125
+    },
+    {
+      "split": "dev",
+      "threshold": 0.75,
+      "n_entity_mentions": 28,
+      "recognition_eer_before": 0.2857142857142857,
+      "recognition_eer_after": 0.21428571428571427,
+      "canonical_miss_before": 0.35714285714285715,
+      "canonical_miss_after": 0.21428571428571427,
+      "n_clean_examples": 45,
+      "corruption_rate": 0.1111111111111111,
+      "recognition_fixed": 2,
+      "recognition_broken": 0,
+      "canonical_fixed": 4,
+      "canonical_broken": 0,
+      "n_corrupted": 5,
+      "recognition_eer_before_ci": [
+        0.15253815848329969,
+        0.470596357370175
+      ],
+      "recognition_eer_after_ci": [
+        0.10212321701189422,
+        0.3953894707927388
+      ],
+      "canonical_miss_before_ci": [
+        0.20705611972458876,
+        0.5417002241777278
+      ],
+      "canonical_miss_after_ci": [
+        0.10212321701189422,
+        0.3953894707927388
+      ],
+      "corruption_rate_ci": [
+        0.04840400437825558,
+        0.23499375490890945
+      ],
+      "recognition_mcnemar_p": 0.5,
+      "canonical_mcnemar_p": 0.125
+    },
+    {
+      "split": "dev",
+      "threshold": 0.8,
+      "n_entity_mentions": 28,
+      "recognition_eer_before": 0.2857142857142857,
+      "recognition_eer_after": 0.25,
+      "canonical_miss_before": 0.35714285714285715,
+      "canonical_miss_after": 0.25,
+      "n_clean_examples": 45,
+      "corruption_rate": 0.044444444444444446,
+      "recognition_fixed": 1,
+      "recognition_broken": 0,
+      "canonical_fixed": 3,
+      "canonical_broken": 0,
+      "n_corrupted": 2,
+      "recognition_eer_before_ci": [
+        0.15253815848329969,
+        0.470596357370175
+      ],
+      "recognition_eer_after_ci": [
+        0.12676334942200781,
+        0.433560252407046
+      ],
+      "canonical_miss_before_ci": [
+        0.20705611972458876,
+        0.5417002241777278
+      ],
+      "canonical_miss_after_ci": [
+        0.12676334942200781,
+        0.433560252407046
+      ],
+      "corruption_rate_ci": [
+        0.012273869040444335,
+        0.14827779183880616
+      ],
+      "recognition_mcnemar_p": 1.0,
+      "canonical_mcnemar_p": 0.25
+    },
+    {
+      "split": "dev",
+      "threshold": 0.82,
+      "n_entity_mentions": 28,
+      "recognition_eer_before": 0.2857142857142857,
+      "recognition_eer_after": 0.25,
+      "canonical_miss_before": 0.35714285714285715,
+      "canonical_miss_after": 0.25,
+      "n_clean_examples": 45,
+      "corruption_rate": 0.0,
+      "recognition_fixed": 1,
+      "recognition_broken": 0,
+      "canonical_fixed": 3,
+      "canonical_broken": 0,
+      "n_corrupted": 0,
+      "recognition_eer_before_ci": [
+        0.15253815848329969,
+        0.470596357370175
+      ],
+      "recognition_eer_after_ci": [
+        0.12676334942200781,
+        0.433560252407046
+      ],
+      "canonical_miss_before_ci": [
+        0.20705611972458876,
+        0.5417002241777278
+      ],
+      "canonical_miss_after_ci": [
+        0.12676334942200781,
+        0.433560252407046
+      ],
+      "corruption_rate_ci": [
+        0.0,
+        0.07865426194064076
+      ],
+      "recognition_mcnemar_p": 1.0,
+      "canonical_mcnemar_p": 0.25
+    },
+    {
+      "split": "dev",
+      "threshold": 0.85,
+      "n_entity_mentions": 28,
+      "recognition_eer_before": 0.2857142857142857,
+      "recognition_eer_after": 0.25,
+      "canonical_miss_before": 0.35714285714285715,
+      "canonical_miss_after": 0.25,
+      "n_clean_examples": 45,
+      "corruption_rate": 0.0,
+      "recognition_fixed": 1,
+      "recognition_broken": 0,
+      "canonical_fixed": 3,
+      "canonical_broken": 0,
+      "n_corrupted": 0,
+      "recognition_eer_before_ci": [
+        0.15253815848329969,
+        0.470596357370175
+      ],
+      "recognition_eer_after_ci": [
+        0.12676334942200781,
+        0.433560252407046
+      ],
+      "canonical_miss_before_ci": [
+        0.20705611972458876,
+        0.5417002241777278
+      ],
+      "canonical_miss_after_ci": [
+        0.12676334942200781,
+        0.433560252407046
+      ],
+      "corruption_rate_ci": [
+        0.0,
+        0.07865426194064076
+      ],
+      "recognition_mcnemar_p": 1.0,
+      "canonical_mcnemar_p": 0.25
+    },
+    {
+      "split": "dev",
+      "threshold": 0.9,
+      "n_entity_mentions": 28,
+      "recognition_eer_before": 0.2857142857142857,
+      "recognition_eer_after": 0.25,
+      "canonical_miss_before": 0.35714285714285715,
+      "canonical_miss_after": 0.25,
+      "n_clean_examples": 45,
+      "corruption_rate": 0.0,
+      "recognition_fixed": 1,
+      "recognition_broken": 0,
+      "canonical_fixed": 3,
+      "canonical_broken": 0,
+      "n_corrupted": 0,
+      "recognition_eer_before_ci": [
+        0.15253815848329969,
+        0.470596357370175
+      ],
+      "recognition_eer_after_ci": [
+        0.12676334942200781,
+        0.433560252407046
+      ],
+      "canonical_miss_before_ci": [
+        0.20705611972458876,
+        0.5417002241777278
+      ],
+      "canonical_miss_after_ci": [
+        0.12676334942200781,
+        0.433560252407046
+      ],
+      "corruption_rate_ci": [
+        0.0,
+        0.07865426194064076
+      ],
+      "recognition_mcnemar_p": 1.0,
+      "canonical_mcnemar_p": 0.25
+    },
+    {
+      "split": "dev",
+      "threshold": 0.95,
+      "n_entity_mentions": 28,
+      "recognition_eer_before": 0.2857142857142857,
+      "recognition_eer_after": 0.2857142857142857,
+      "canonical_miss_before": 0.35714285714285715,
+      "canonical_miss_after": 0.2857142857142857,
+      "n_clean_examples": 45,
+      "corruption_rate": 0.0,
+      "recognition_fixed": 0,
+      "recognition_broken": 0,
+      "canonical_fixed": 2,
+      "canonical_broken": 0,
+      "n_corrupted": 0,
+      "recognition_eer_before_ci": [
+        0.15253815848329969,
+        0.470596357370175
+      ],
+      "recognition_eer_after_ci": [
+        0.15253815848329969,
+        0.470596357370175
+      ],
+      "canonical_miss_before_ci": [
+        0.20705611972458876,
+        0.5417002241777278
+      ],
+      "canonical_miss_after_ci": [
+        0.15253815848329969,
+        0.470596357370175
+      ],
+      "corruption_rate_ci": [
+        0.0,
+        0.07865426194064076
+      ],
+      "recognition_mcnemar_p": 1.0,
+      "canonical_mcnemar_p": 0.5
+    }
+  ],
+  "chosen_threshold": 0.7,
+  "test": {
+    "split": "test",
+    "threshold": 0.7,
+    "n_entity_mentions": 66,
+    "recognition_eer_before": 0.25757575757575757,
+    "recognition_eer_after": 0.12121212121212122,
+    "canonical_miss_before": 0.2878787878787879,
+    "canonical_miss_after": 0.12121212121212122,
+    "n_clean_examples": 105,
+    "corruption_rate": 0.11428571428571428,
+    "recognition_fixed": 9,
+    "recognition_broken": 0,
+    "canonical_fixed": 11,
+    "canonical_broken": 0,
+    "n_corrupted": 12,
+    "recognition_eer_before_ci": [
+      0.16748707345896682,
+      0.37433327429938923
+    ],
+    "recognition_eer_after_ci": [
+      0.06271770703368283,
+      0.22137658633874846
+    ],
+    "canonical_miss_before_ci": [
+      0.19271802784703906,
+      0.40637477644152253
+    ],
+    "canonical_miss_after_ci": [
+      0.06271770703368283,
+      0.22137658633874846
+    ],
+    "corruption_rate_ci": [
+      0.0665963623948552,
+      0.18920289083185224
+    ],
+    "recognition_mcnemar_p": 0.00390625,
+    "canonical_mcnemar_p": 0.0009765625
+  }
+}

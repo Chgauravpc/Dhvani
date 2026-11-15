@@ -63,7 +63,10 @@ _ENTRIES: tuple[LexiconEntry, ...] = (
     LexiconEntry(
         canonical="Aadhaar",
         variants={
-            DEVANAGARI: ("आधार", "आधार कार्ड"),
+            # Bare "आधार" dropped (phase-3b 3B-2): it is the everyday noun
+            # "basis" ("के आधार पर" -- 286 false pairs in IndicVoices Hindi,
+            # all 12 LAHAJA hits). Kept only in compounds that name the ID.
+            DEVANAGARI: ("आधार कार्ड", "आधार नंबर", "आधार नम्बर"),
             LATIN: ("aadhaar", "aadhar", "adhaar", "aadhar card", "aadhaar card"),
             TAMIL: (_tamil("aadhaara"),),
         },
@@ -71,8 +74,10 @@ _ENTRIES: tuple[LexiconEntry, ...] = (
     LexiconEntry(
         canonical="PAN card",
         variants={
-            DEVANAGARI: ("पैन", "पैन कार्ड"),
-            LATIN: ("pan", "pan card"),
+            # Bare "पैन"/"pan" dropped (3B-2): "pain killer", frying pan,
+            # pen -- almost every bare IndicVoices hit was one of these.
+            DEVANAGARI: ("पैन कार्ड", "पैन नंबर", "पैन नम्बर"),
+            LATIN: ("pan card", "pan number"),
         },
     ),
     LexiconEntry(

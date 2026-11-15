@@ -388,27 +388,30 @@ as their own problem.
 
 *Release 2, Q1 — does a strong ASR lose digits and entities on phone audio?*
 
-- [?] 3B-17 — number normalisation for scoring; digit-string exact match
+- [x] 3B-17 — number normalisation for scoring; digit-string exact match
       from the cached logs
       evidence: prereg `6d862df` (before scoring) · `results/f2_digits.json` · `docs/runs/3b-17-digit-strings.md`
       · digit-string exact match Svarah Whisper 81.3% / Saaras 92.0%, Hindi Saaras 84.1%; Hindi Saaras WER
-      26.4% -> 12.6% after number normalisation. Normaliser amended after seeing misses (deviation 1);
-      awaiting owner review
-- [?] 3B-20 — reference arm: hosted Whisper `large-v3`, language forced
+      26.4% -> 12.6% after number normalisation. Normaliser amended after seeing misses (deviation 1).
+      Accepted by owner 2026-11-15.
+- [x] 3B-20 — reference arm: hosted Whisper `large-v3`, language forced
       evidence (clean and `pstn` halves; nothing degrades under pstn, max drop 1.1 pp; `results/f3_channel_groq-whisper.json`): prereg `2b52ff2` ·
       `docs/runs/3b-20-groq-large-v3.md` · `results/f2_eer_*_groq-whisper.json` · Svarah recognition
       error 16.7% [9.6, 27.4] vs Saaras 0.0%; Hindi arm is a broken baseline by the pre-flight rule
-- [?] 3B-18 — Saaras on the test-split entity rows through the 8 kHz
+      Accepted by owner 2026-11-15.
+- [x] 3B-18 — Saaras on the test-split entity rows through the 8 kHz
       mu-law channel
       evidence: prereg `1a1212b` (before the run) · `docs/runs/3b-18-phone-channel.md` ·
       `results/f3_channel_sarvam.json` · 290 rows, 65.05 min; nothing degrades (digit match
       -2.3 / 0.0 pp, entity recognition -1.5 / -0.4 pp, normalised WER +2.0 / +1.5 pp); simulated
       codec, read speech; balance not readable by the agent -- owner to read the dashboard
-- [?] 3B-21 — the same ASRs on a sample of real telephone Hindi
+      Accepted by owner 2026-11-15.
+- [x] 3B-21 — the same ASRs on a sample of real telephone Hindi
       evidence: prereg `c8e916c` (before transcription; deviation 1 `d0f62e6`) · `docs/runs/3b-21-real-telephone-hindi.md`
       · `results/f3_gramvaani.json` · 220 utterances scored; Saaras 26.5% normalised WER, large-v3 54.5%;
       gap to clean rows not a channel effect (raw WER 26.4% vs 27.2%); digits too few (14) to measure;
       Sarvam balance not readable by the agent -- owner to read the dashboard
+      Accepted by owner 2026-11-15.
 
 *Release 2, Q2 — why does the agent fail with perfect transcripts?*
 

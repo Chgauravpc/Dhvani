@@ -42,6 +42,8 @@ ARMS = (
     ("svarah", "sarvam"),
     ("indicvoices-hindi", "whisper"),
     ("indicvoices-hindi", "sarvam"),
+    ("svarah", "groq-whisper"),  # 3B-20
+    ("indicvoices-hindi", "groq-whisper"),  # 3B-20 (broken baseline by pre-flight)
 )
 REPORT_KEYS = (
     "n_entity_mentions",

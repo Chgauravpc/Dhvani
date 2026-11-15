@@ -25,6 +25,11 @@ ARM_LABELS = {
     "svarah/sarvam": "Svarah (English), Saaras",
     "indicvoices-hindi/whisper": "IndicVoices (Hindi), local Whisper `small`",
     "indicvoices-hindi/sarvam": "IndicVoices (Hindi), Saaras",
+    "svarah/groq-whisper": "Svarah (English), Whisper `large-v3` (Groq)",
+    "indicvoices-hindi/groq-whisper": (
+        "IndicVoices (Hindi), Whisper `large-v3` (Groq; broken baseline by the pre-flight "
+        "rule, not compared)"
+    ),
 }
 COLUMN_LABELS = {
     "raw": "raw ASR output",

@@ -130,6 +130,70 @@
     "number_normalised": 0.12703751617076325,
     "formatting_inflation_pp": 13.100891200014624
    }
+  },
+  "svarah/groq-whisper": {
+   "broken_baseline": false,
+   "rows": 243,
+   "digit_string_exact_match_all_rows": {
+    "k": 66,
+    "n": 75,
+    "rate": 0.88,
+    "ci95": [
+     0.7874015748031495,
+     0.9355670103092784
+    ]
+   },
+   "digit_string_exact_match_test_rows": {
+    "k": 46,
+    "n": 52,
+    "rate": 0.8846153846153846,
+    "ci95": [
+     0.7702808110893793,
+     0.9460310424391727
+    ]
+   },
+   "wer_all_rows": {
+    "raw": 0.10057678442682047,
+    "number_normalised": 0.0986271676300578,
+    "formatting_inflation_pp": 0.1949616796762671
+   },
+   "wer_test_rows": {
+    "raw": 0.10500490677134446,
+    "number_normalised": 0.10231185440236104,
+    "formatting_inflation_pp": 0.26930523689834146
+   }
+  },
+  "indicvoices-hindi/groq-whisper": {
+   "broken_baseline": false,
+   "rows": 464,
+   "digit_string_exact_match_all_rows": {
+    "k": 176,
+    "n": 246,
+    "rate": 0.7154471544715447,
+    "ci95": [
+     0.6560872126706999,
+     0.7681816040515753
+    ]
+   },
+   "digit_string_exact_match_test_rows": {
+    "k": 124,
+    "n": 180,
+    "rate": 0.6888888888888889,
+    "ci95": [
+     0.6179038880110056,
+     0.7519797509477503
+    ]
+   },
+   "wer_all_rows": {
+    "raw": 0.4425340121859611,
+    "number_normalised": 0.3470098703309464,
+    "formatting_inflation_pp": 9.552414185501473
+   },
+   "wer_test_rows": {
+    "raw": 0.4446562745317932,
+    "number_normalised": 0.3529107373868047,
+    "formatting_inflation_pp": 9.17455371449885
+   }
   }
  },
  "paired_svarah_whisper_vs_saaras": {

@@ -50,6 +50,12 @@ the corrector rewrote anyway.
 | IndicVoices (Hindi), Saaras (242 / 115) | raw ASR output | 4.5% | 99.6% | - |
 |  | + exact lookup (default) | 4.5% | 4.5% | 0 / 115 |
 |  | + exact + fuzzy | 0.8% | 0.8% | 0 / 115 |
+| Svarah (English), Whisper `large-v3` (Groq) (66 / 105) | raw ASR output | 16.7% | 18.2% | - |
+|  | + exact lookup (default) | 16.7% | 16.7% | 0 / 105 |
+|  | + exact + fuzzy | 13.6% | 13.6% | 0 / 105 |
+| IndicVoices (Hindi), Whisper `large-v3` (Groq; broken baseline by the pre-flight rule, not compared) (242 / 115) | raw ASR output | 65.7% | 99.6% | - |
+|  | + exact lookup (default) | 65.7% | 65.7% | 0 / 115 |
+|  | + exact + fuzzy | 7.4% | 7.4% | 16 / 115 |
 
 **A strong Indic ASR already recognises nearly all of these entities on clean audio.**
 Saaras gets 66 of 66 Svarah mentions and 231 of 242 Hindi mentions right with no help.
@@ -60,8 +66,17 @@ exact lookup does: Hindi canonical-form misses fall from 99.6% to 4.5%, and from
 rows); with local Whisper it adds 9 and 185 mentions, at 12 of 105 and 17 of 115 clean
 rows corrupted (`play` → "Pradhan Mantri Awas Yojana", `coming` → "CoWIN", `हर` →
 "Aadhaar"). The fuzzy layer is therefore optional (`EntityCorrector(mode="fuzzy")`);
-exact lookup is the default. So, for entities on clean audio with a good ASR, the
-project's thesis is **refuted**: the ear is not where these fail.
+exact lookup is the default. So, for entities on clean audio with **Saaras**, the
+project's thesis is **refuted**: the ear is not where these fail. It is not refuted for
+every ASR (next paragraph).
+
+**Not every strong ASR recognises them.** Hosted Whisper `large-v3` (Groq, language forced;
+[`docs/runs/3b-20-groq-large-v3.md`](docs/runs/3b-20-groq-large-v3.md)) misses 16.7% of the
+Svarah mentions (11 of 66, 95% interval 9.6 to 27.4%), 6 of them CoWIN, where Saaras misses
+none. Exact lookup cannot change that; exact + fuzzy recovers 2 of the 11 at no clean row
+corrupted. On the Hindi rows it misses 65.7% of mentions with a 44.3% word error rate, but
+it fails this project's baseline-sanity line (under 40%), so it is listed and not compared.
+Which ASR is used, not the corrector, decides how many entities are lost.
 
 **Local Whisper `small` is a CPU-constrained reference row, not an Indic ASR.** On
 the Hindi rows it has a 66.5% word error rate against Saaras's 26.4%

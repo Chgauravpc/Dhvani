@@ -464,6 +464,236 @@
      "extra_corrupted_clean_rows": 0
     }
    }
+  },
+  "svarah/groq-whisper": {
+   "dataset": "svarah",
+   "stt": "groq-whisper",
+   "fuzzy_threshold": 0.9,
+   "n_test_mentions": 66,
+   "n_test_clean_rows": 105,
+   "columns": {
+    "raw": {
+     "recognition_error": {
+      "k": 11,
+      "n": 66,
+      "rate": 0.16666666666666666,
+      "ci95": [
+       0.09569485409199655,
+       0.274308124075743
+      ]
+     },
+     "canonical_miss": {
+      "k": 12,
+      "n": 66,
+      "rate": 0.18181818181818182,
+      "ci95": [
+       0.10718501425764242,
+       0.2914541921751999
+      ]
+     },
+     "corruption_on_clean_rows": null
+    },
+    "exact": {
+     "recognition_error": {
+      "k": 11,
+      "n": 66,
+      "rate": 0.16666666666666666,
+      "ci95": [
+       0.09569485409199655,
+       0.274308124075743
+      ]
+     },
+     "canonical_miss": {
+      "k": 11,
+      "n": 66,
+      "rate": 0.16666666666666666,
+      "ci95": [
+       0.09569485409199655,
+       0.274308124075743
+      ]
+     },
+     "corruption_on_clean_rows": {
+      "k": 0,
+      "n": 105,
+      "rate": 0.0,
+      "ci95": [
+       0.0,
+       0.035295328256842964
+      ]
+     }
+    },
+    "exact_plus_fuzzy": {
+     "recognition_error": {
+      "k": 9,
+      "n": 66,
+      "rate": 0.13636363636363635,
+      "ci95": [
+       0.07343237343346894,
+       0.23929814820406514
+      ]
+     },
+     "canonical_miss": {
+      "k": 9,
+      "n": 66,
+      "rate": 0.13636363636363635,
+      "ci95": [
+       0.07343237343346894,
+       0.23929814820406514
+      ]
+     },
+     "corruption_on_clean_rows": {
+      "k": 0,
+      "n": 105,
+      "rate": 0.0,
+      "ci95": [
+       0.0,
+       0.035295328256842964
+      ]
+     }
+    }
+   },
+   "paired": {
+    "exact_over_raw": {
+     "recognition": {
+      "fixed": 0,
+      "broken": 0,
+      "mcnemar_p": 1.0
+     },
+     "canonical": {
+      "fixed": 1,
+      "broken": 0,
+      "mcnemar_p": 1.0
+     }
+    },
+    "fuzzy_layer_over_exact": {
+     "recognition": {
+      "fixed": 2,
+      "broken": 0,
+      "mcnemar_p": 0.5
+     },
+     "canonical": {
+      "fixed": 2,
+      "broken": 0,
+      "mcnemar_p": 0.5
+     },
+     "extra_corrupted_clean_rows": 0
+    }
+   }
+  },
+  "indicvoices-hindi/groq-whisper": {
+   "dataset": "indicvoices-hindi",
+   "stt": "groq-whisper",
+   "fuzzy_threshold": 0.75,
+   "n_test_mentions": 242,
+   "n_test_clean_rows": 115,
+   "columns": {
+    "raw": {
+     "recognition_error": {
+      "k": 159,
+      "n": 242,
+      "rate": 0.6570247933884298,
+      "ci95": [
+       0.5951799430424556,
+       0.7139622037707771
+      ]
+     },
+     "canonical_miss": {
+      "k": 241,
+      "n": 242,
+      "rate": 0.9958677685950413,
+      "ci95": [
+       0.9769681526921359,
+       0.999270205665441
+      ]
+     },
+     "corruption_on_clean_rows": null
+    },
+    "exact": {
+     "recognition_error": {
+      "k": 159,
+      "n": 242,
+      "rate": 0.6570247933884298,
+      "ci95": [
+       0.5951799430424556,
+       0.7139622037707771
+      ]
+     },
+     "canonical_miss": {
+      "k": 159,
+      "n": 242,
+      "rate": 0.6570247933884298,
+      "ci95": [
+       0.5951799430424556,
+       0.7139622037707771
+      ]
+     },
+     "corruption_on_clean_rows": {
+      "k": 0,
+      "n": 115,
+      "rate": 0.0,
+      "ci95": [
+       0.0,
+       0.03232538101136302
+      ]
+     }
+    },
+    "exact_plus_fuzzy": {
+     "recognition_error": {
+      "k": 18,
+      "n": 242,
+      "rate": 0.0743801652892562,
+      "ci95": [
+       0.04756357136580037,
+       0.11449850437727974
+      ]
+     },
+     "canonical_miss": {
+      "k": 18,
+      "n": 242,
+      "rate": 0.0743801652892562,
+      "ci95": [
+       0.04756357136580037,
+       0.11449850437727974
+      ]
+     },
+     "corruption_on_clean_rows": {
+      "k": 16,
+      "n": 115,
+      "rate": 0.1391304347826087,
+      "ci95": [
+       0.08748856525656706,
+       0.21410279669076449
+      ]
+     }
+    }
+   },
+   "paired": {
+    "exact_over_raw": {
+     "recognition": {
+      "fixed": 0,
+      "broken": 0,
+      "mcnemar_p": 1.0
+     },
+     "canonical": {
+      "fixed": 82,
+      "broken": 0,
+      "mcnemar_p": 4.1359030627651384e-25
+     }
+    },
+    "fuzzy_layer_over_exact": {
+     "recognition": {
+      "fixed": 143,
+      "broken": 2,
+      "mcnemar_p": 4.746926573869604e-40
+     },
+     "canonical": {
+      "fixed": 143,
+      "broken": 2,
+      "mcnemar_p": 4.746926573869604e-40
+     },
+     "extra_corrupted_clean_rows": 16
+    }
+   }
   }
  }
 }

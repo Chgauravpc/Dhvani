@@ -32,6 +32,8 @@ ARMS = (
     ("svarah", "sarvam"),
     ("indicvoices-hindi", "whisper"),
     ("indicvoices-hindi", "sarvam"),
+    ("svarah", "groq-whisper"),  # 3B-20
+    ("indicvoices-hindi", "groq-whisper"),  # 3B-20 (broken baseline by pre-flight)
 )
 COLUMNS = ("raw", "exact", "exact_plus_fuzzy")
 

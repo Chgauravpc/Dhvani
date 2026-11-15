@@ -1,0 +1,347 @@
+{
+  "item": "3B-4",
+  "code_commit": "27177a502f15001e588f1a486ba5dc23b914f18d",
+  "dataset": "indicvoices-hindi",
+  "stt": "groq-whisper",
+  "model": "whisper-large-v3",
+  "seed": 0,
+  "sampling": {
+    "split_unit": "speaker",
+    "sampling": "cluster sample by shard",
+    "shards": [
+      "hindi/train-00041-of-00082.parquet",
+      "hindi/train-00023-of-00082.parquet",
+      "hindi/train-00048-of-00082.parquet",
+      "hindi/train-00059-of-00082.parquet",
+      "hindi/train-00052-of-00082.parquet",
+      "hindi/train-00037-of-00082.parquet",
+      "hindi/train-00077-of-00082.parquet",
+      "hindi/train-00026-of-00082.parquet",
+      "hindi/train-00044-of-00082.parquet",
+      "hindi/train-00024-of-00082.parquet",
+      "hindi/train-00069-of-00082.parquet",
+      "hindi/train-00050-of-00082.parquet",
+      "hindi/train-00008-of-00082.parquet",
+      "hindi/train-00001-of-00082.parquet"
+    ],
+    "n_speakers": 333,
+    "n_dev_speakers": 87
+  },
+  "n_dev": {
+    "entity": 89,
+    "clean": 35
+  },
+  "n_test": {
+    "entity": 225,
+    "clean": 115
+  },
+  "transcript_log": "results/transcripts/f2_indicvoices-hindi_groq-whisper.jsonl",
+  "threshold_objective": "min dev canonical_miss_after + corruption_rate; ties -> higher",
+  "dev_sweep": [
+    {
+      "split": "dev",
+      "threshold": 0.7,
+      "n_entity_mentions": 95,
+      "recognition_eer_before": 0.6842105263157895,
+      "recognition_eer_after": 0.031578947368421054,
+      "canonical_miss_before": 1.0,
+      "canonical_miss_after": 0.031578947368421054,
+      "n_clean_examples": 35,
+      "corruption_rate": 0.2857142857142857,
+      "recognition_fixed": 62,
+      "recognition_broken": 0,
+      "canonical_fixed": 92,
+      "canonical_broken": 0,
+      "n_corrupted": 10,
+      "recognition_eer_before_ci": [
+        0.585132797889047,
+        0.7689691187128695
+      ],
+      "recognition_eer_after_ci": [
+        0.010796943829702532,
+        0.08877246823970955
+      ],
+      "canonical_miss_before_ci": [
+        0.9611337736337738,
+        1.0
+      ],
+      "canonical_miss_after_ci": [
+        0.010796943829702532,
+        0.08877246823970955
+      ],
+      "corruption_rate_ci": [
+        0.16326363398295565,
+        0.45055248069821086
+      ],
+      "recognition_mcnemar_p": 4.336808689942018e-19,
+      "canonical_mcnemar_p": 4.0389678347315804e-28
+    },
+    {
+      "split": "dev",
+      "threshold": 0.75,
+      "n_entity_mentions": 95,
+      "recognition_eer_before": 0.6842105263157895,
+      "recognition_eer_after": 0.031578947368421054,
+      "canonical_miss_before": 1.0,
+      "canonical_miss_after": 0.031578947368421054,
+      "n_clean_examples": 35,
+      "corruption_rate": 0.08571428571428572,
+      "recognition_fixed": 62,
+      "recognition_broken": 0,
+      "canonical_fixed": 92,
+      "canonical_broken": 0,
+      "n_corrupted": 3,
+      "recognition_eer_before_ci": [
+        0.585132797889047,
+        0.7689691187128695
+      ],
+      "recognition_eer_after_ci": [
+        0.010796943829702532,
+        0.08877246823970955
+      ],
+      "canonical_miss_before_ci": [
+        0.9611337736337738,
+        1.0
+      ],
+      "canonical_miss_after_ci": [
+        0.010796943829702532,
+        0.08877246823970955
+      ],
+      "corruption_rate_ci": [
+        0.029581831005296905,
+        0.22379599071162518
+      ],
+      "recognition_mcnemar_p": 4.336808689942018e-19,
+      "canonical_mcnemar_p": 4.0389678347315804e-28
+    },
+    {
+      "split": "dev",
+      "threshold": 0.8,
+      "n_entity_mentions": 95,
+      "recognition_eer_before": 0.6842105263157895,
+      "recognition_eer_after": 0.09473684210526316,
+      "canonical_miss_before": 1.0,
+      "canonical_miss_after": 0.09473684210526316,
+      "n_clean_examples": 35,
+      "corruption_rate": 0.02857142857142857,
+      "recognition_fixed": 56,
+      "recognition_broken": 0,
+      "canonical_fixed": 86,
+      "canonical_broken": 0,
+      "n_corrupted": 1,
+      "recognition_eer_before_ci": [
+        0.585132797889047,
+        0.7689691187128695
+      ],
+      "recognition_eer_after_ci": [
+        0.05064366025472933,
+        0.17033212322105415
+      ],
+      "canonical_miss_before_ci": [
+        0.9611337736337738,
+        1.0
+      ],
+      "canonical_miss_after_ci": [
+        0.05064366025472933,
+        0.17033212322105415
+      ],
+      "corruption_rate_ci": [
+        0.005061361365853362,
+        0.1453340909327131
+      ],
+      "recognition_mcnemar_p": 2.7755575615628914e-17,
+      "canonical_mcnemar_p": 2.5849394142282115e-26
+    },
+    {
+      "split": "dev",
+      "threshold": 0.82,
+      "n_entity_mentions": 95,
+      "recognition_eer_before": 0.6842105263157895,
+      "recognition_eer_after": 0.10526315789473684,
+      "canonical_miss_before": 1.0,
+      "canonical_miss_after": 0.10526315789473684,
+      "n_clean_examples": 35,
+      "corruption_rate": 0.02857142857142857,
+      "recognition_fixed": 56,
+      "recognition_broken": 1,
+      "canonical_fixed": 85,
+      "canonical_broken": 0,
+      "n_corrupted": 1,
+      "recognition_eer_before_ci": [
+        0.585132797889047,
+        0.7689691187128695
+      ],
+      "recognition_eer_after_ci": [
+        0.05818789720392155,
+        0.1830222815062572
+      ],
+      "canonical_miss_before_ci": [
+        0.9611337736337738,
+        1.0
+      ],
+      "canonical_miss_after_ci": [
+        0.05818789720392155,
+        0.1830222815062572
+      ],
+      "corruption_rate_ci": [
+        0.005061361365853362,
+        0.1453340909327131
+      ],
+      "recognition_mcnemar_p": 8.049116928532385e-16,
+      "canonical_mcnemar_p": 5.169878828456423e-26
+    },
+    {
+      "split": "dev",
+      "threshold": 0.85,
+      "n_entity_mentions": 95,
+      "recognition_eer_before": 0.6842105263157895,
+      "recognition_eer_after": 0.14736842105263157,
+      "canonical_miss_before": 1.0,
+      "canonical_miss_after": 0.14736842105263157,
+      "n_clean_examples": 35,
+      "corruption_rate": 0.0,
+      "recognition_fixed": 52,
+      "recognition_broken": 1,
+      "canonical_fixed": 81,
+      "canonical_broken": 0,
+      "n_corrupted": 0,
+      "recognition_eer_before_ci": [
+        0.585132797889047,
+        0.7689691187128695
+      ],
+      "recognition_eer_after_ci": [
+        0.0898599863410513,
+        0.23228777330670836
+      ],
+      "canonical_miss_before_ci": [
+        0.9611337736337738,
+        1.0
+      ],
+      "canonical_miss_after_ci": [
+        0.0898599863410513,
+        0.23228777330670836
+      ],
+      "corruption_rate_ci": [
+        0.0,
+        0.09890426758938868
+      ],
+      "recognition_mcnemar_p": 1.199040866595169e-14,
+      "canonical_mcnemar_p": 8.271806125530277e-25
+    },
+    {
+      "split": "dev",
+      "threshold": 0.9,
+      "n_entity_mentions": 95,
+      "recognition_eer_before": 0.6842105263157895,
+      "recognition_eer_after": 0.24210526315789474,
+      "canonical_miss_before": 1.0,
+      "canonical_miss_after": 0.24210526315789474,
+      "n_clean_examples": 35,
+      "corruption_rate": 0.0,
+      "recognition_fixed": 42,
+      "recognition_broken": 0,
+      "canonical_fixed": 72,
+      "canonical_broken": 0,
+      "n_corrupted": 0,
+      "recognition_eer_before_ci": [
+        0.585132797889047,
+        0.7689691187128695
+      ],
+      "recognition_eer_after_ci": [
+        0.1670872321759837,
+        0.3371700845813331
+      ],
+      "canonical_miss_before_ci": [
+        0.9611337736337738,
+        1.0
+      ],
+      "canonical_miss_after_ci": [
+        0.1670872321759837,
+        0.3371700845813331
+      ],
+      "corruption_rate_ci": [
+        0.0,
+        0.09890426758938868
+      ],
+      "recognition_mcnemar_p": 4.547473508864641e-13,
+      "canonical_mcnemar_p": 4.235164736271502e-22
+    },
+    {
+      "split": "dev",
+      "threshold": 0.95,
+      "n_entity_mentions": 95,
+      "recognition_eer_before": 0.6842105263157895,
+      "recognition_eer_after": 0.3684210526315789,
+      "canonical_miss_before": 1.0,
+      "canonical_miss_after": 0.3684210526315789,
+      "n_clean_examples": 35,
+      "corruption_rate": 0.0,
+      "recognition_fixed": 30,
+      "recognition_broken": 0,
+      "canonical_fixed": 60,
+      "canonical_broken": 0,
+      "n_corrupted": 0,
+      "recognition_eer_before_ci": [
+        0.585132797889047,
+        0.7689691187128695
+      ],
+      "recognition_eer_after_ci": [
+        0.2782994396773112,
+        0.4687706198927484
+      ],
+      "canonical_miss_before_ci": [
+        0.9611337736337738,
+        1.0
+      ],
+      "canonical_miss_after_ci": [
+        0.2782994396773112,
+        0.4687706198927484
+      ],
+      "corruption_rate_ci": [
+        0.0,
+        0.09890426758938868
+      ],
+      "recognition_mcnemar_p": 1.862645149230957e-09,
+      "canonical_mcnemar_p": 1.734723475976807e-18
+    }
+  ],
+  "chosen_threshold": 0.75,
+  "test": {
+    "split": "test",
+    "threshold": 0.75,
+    "n_entity_mentions": 242,
+    "recognition_eer_before": 0.6570247933884298,
+    "recognition_eer_after": 0.0743801652892562,
+    "canonical_miss_before": 0.9958677685950413,
+    "canonical_miss_after": 0.0743801652892562,
+    "n_clean_examples": 115,
+    "corruption_rate": 0.1391304347826087,
+    "recognition_fixed": 143,
+    "recognition_broken": 2,
+    "canonical_fixed": 223,
+    "canonical_broken": 0,
+    "n_corrupted": 16,
+    "recognition_eer_before_ci": [
+      0.5951799430424556,
+      0.7139622037707771
+    ],
+    "recognition_eer_after_ci": [
+      0.04756357136580037,
+      0.11449850437727974
+    ],
+    "canonical_miss_before_ci": [
+      0.9769681526921359,
+      0.999270205665441
+    ],
+    "canonical_miss_after_ci": [
+      0.04756357136580037,
+      0.11449850437727974
+    ],
+    "corruption_rate_ci": [
+      0.08748856525656706,
+      0.21410279669076449
+    ],
+    "recognition_mcnemar_p": 4.746926573869604e-40,
+    "canonical_mcnemar_p": 1.4836824602749686e-67
+  }
+}

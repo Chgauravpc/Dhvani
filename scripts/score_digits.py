@@ -23,6 +23,8 @@ ARMS = (
     ("svarah", "sarvam"),
     ("indicvoices-hindi", "whisper"),
     ("indicvoices-hindi", "sarvam"),
+    ("svarah", "groq-whisper"),  # 3B-20
+    ("indicvoices-hindi", "groq-whisper"),  # 3B-20 (broken baseline by pre-flight)
 )
 BROKEN = {("indicvoices-hindi", "whisper")}  # 66.5% WER > 40% (plan section 3, check 2)
 

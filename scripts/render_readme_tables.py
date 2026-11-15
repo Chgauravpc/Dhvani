@@ -8,8 +8,8 @@ README does not contain the generated text verbatim -- so a table cannot drift
 from the results file it claims to read. Sources:
 
 - `results/f2_three_way.json` (3B-15): the F2 table.
-- `results/f1_judge_audit.json` and `results/f1_noise_floor.json` (3B-5, 3B-19 a/a2):
-  the F1 ceiling and noise-floor table.
+- `results/f1_meaning_judge.json` (3B-19): the F1 ground-truth ceiling under the three
+  judges, the noise floor, and the per-arm ASR loss table.
 """
 
 from __future__ import annotations
@@ -63,26 +63,45 @@ def f2_table() -> str:
 
 
 def f1_table() -> str:
-    audit: dict[str, Any] = json.loads(Path("results/f1_judge_audit.json").read_text("utf-8"))
-    floor: dict[str, Any] = json.loads(Path("results/f1_noise_floor.json").read_text("utf-8"))
-    listfix: dict[str, Any] = audit["analysis_list_aware"]
+    judged: dict[str, Any] = json.loads(Path("results/f1_meaning_judge.json").read_text("utf-8"))
+    floor = judged["analysis_list_aware_plus_meaning"]["languages"]
     lines = [
-        "| | Ground-truth text passes, exact-match judge as run | Same, list-argument bug fixed | "
-        "Run-to-run noise floor (ground truth) |",
-        "|---|---|---|---|",
+        "| | Ground-truth text passes: exact-match judge as run | List-argument bug fixed | "
+        "Plus meaning-level judge | Run-to-run noise floor (final judge) |",
+        "|---|---|---|---|---|",
     ]
     for lang, name in (("english", "English (141 tasks)"), ("hindi", "Hindi (134 tasks)")):
-        rates = audit["gt_pass_rate_pct"][lang]
+        rates = judged["gt_pass_rate_pct"][lang]
         lines.append(
             f"| {name} | {rates['registered']:.1f}% | {rates['list_aware']:.1f}% | "
-            f"{floor['languages'][lang]['noise_floor_pp']:.1f} pp "
-            f"({listfix['languages'][lang]['noise_floor_pp']:.1f} pp after the fix) |"
+            f"{rates['list_aware_plus_meaning']:.1f}% | {floor[lang]['noise_floor_pp']:.1f} pp |"
         )
     return "\n".join(lines)
 
 
+def f1_loss_table() -> str:
+    judged: dict[str, Any] = json.loads(Path("results/f1_meaning_judge.json").read_text("utf-8"))
+    final = judged["analysis_list_aware_plus_meaning"]["languages"]
+    lines = [
+        "| Language / ASR | Task success lost vs ground-truth text | 95% interval | "
+        "Tasks only ground truth passes / only the ASR passes | McNemar p | Verdict |",
+        "|---|---|---|---|---|---|",
+    ]
+    arms = {"whisper": "local Whisper `small`", "sarvam": "Saaras"}
+    for lang, name in (("english", "English"), ("hindi", "Hindi")):
+        for arm, arm_name in arms.items():
+            a = final[lang]["arms"][arm]
+            lo, hi = a["loss_ci_pp"]
+            lines.append(
+                f"| {name} / {arm_name} | {a['mean_loss_pp']:.1f} pp | {lo:.1f} to {hi:.1f} | "
+                f"{a['majority_gt_pass_real_fail']} / {a['majority_gt_fail_real_pass']} | "
+                f"{a['mcnemar_p']:.2g} | {a['verdict']} |"
+            )
+    return "\n".join(lines)
+
+
 def blocks() -> dict[str, str]:
-    return {"F2 table": f2_table(), "F1 table": f1_table()}
+    return {"F2 table": f2_table(), "F1 table": f1_table(), "F1 loss table": f1_loss_table()}
 
 
 def main() -> None:

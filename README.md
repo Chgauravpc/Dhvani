@@ -24,7 +24,7 @@ be quoted by accident, each with what replaced it.
 | ~~F2: Svarah entity error 59.4% → 49.0%~~ | Mentions were counted as raw substrings ("pan" inside "company"): the audit's recount took Svarah's entity mentions from about 202 to 94. | replaced by the table in section 2 |
 | ~~F2: LAHAJA entity error 100% → 46.4%~~ | The scorer accepted only the Latin spelling, so a correct Devanagari "आधार" scored as an ASR error; the 100% was an artifact. LAHAJA then failed the entity-density gate (17 real mentions) and was replaced by IndicVoices Hindi. | replaced by the table in section 2 |
 | ~~Jitter raises STT latency from 1.3 s to 4.8 s~~ | The channel simulator's "jitter" accumulated as a slowdown, not as jitter. | not re-measured |
-| ~~F1: the agent loses 27.5% (English) / 10.0% (Hindi) of tasks to ASR~~ | One LLM sample per condition, 40 tasks per language, no noise floor, and the judge has bugs (section 3). | **under repair**; no loss figure is given until the judge is validated |
+| ~~F1: the agent loses 27.5% (English) / 10.0% (Hindi) of tasks to ASR~~ | One LLM sample per condition, 40 tasks per language, no noise floor, and the judge had bugs (section 3). | replaced by the tables in section 3 |
 | ~~"Sub-800 ms p50 conversation"~~ | That number came from mock providers. | no real voice-to-voice latency has been measured |
 
 ## 2. Entity correction (F2): what is left once the ASR is good
@@ -76,36 +76,57 @@ files (and their McNemar tests, which treat mentions as independent) are optimis
 Svarah's 66 test mentions are 43 ESIC or EPFO, and Hindi's 242 are 163 Aadhaar or PAN
 card; the lexicon is this project's own, so nothing here speaks to entities outside it.
 
-## 3. Task success (F1): under repair
+## 3. Task success (F1): what ASR costs once the judge is fixed
 
-F1 asks how much task success an agent loses to transcription. **Its numbers were scored
-by exact string match against a benchmark that expects English argument values for Hindi
-queries; they are withdrawn until re-scored.** What the audit of that judge
-([`docs/runs/3b-19-audit-a-a2.md`](docs/runs/3b-19-audit-a-a2.md)) and the noise-floor run
-([`docs/runs/3b-5-f1-noise-floor.md`](docs/runs/3b-5-f1-noise-floor.md)) found so far:
+F1 asks how much task success an agent loses to transcription: VoiceAgentBench
+`single_tool` tasks (141 English, 134 Hindi, synthesized speech), Groq `gpt-oss-20b` as the
+agent, each condition run three times. The original scoring was exact string match against a
+benchmark that expects English argument values for Hindi queries, so those numbers were
+withdrawn. The judge was repaired in two steps (a list-argument fix, then a meaning-level
+LLM judge) and checked against 50 hand labels: Cohen's kappa **0.682**, 95% interval
+0.465 to 0.878, 84% raw agreement
+([`docs/runs/3b-19-meaning-judge.md`](docs/runs/3b-19-meaning-judge.md)).
 
-| | Ground-truth text passes, exact-match judge as run | Same, list-argument bug fixed | Run-to-run noise floor (ground truth) |
-|---|---|---|---|
-| English (141 tasks) | 53.2% | 65.0% | 6.4 pp (7.8 pp after the fix) |
-| Hindi (134 tasks) | 32.1% | 38.6% | 1.5 pp (3.7 pp after the fix) |
+How often the agent passes with **perfect** transcripts, under each judge:
 
-- The judge compared a returned list against each *element* of the expected list, so a
-  correct list argument could never pass. That bug alone cost about 12 points of English
-  and 6.5 of Hindi ground truth.
-- With **perfect** transcripts the agent still fails about 35% (English) and 61% (Hindi)
-  of tasks after that fix. Whether those failures are the model's or the judge's is what
-  the next step (a meaning-level judge, checked against 50 hand labels) decides. The
-  benchmark's own system instruction ("give the final output tool call arguments in
-  English only", with a one-shot example) was also never sent to the model.
-- The same task scored on three LLM runs changes outcome for 8-15% of tasks, so a
-  single-sample difference of a few points is not evidence.
-- Re-transcribing the same audio with Whisper gave byte-identical text for only 8 of 30
-  clips, so each Whisper transcript is one draw from a noisy ASR, and that variance is in
-  none of the intervals.
+| | Ground-truth text passes: exact-match judge as run | List-argument bug fixed | Plus meaning-level judge | Run-to-run noise floor (final judge) |
+|---|---|---|---|---|
+| English (141 tasks) | 53.2% | 65.0% | 73.3% | 5.0 pp |
+| Hindi (134 tasks) | 32.1% | 38.6% | 64.7% | 3.7 pp |
 
-**No "X% lost to ASR" figure is given here until the judge is validated.** The raw
-per-arm numbers are in [`results/f1_noise_floor.json`](results/f1_noise_floor.json) for
-anyone who wants them, labelled as exact-match results.
+Loss in task success when the ground-truth text is replaced by an ASR transcript (final
+judge, mean over three runs, paired bootstrap, majority-vote McNemar):
+
+| Language / ASR | Task success lost vs ground-truth text | 95% interval | Tasks only ground truth passes / only the ASR passes | McNemar p | Verdict |
+|---|---|---|---|---|---|
+| English / local Whisper `small` | 20.6 pp | 13.7 to 27.9 | 31 / 3 | 7.7e-07 | ASR costs task success |
+| English / Saaras | 10.4 pp | 4.7 to 16.3 | 18 / 5 | 0.011 | ASR costs task success |
+| Hindi / local Whisper `small` | 22.9 pp | 15.2 to 30.8 | 41 / 7 | 6.2e-07 | ASR costs task success |
+| Hindi / Saaras | 7.7 pp | 2.2 to 13.4 | 19 / 9 | 0.087 | not distinguishable from LLM sampling noise |
+
+- The exact-match judge was a measurement bug: it compared a returned list against each
+  *element* of the expected list, so a correct list never passed, and it rejected correct
+  Devanagari values. With it fixed, the Hindi ceiling is 64.7%, not 32.1%.
+- ASR costs task success in three of four arms. For Hindi with Saaras the loss
+  (7.7 points) is not distinguishable from LLM sampling noise (p = 0.087). Local Whisper
+  `small` loses more in Hindi under the final judge (22.9 points) than under exact match
+  (10.2).
+- Even with perfect text the agent fails about 27% (English) and 35% (Hindi) of tasks,
+  more than the ASR loss in every arm above.
+
+Caveats that travel with these numbers:
+
+1. **The judge is the agent's model family** (`gpt-oss-120b` judging `gpt-oss-20b`), and the
+   check on it is one annotator and 50 labels: the kappa interval reaches below the 0.6
+   bar. The judge was stricter than the annotator (6 of 8 disagreements), so some
+   ceilings may be low.
+2. **The benchmark's own system instruction was never sent** (arguments in English only,
+   plus a one-shot example), the audio is synthesized, and each Whisper transcript is one
+   draw from a non-deterministic ASR (8 of 30 re-transcriptions were identical) that no
+   interval includes. Losses here are a lower bound on a real phone call.
+
+The exact-match and list-fix results sit beside these in
+[`results/f1_meaning_judge.json`](results/f1_meaning_judge.json).
 
 ## 4. Not yet measured
 
@@ -151,6 +172,7 @@ uv run python scripts/rescore_f2_transcripts.py    # -> results/f2_rescore.json
 uv run python scripts/f2_three_way_table.py        # -> results/f2_three_way.json
 uv run python scripts/analyze_f1_noise_floor.py    # -> results/f1_noise_floor.json
 uv run python scripts/audit_f1_judge.py            # -> results/f1_judge_audit.json
+uv run python scripts/analyze_f1_meaning_judge.py  # -> results/f1_meaning_judge.json
 uv run python scripts/render_readme_tables.py --check README.md
 ```
 

@@ -11,8 +11,8 @@ ships with a number.
 > lexicon entity unaided, and local Whisper `small` fails Hindi as a whole,
 > not on entities. F1's low ground-truth ceiling (42.5% / 17.5%) turned out
 > to be mostly our own exact-match judge (the benchmark expects English
-> argument values for Hindi queries), so F1 says nothing yet in either
-> direction. The thesis stays above as the hypothesis that was tested. The
+> argument values for Hindi queries). With the judge repaired (3B-19, 15 Nov)
+> the ceiling is 73.3% / 64.7% and ASR costs task success in three of four arms. The thesis stays above as the hypothesis that was tested. The
 > open questions are now three, each with its outcomes written in advance:
 > digits and phone audio, the F1 judge, and real response time.
 
@@ -42,7 +42,7 @@ one deliverable with one metric.
 
 | # | Finding | Deliverable | Status |
 |---|---------|-------------|--------|
-| F1 | ASR is the bottleneck, not the LLM — 24%+ swing from transcript quality | ASR-ablation harness | **reopened** — harness done; noise floor running (3B-5); the 42.5% / 17.5% ground-truth ceiling is mostly our exact-match judge (the benchmark expects English argument values for Hindi queries), so every F1 number is withdrawn until re-scored (3B-19) |
+| F1 | ASR is the bottleneck, not the LLM — 24%+ swing from transcript quality | ASR-ablation harness | **reopened** — harness done; noise floor measured (3B-5) and judge repaired and checked against 50 owner labels (3B-19, kappa 0.682); the old 42.5% / 17.5% ceiling was mostly our exact-match judge. Current numbers: README §3 (ceiling 73.3% EN / 64.7% HI; ASR loss detected in 3 of 4 arms) |
 | F2 | Named entities are where Indic ASR breaks — 11.2% vs 6.2% WER | `dhvani-entity` post-ASR corrector | **reopened** — code done; EER numbers invalidated by the Sep 23 audit (substring + script-blind scoring); re-run done and accepted by owner 2026-11-15 (3B-4 `[x]`). Being split into exact canonicalisation (default) and optional fuzzy repair (3B-15) |
 | F3 | Code-switching costs 30–50% relative WER | Hinglish-aware decode + script normalization | deferred past Nov 3 |
 | F4 | Safety refusal collapses 51.78% to 2.67% English-to-Indic | pre-LLM language-agnostic intent guard | deferred past Nov 3 |
@@ -141,7 +141,8 @@ The highest-signal pair. F1 is nearly free once Phase 1 exists; F2 is the flagsh
       pairs, which moves it to the 30–100 bucket), and the scorer only accepts
       the Latin canonical form, so a correct Devanagari transcript of आधार is
       scored as an error (LAHAJA's 100% `eer_before` is true by construction).
-      Re-run as 3B-1..3B-4. Original text kept below for the record:
+      Re-run as 3B-1..3B-4. **superseded by:** `results/f2_three_way.json` and
+      README §2 (3B-15). Original text kept below for the record:
       entity-density gate passed both
       (212 and 40 mentions). Real EER: Svarah 59.4%→49.0% (10.4-point
       recovery, 2.9% corruption); LAHAJA 100%→46.4% (53.6-point recovery,
@@ -150,6 +151,8 @@ The highest-signal pair. F1 is nearly free once Phase 1 exists; F2 is the flagsh
       `docs/specs/phase-2.md` sections 14–15.
 - [!] invalidated for Y only (X stands, pending the 3B-5 noise floor): Y is
       the EER recovery the Sep 23 audit reopened. Re-closed by 3B-4.
+      **X superseded by:** README §3 and `results/f1_meaning_judge.json` (3B-19);
+      **Y superseded by:** `results/f2_three_way.json` (3B-15).
       **Milestone: "the agent loses X% of task success to transcription alone,
       and `dhvani-entity` recovers Y% of it."** X: F1's numbers above. Y:
       the two EER recoveries above — read both with their caveats, not as
@@ -176,6 +179,7 @@ follow-up question.
       and run for real against the API once `SARVAM_API_KEY` became
       available under Phase 3 §2.1. See `docs/specs/phase-2b.md` §11.
 - [!] invalidated by the same scorer bugs (`phase-3b.md` §5); re-run as 3B-4.
+      **superseded by:** `results/f2_three_way.json` (Saaras arms, 3B-15).
       Re-run Svarah and LAHAJA EER with it as the inner ASR -- real numbers
       in `docs/specs/phase-2.md` §18: Svarah improves (59.4% → 46.9%
       `eer_before`); LAHAJA doesn't (100.0% on both) — a purpose-built
@@ -183,7 +187,9 @@ follow-up question.
 - [x] Re-run the F1 ablation with it -- `docs/specs/phase-2.md` §18; noisy
       as expected given the same 2-of-80 lexicon-overlap issue section 16
       already found, not a new problem.
-- [x] Re-express F1 loss as **share of achievable**, not absolute points:
+- [!] invalidated: rested on the 42.5% / 17.5% ceiling, which was mostly the
+      exact-match judge (3B-19). **superseded by:** README §3. Original text:
+      Re-express F1 loss as **share of achievable**, not absolute points:
       English 27.5/42.5 = **65%**, Hindi 10.0/17.5 = **57%**. Same data,
       comparable across languages, and it dissolves the counterintuitive
       Hindi-loses-less artifact that section 12 had to apologise for.
@@ -367,11 +373,18 @@ as their own problem.
 
 *Release 1 — ship what is already true (cached transcripts only)*
 
-- [ ] 3B-14 — committed re-score script and `results/f2_rescore.json`
-- [ ] 3B-15 — exact-match canonicaliser as the shipped default; raw /
+- [x] 3B-14 — committed re-score script and `results/f2_rescore.json`
+      evidence: `27e6516` · `scripts/rescore_f2_transcripts.py` · `results/f2_rescore.json`
+      (reproduces the four 3B-4 test reports exactly) · `docs/runs/3b-14-rescore.md`
+- [x] 3B-15 — exact-match canonicaliser as the shipped default; raw /
       exact / exact+fuzzy table per arm
-- [ ] 3B-16 — old F2 rows marked superseded, branch merged, README
+      evidence: `5867c42` · `EntityCorrector(mode="exact")` default · `results/f2_three_way.json`
+      · `docs/runs/3b-15-three-way.md`
+- [x] 3B-16 — old F2 rows marked superseded, branch merged, README
       rewritten audit-first from committed results files, tag `v0.1`
+      evidence: README `a258987` (tables generated by `scripts/render_readme_tables.py
+      --check README.md`) · merged to `main` and pushed · tag `v0.1` (`f5b59ea`) · old
+      F1/F2 rows marked `superseded by:` above, 2026-11-15 · accepted by owner 2026-11-15
 
 *Release 2, Q1 — does a strong ASR lose digits and entities on phone audio?*
 
@@ -384,12 +397,14 @@ as their own problem.
 
 *Release 2, Q2 — why does the agent fail with perfect transcripts?*
 
-- [?] 3B-19 — failure breakdown, a meaning-level judge validated against
+- [x] 3B-19 — failure breakdown, a meaning-level judge validated against
       50 owner labels, and the 3B-5 log re-scored under both judges. No
       "lost to ASR" line anywhere until this is `[x]`
       evidence: `docs/runs/3b-19-meaning-judge.md` · `results/f1_meaning_judge.json` ·
       kappa 0.682 [0.465, 0.878] vs the owner's 50 labels; gt ceiling 73.3% EN / 64.7% HI
-      under the meaning judge; awaiting owner review
+      under the meaning judge. Accepted by owner 2026-11-15; the 50 labels were left as
+      committed (relabelling after seeing verdicts would inflate agreement). README §3
+      updated from the committed results
 
 *Release 2, Q3 — what is the real response time?*
 

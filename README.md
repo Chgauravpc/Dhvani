@@ -134,9 +134,13 @@ The exact-match and list-fix results sit beside these in
   and the Twilio Media Streams transport is tested against a mock Media Streams server;
   it has not carried a real call (a Twilio trial account cannot stream). No result on how
   a phone channel affects a strong ASR has been produced.
-- **Digit strings** (Aadhaar, phone and account numbers). Hindi WER here is also
-  suspected to be inflated by number formatting (Saaras writes digits where the reference
-  spells words); that is untested, and a number normaliser is planned.
+- **Digit strings on phone audio.** On clean audio, Saaras reproduces 92.0% of English
+  and 84.1% of Hindi digit strings exactly (local Whisper `small`, English: 81.3%); the Hindi
+  figure is likely an underestimate, and the normaliser was amended after reading misses
+  ([`docs/runs/3b-17-digit-strings.md`](docs/runs/3b-17-digit-strings.md)). Hindi WER for
+  Saaras is 26.4% as scored and 12.6% once numbers are normalised on both sides, so
+  number formatting accounts for about half of it. Digit strings through a phone channel
+  have not been measured.
 - **Real response time.** The only latency measured is STT alone: `small`/`int8` at p50
   7.46 s (Svarah) to 13.7 s (LAHAJA), and `tiny` at about 1.2 s, against a 200 ms stage
   budget. There is no voice-to-voice number.

@@ -388,8 +388,12 @@ as their own problem.
 
 *Release 2, Q1 — does a strong ASR lose digits and entities on phone audio?*
 
-- [ ] 3B-17 — number normalisation for scoring; digit-string exact match
+- [?] 3B-17 — number normalisation for scoring; digit-string exact match
       from the cached logs
+      evidence: prereg `6d862df` (before scoring) · `results/f2_digits.json` · `docs/runs/3b-17-digit-strings.md`
+      · digit-string exact match Svarah Whisper 81.3% / Saaras 92.0%, Hindi Saaras 84.1%; Hindi Saaras WER
+      26.4% -> 12.6% after number normalisation. Normaliser amended after seeing misses (deviation 1);
+      awaiting owner review
 - [ ] 3B-20 — reference arm: hosted Whisper `large-v3`, language forced
 - [ ] 3B-18 — Saaras on the test-split entity rows through the 8 kHz
       mu-law channel

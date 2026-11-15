@@ -1,0 +1,976 @@
+{
+ "item": "3B-14",
+ "note": "Re-score of the committed F2 transcript logs; no API call. WER uses eval.wer unchanged (digit formatting inflates Hindi WER, phase-3b 11.1 B6, until 3B-17).",
+ "arms": {
+  "svarah/whisper": {
+   "dataset": "svarah",
+   "stt": "whisper",
+   "model": "small/int8",
+   "transcript_log": "results\\transcripts\\f2_svarah_whisper.jsonl",
+   "n_rows": 243,
+   "n_rows_by_split": {
+    "dev": 73,
+    "test": 170
+   },
+   "wer": {
+    "all_rows": {
+     "wer": 0.1773612112472963,
+     "reference_words": 2774,
+     "n_rows": 243
+    },
+    "test_rows": {
+     "wer": 0.1844946025515211,
+     "reference_words": 2038,
+     "n_rows": 170
+    },
+    "test_entity_rows": {
+     "wer": 0.2668918918918919,
+     "reference_words": 888,
+     "n_rows": 65
+    },
+    "test_clean_rows": {
+     "wer": 0.1208695652173913,
+     "reference_words": 1150,
+     "n_rows": 105
+    }
+   },
+   "output_script_rows": {
+    "all_rows": {
+     "latin": 228,
+     "none": 10,
+     "katakana": 1,
+     "telugu": 1,
+     "devanagari": 2,
+     "tamil": 1
+    },
+    "test_rows": {
+     "latin": 159,
+     "devanagari": 2,
+     "none": 8,
+     "tamil": 1
+    }
+   },
+   "empty_outputs": 0,
+   "sanity": {
+    "reproduces_committed_results": true,
+    "chosen_threshold": 0.7
+   },
+   "test": {
+    "raw_vs_fuzzy_as_committed": {
+     "n_entity_mentions": 66,
+     "recognition_eer_before": 0.25757575757575757,
+     "recognition_eer_after": 0.12121212121212122,
+     "canonical_miss_before": 0.2878787878787879,
+     "canonical_miss_after": 0.12121212121212122,
+     "n_clean_examples": 105,
+     "corruption_rate": 0.11428571428571428,
+     "recognition_fixed": 9,
+     "recognition_broken": 0,
+     "canonical_fixed": 11,
+     "canonical_broken": 0,
+     "n_corrupted": 12,
+     "threshold": 0.7
+    },
+    "exact_lookup": {
+     "n_entity_mentions": 66,
+     "recognition_eer_before": 0.25757575757575757,
+     "recognition_eer_after": 0.25757575757575757,
+     "canonical_miss_before": 0.2878787878787879,
+     "canonical_miss_after": 0.25757575757575757,
+     "n_clean_examples": 105,
+     "corruption_rate": 0.0,
+     "recognition_fixed": 0,
+     "recognition_broken": 0,
+     "canonical_fixed": 2,
+     "canonical_broken": 0,
+     "n_corrupted": 0,
+     "threshold": null
+    },
+    "exact_then_fuzzy": {
+     "n_entity_mentions": 66,
+     "recognition_eer_before": 0.25757575757575757,
+     "recognition_eer_after": 0.12121212121212122,
+     "canonical_miss_before": 0.2878787878787879,
+     "canonical_miss_after": 0.12121212121212122,
+     "n_clean_examples": 105,
+     "corruption_rate": 0.11428571428571428,
+     "recognition_fixed": 9,
+     "recognition_broken": 0,
+     "canonical_fixed": 11,
+     "canonical_broken": 0,
+     "n_corrupted": 12,
+     "threshold": 0.7
+    },
+    "fuzzy_layer_over_exact": {
+     "mentions_made_canonical_by_fuzzy_beyond_exact": 9,
+     "mentions_broken_by_fuzzy_after_exact": 0
+    }
+   },
+   "per_entity_test": {
+    "Aadhaar": {
+     "mentions": 1,
+     "recognised_raw": 1,
+     "canonical_raw": 0,
+     "canonical_exact": 1
+    },
+    "Ayushman Bharat": {
+     "mentions": 1,
+     "recognised_raw": 1,
+     "canonical_raw": 1,
+     "canonical_exact": 1
+    },
+    "CoWIN": {
+     "mentions": 8,
+     "recognised_raw": 0,
+     "canonical_raw": 0,
+     "canonical_exact": 0
+    },
+    "EPFO": {
+     "mentions": 14,
+     "recognised_raw": 11,
+     "canonical_raw": 11,
+     "canonical_exact": 11
+    },
+    "ESIC": {
+     "mentions": 29,
+     "recognised_raw": 27,
+     "canonical_raw": 27,
+     "canonical_exact": 27
+    },
+    "Jan Dhan Yojana": {
+     "mentions": 3,
+     "recognised_raw": 0,
+     "canonical_raw": 0,
+     "canonical_exact": 0
+    },
+    "Provident Fund": {
+     "mentions": 2,
+     "recognised_raw": 2,
+     "canonical_raw": 1,
+     "canonical_exact": 2
+    },
+    "UPI": {
+     "mentions": 6,
+     "recognised_raw": 6,
+     "canonical_raw": 6,
+     "canonical_exact": 6
+    },
+    "Voter ID": {
+     "mentions": 2,
+     "recognised_raw": 1,
+     "canonical_raw": 1,
+     "canonical_exact": 1
+    }
+   },
+   "false_rewrites_test_clean_rows": {
+    "n_clean_rows": 105,
+    "fuzzy_at_chosen_threshold": {
+     "n": 12,
+     "rows": [
+      {
+       "example_id": "data/test-00000-of-00003.parquet#2022",
+       "rewrites": [
+        {
+         "from": "play",
+         "to": "Pradhan Mantri Awas Yojana"
+        }
+       ]
+      },
+      {
+       "example_id": "data/test-00002-of-00003.parquet#151",
+       "rewrites": [
+        {
+         "from": "number",
+         "to": "PAN card"
+        }
+       ]
+      },
+      {
+       "example_id": "data/test-00000-of-00003.parquet#1256",
+       "rewrites": [
+        {
+         "from": "play",
+         "to": "Pradhan Mantri Awas Yojana"
+        }
+       ]
+      },
+      {
+       "example_id": "data/test-00001-of-00003.parquet#2016",
+       "rewrites": [
+        {
+         "from": "known",
+         "to": "CoWIN"
+        }
+       ]
+      },
+      {
+       "example_id": "data/test-00002-of-00003.parquet#417",
+       "rewrites": [
+        {
+         "from": "loving",
+         "to": "CoWIN"
+        }
+       ]
+      },
+      {
+       "example_id": "data/test-00002-of-00003.parquet#1769",
+       "rewrites": [
+        {
+         "from": "coming",
+         "to": "CoWIN"
+        }
+       ]
+      },
+      {
+       "example_id": "data/test-00000-of-00003.parquet#305",
+       "rewrites": [
+        {
+         "from": "many",
+         "to": "Pradhan Mantri Awas Yojana"
+        }
+       ]
+      },
+      {
+       "example_id": "data/test-00002-of-00003.parquet#846",
+       "rewrites": [
+        {
+         "from": "Clown",
+         "to": "CoWIN"
+        }
+       ]
+      },
+      {
+       "example_id": "data/test-00000-of-00003.parquet#2128",
+       "rewrites": [
+        {
+         "from": "growing",
+         "to": "CoWIN"
+        }
+       ]
+      },
+      {
+       "example_id": "data/test-00000-of-00003.parquet#589",
+       "rewrites": [
+        {
+         "from": "speak 5 numbers",
+         "to": "PAN card"
+        }
+       ]
+      },
+      {
+       "example_id": "data/test-00001-of-00003.parquet#1329",
+       "rewrites": [
+        {
+         "from": "rupees.",
+         "to": "UPI"
+        }
+       ]
+      },
+      {
+       "example_id": "data/test-00000-of-00003.parquet#1482",
+       "rewrites": [
+        {
+         "from": "large number",
+         "to": "PAN card"
+        }
+       ]
+      }
+     ]
+    },
+    "exact_lookup": {
+     "n": 0,
+     "rows": []
+    }
+   }
+  },
+  "svarah/sarvam": {
+   "dataset": "svarah",
+   "stt": "sarvam",
+   "model": "saaras:v3",
+   "transcript_log": "results\\transcripts\\f2_svarah_sarvam.jsonl",
+   "n_rows": 243,
+   "n_rows_by_split": {
+    "dev": 73,
+    "test": 170
+   },
+   "wer": {
+    "all_rows": {
+     "wer": 0.08615717375630857,
+     "reference_words": 2774,
+     "n_rows": 243
+    },
+    "test_rows": {
+     "wer": 0.08684985279685967,
+     "reference_words": 2038,
+     "n_rows": 170
+    },
+    "test_entity_rows": {
+     "wer": 0.11148648648648649,
+     "reference_words": 888,
+     "n_rows": 65
+    },
+    "test_clean_rows": {
+     "wer": 0.06782608695652174,
+     "reference_words": 1150,
+     "n_rows": 105
+    }
+   },
+   "output_script_rows": {
+    "all_rows": {
+     "latin": 235,
+     "none": 6,
+     "malayalam": 1,
+     "kannada": 1
+    },
+    "test_rows": {
+     "latin": 164,
+     "none": 5,
+     "kannada": 1
+    }
+   },
+   "empty_outputs": 0,
+   "sanity": {
+    "reproduces_committed_results": true,
+    "chosen_threshold": 0.95
+   },
+   "test": {
+    "raw_vs_fuzzy_as_committed": {
+     "n_entity_mentions": 66,
+     "recognition_eer_before": 0.0,
+     "recognition_eer_after": 0.0,
+     "canonical_miss_before": 0.015151515151515152,
+     "canonical_miss_after": 0.0,
+     "n_clean_examples": 105,
+     "corruption_rate": 0.0,
+     "recognition_fixed": 0,
+     "recognition_broken": 0,
+     "canonical_fixed": 1,
+     "canonical_broken": 0,
+     "n_corrupted": 0,
+     "threshold": 0.95
+    },
+    "exact_lookup": {
+     "n_entity_mentions": 66,
+     "recognition_eer_before": 0.0,
+     "recognition_eer_after": 0.0,
+     "canonical_miss_before": 0.015151515151515152,
+     "canonical_miss_after": 0.0,
+     "n_clean_examples": 105,
+     "corruption_rate": 0.0,
+     "recognition_fixed": 0,
+     "recognition_broken": 0,
+     "canonical_fixed": 1,
+     "canonical_broken": 0,
+     "n_corrupted": 0,
+     "threshold": null
+    },
+    "exact_then_fuzzy": {
+     "n_entity_mentions": 66,
+     "recognition_eer_before": 0.0,
+     "recognition_eer_after": 0.0,
+     "canonical_miss_before": 0.015151515151515152,
+     "canonical_miss_after": 0.0,
+     "n_clean_examples": 105,
+     "corruption_rate": 0.0,
+     "recognition_fixed": 0,
+     "recognition_broken": 0,
+     "canonical_fixed": 1,
+     "canonical_broken": 0,
+     "n_corrupted": 0,
+     "threshold": 0.95
+    },
+    "fuzzy_layer_over_exact": {
+     "mentions_made_canonical_by_fuzzy_beyond_exact": 0,
+     "mentions_broken_by_fuzzy_after_exact": 0
+    }
+   },
+   "per_entity_test": {
+    "Aadhaar": {
+     "mentions": 1,
+     "recognised_raw": 1,
+     "canonical_raw": 1,
+     "canonical_exact": 1
+    },
+    "Ayushman Bharat": {
+     "mentions": 1,
+     "recognised_raw": 1,
+     "canonical_raw": 1,
+     "canonical_exact": 1
+    },
+    "CoWIN": {
+     "mentions": 8,
+     "recognised_raw": 8,
+     "canonical_raw": 8,
+     "canonical_exact": 8
+    },
+    "EPFO": {
+     "mentions": 14,
+     "recognised_raw": 14,
+     "canonical_raw": 14,
+     "canonical_exact": 14
+    },
+    "ESIC": {
+     "mentions": 29,
+     "recognised_raw": 29,
+     "canonical_raw": 29,
+     "canonical_exact": 29
+    },
+    "Jan Dhan Yojana": {
+     "mentions": 3,
+     "recognised_raw": 3,
+     "canonical_raw": 3,
+     "canonical_exact": 3
+    },
+    "Provident Fund": {
+     "mentions": 2,
+     "recognised_raw": 2,
+     "canonical_raw": 1,
+     "canonical_exact": 2
+    },
+    "UPI": {
+     "mentions": 6,
+     "recognised_raw": 6,
+     "canonical_raw": 6,
+     "canonical_exact": 6
+    },
+    "Voter ID": {
+     "mentions": 2,
+     "recognised_raw": 2,
+     "canonical_raw": 2,
+     "canonical_exact": 2
+    }
+   },
+   "false_rewrites_test_clean_rows": {
+    "n_clean_rows": 105,
+    "fuzzy_at_chosen_threshold": {
+     "n": 0,
+     "rows": []
+    },
+    "exact_lookup": {
+     "n": 0,
+     "rows": []
+    }
+   }
+  },
+  "indicvoices-hindi/whisper": {
+   "dataset": "indicvoices-hindi",
+   "stt": "whisper",
+   "model": "small/int8",
+   "transcript_log": "results\\transcripts\\f2_indicvoices-hindi_whisper.jsonl",
+   "n_rows": 464,
+   "n_rows_by_split": {
+    "dev": 124,
+    "test": 340
+   },
+   "wer": {
+    "all_rows": {
+     "wer": 0.665470328019364,
+     "reference_words": 11981,
+     "n_rows": 464
+    },
+    "test_rows": {
+     "wer": 0.6659190310642593,
+     "reference_words": 8917,
+     "n_rows": 340
+    },
+    "test_entity_rows": {
+     "wer": 0.6619864026012415,
+     "reference_words": 6766,
+     "n_rows": 225
+    },
+    "test_clean_rows": {
+     "wer": 0.6782891678289168,
+     "reference_words": 2151,
+     "n_rows": 115
+    }
+   },
+   "output_script_rows": {
+    "all_rows": {
+     "devanagari": 422,
+     "latin": 27,
+     "arabic": 8,
+     "none": 4,
+     "tamil": 1,
+     "cjk": 2
+    },
+    "test_rows": {
+     "devanagari": 307,
+     "latin": 21,
+     "arabic": 6,
+     "tamil": 1,
+     "none": 3,
+     "cjk": 2
+    }
+   },
+   "empty_outputs": 3,
+   "sanity": {
+    "reproduces_committed_results": true,
+    "chosen_threshold": 0.75
+   },
+   "test": {
+    "raw_vs_fuzzy_as_committed": {
+     "n_entity_mentions": 242,
+     "recognition_eer_before": 0.9380165289256198,
+     "recognition_eer_after": 0.17355371900826447,
+     "canonical_miss_before": 1.0,
+     "canonical_miss_after": 0.17355371900826447,
+     "n_clean_examples": 115,
+     "corruption_rate": 0.14782608695652175,
+     "recognition_fixed": 185,
+     "recognition_broken": 0,
+     "canonical_fixed": 200,
+     "canonical_broken": 0,
+     "n_corrupted": 17,
+     "threshold": 0.75
+    },
+    "exact_lookup": {
+     "n_entity_mentions": 242,
+     "recognition_eer_before": 0.9380165289256198,
+     "recognition_eer_after": 0.9380165289256198,
+     "canonical_miss_before": 1.0,
+     "canonical_miss_after": 0.9380165289256198,
+     "n_clean_examples": 115,
+     "corruption_rate": 0.0,
+     "recognition_fixed": 0,
+     "recognition_broken": 0,
+     "canonical_fixed": 15,
+     "canonical_broken": 0,
+     "n_corrupted": 0,
+     "threshold": null
+    },
+    "exact_then_fuzzy": {
+     "n_entity_mentions": 242,
+     "recognition_eer_before": 0.9380165289256198,
+     "recognition_eer_after": 0.17355371900826447,
+     "canonical_miss_before": 1.0,
+     "canonical_miss_after": 0.17355371900826447,
+     "n_clean_examples": 115,
+     "corruption_rate": 0.14782608695652175,
+     "recognition_fixed": 185,
+     "recognition_broken": 0,
+     "canonical_fixed": 200,
+     "canonical_broken": 0,
+     "n_corrupted": 17,
+     "threshold": 0.75
+    },
+    "fuzzy_layer_over_exact": {
+     "mentions_made_canonical_by_fuzzy_beyond_exact": 185,
+     "mentions_broken_by_fuzzy_after_exact": 0
+    }
+   },
+   "per_entity_test": {
+    "Aadhaar": {
+     "mentions": 110,
+     "recognised_raw": 0,
+     "canonical_raw": 0,
+     "canonical_exact": 0
+    },
+    "Ayushman Bharat": {
+     "mentions": 18,
+     "recognised_raw": 0,
+     "canonical_raw": 0,
+     "canonical_exact": 0
+    },
+    "CoWIN": {
+     "mentions": 23,
+     "recognised_raw": 15,
+     "canonical_raw": 0,
+     "canonical_exact": 15
+    },
+    "DigiLocker": {
+     "mentions": 20,
+     "recognised_raw": 0,
+     "canonical_raw": 0,
+     "canonical_exact": 0
+    },
+    "GST": {
+     "mentions": 1,
+     "recognised_raw": 0,
+     "canonical_raw": 0,
+     "canonical_exact": 0
+    },
+    "PAN card": {
+     "mentions": 53,
+     "recognised_raw": 0,
+     "canonical_raw": 0,
+     "canonical_exact": 0
+    },
+    "Passport Seva": {
+     "mentions": 5,
+     "recognised_raw": 0,
+     "canonical_raw": 0,
+     "canonical_exact": 0
+    },
+    "Ration card": {
+     "mentions": 8,
+     "recognised_raw": 0,
+     "canonical_raw": 0,
+     "canonical_exact": 0
+    },
+    "Voter ID": {
+     "mentions": 4,
+     "recognised_raw": 0,
+     "canonical_raw": 0,
+     "canonical_exact": 0
+    }
+   },
+   "false_rewrites_test_clean_rows": {
+    "n_clean_rows": 115,
+    "fuzzy_at_chosen_threshold": {
+     "n": 17,
+     "rows": [
+      {
+       "example_id": "hindi/train-00023-of-00082.parquet#570",
+       "rewrites": [
+        {
+         "from": "किन",
+         "to": "CoWIN"
+        }
+       ]
+      },
+      {
+       "example_id": "hindi/train-00023-of-00082.parquet#2601",
+       "rewrites": [
+        {
+         "from": "हरा",
+         "to": "Aadhaar"
+        },
+        {
+         "from": "दे हरा",
+         "to": "Aadhaar"
+        },
+        {
+         "from": "पिम",
+         "to": "Pradhan Mantri Awas Yojana"
+        }
+       ]
+      },
+      {
+       "example_id": "hindi/train-00023-of-00082.parquet#4966",
+       "rewrites": [
+        {
+         "from": "पानी बना कर",
+         "to": "PAN card"
+        }
+       ]
+      },
+      {
+       "example_id": "hindi/train-00026-of-00082.parquet#4666",
+       "rewrites": [
+        {
+         "from": "दार",
+         "to": "Aadhaar"
+        }
+       ]
+      },
+      {
+       "example_id": "hindi/train-00037-of-00082.parquet#1630",
+       "rewrites": [
+        {
+         "from": "कोईन",
+         "to": "CoWIN"
+        }
+       ]
+      },
+      {
+       "example_id": "hindi/train-00037-of-00082.parquet#1855",
+       "rewrites": [
+        {
+         "from": "Laddhaar,",
+         "to": "Aadhaar"
+        }
+       ]
+      },
+      {
+       "example_id": "hindi/train-00037-of-00082.parquet#3834",
+       "rewrites": [
+        {
+         "from": "परनतु भारत",
+         "to": "Ayushman Bharat"
+        }
+       ]
+      },
+      {
+       "example_id": "hindi/train-00041-of-00082.parquet#2989",
+       "rewrites": [
+        {
+         "from": "अहाँ",
+         "to": "Aadhaar"
+        }
+       ]
+      },
+      {
+       "example_id": "hindi/train-00041-of-00082.parquet#4326",
+       "rewrites": [
+        {
+         "from": "बाहर",
+         "to": "Aadhaar"
+        }
+       ]
+      },
+      {
+       "example_id": "hindi/train-00041-of-00082.parquet#5070",
+       "rewrites": [
+        {
+         "from": "माद्वारा",
+         "to": "Aadhaar"
+        }
+       ]
+      },
+      {
+       "example_id": "hindi/train-00044-of-00082.parquet#559",
+       "rewrites": [
+        {
+         "from": "हर",
+         "to": "Aadhaar"
+        },
+        {
+         "from": "अफर",
+         "to": "Aadhaar"
+        }
+       ]
+      },
+      {
+       "example_id": "hindi/train-00059-of-00082.parquet#1113",
+       "rewrites": [
+        {
+         "from": "प्रदान करता",
+         "to": "Ration card"
+        }
+       ]
+      },
+      {
+       "example_id": "hindi/train-00059-of-00082.parquet#1443",
+       "rewrites": [
+        {
+         "from": "प्रासिन काल",
+         "to": "PAN card"
+        }
+       ]
+      },
+      {
+       "example_id": "hindi/train-00059-of-00082.parquet#3886",
+       "rewrites": [
+        {
+         "from": "बदार्द",
+         "to": "Aadhaar"
+        }
+       ]
+      },
+      {
+       "example_id": "hindi/train-00069-of-00082.parquet#4433",
+       "rewrites": [
+        {
+         "from": "हर",
+         "to": "Aadhaar"
+        }
+       ]
+      },
+      {
+       "example_id": "hindi/train-00077-of-00082.parquet#1617",
+       "rewrites": [
+        {
+         "from": "कवर कर",
+         "to": "Aadhaar"
+        },
+        {
+         "from": "शान्दार",
+         "to": "Aadhaar"
+        }
+       ]
+      },
+      {
+       "example_id": "hindi/train-00077-of-00082.parquet#1635",
+       "rewrites": [
+        {
+         "from": "रहार",
+         "to": "Aadhaar"
+        },
+        {
+         "from": "रहार का",
+         "to": "Aadhaar"
+        }
+       ]
+      }
+     ]
+    },
+    "exact_lookup": {
+     "n": 0,
+     "rows": []
+    }
+   }
+  },
+  "indicvoices-hindi/sarvam": {
+   "dataset": "indicvoices-hindi",
+   "stt": "sarvam",
+   "model": "saaras:v3",
+   "transcript_log": "results\\transcripts\\f2_indicvoices-hindi_sarvam.jsonl",
+   "n_rows": 464,
+   "n_rows_by_split": {
+    "dev": 124,
+    "test": 340
+   },
+   "wer": {
+    "all_rows": {
+     "wer": 0.2635840080126868,
+     "reference_words": 11981,
+     "n_rows": 464
+    },
+    "test_rows": {
+     "wer": 0.2580464281709095,
+     "reference_words": 8917,
+     "n_rows": 340
+    },
+    "test_entity_rows": {
+     "wer": 0.29618681643511674,
+     "reference_words": 6766,
+     "n_rows": 225
+    },
+    "test_clean_rows": {
+     "wer": 0.13807531380753138,
+     "reference_words": 2151,
+     "n_rows": 115
+    }
+   },
+   "output_script_rows": {
+    "all_rows": {
+     "devanagari": 454,
+     "none": 3,
+     "gurmukhi": 1,
+     "latin": 4,
+     "gujarati": 1,
+     "kannada": 1
+    },
+    "test_rows": {
+     "devanagari": 334,
+     "latin": 4,
+     "gujarati": 1,
+     "kannada": 1
+    }
+   },
+   "empty_outputs": 0,
+   "sanity": {
+    "reproduces_committed_results": true,
+    "chosen_threshold": 0.85
+   },
+   "test": {
+    "raw_vs_fuzzy_as_committed": {
+     "n_entity_mentions": 242,
+     "recognition_eer_before": 0.045454545454545456,
+     "recognition_eer_after": 0.008264462809917356,
+     "canonical_miss_before": 0.9958677685950413,
+     "canonical_miss_after": 0.008264462809917356,
+     "n_clean_examples": 115,
+     "corruption_rate": 0.0,
+     "recognition_fixed": 9,
+     "recognition_broken": 0,
+     "canonical_fixed": 239,
+     "canonical_broken": 0,
+     "n_corrupted": 0,
+     "threshold": 0.85
+    },
+    "exact_lookup": {
+     "n_entity_mentions": 242,
+     "recognition_eer_before": 0.045454545454545456,
+     "recognition_eer_after": 0.045454545454545456,
+     "canonical_miss_before": 0.9958677685950413,
+     "canonical_miss_after": 0.045454545454545456,
+     "n_clean_examples": 115,
+     "corruption_rate": 0.0,
+     "recognition_fixed": 0,
+     "recognition_broken": 0,
+     "canonical_fixed": 230,
+     "canonical_broken": 0,
+     "n_corrupted": 0,
+     "threshold": null
+    },
+    "exact_then_fuzzy": {
+     "n_entity_mentions": 242,
+     "recognition_eer_before": 0.045454545454545456,
+     "recognition_eer_after": 0.008264462809917356,
+     "canonical_miss_before": 0.9958677685950413,
+     "canonical_miss_after": 0.008264462809917356,
+     "n_clean_examples": 115,
+     "corruption_rate": 0.0,
+     "recognition_fixed": 9,
+     "recognition_broken": 0,
+     "canonical_fixed": 239,
+     "canonical_broken": 0,
+     "n_corrupted": 0,
+     "threshold": 0.85
+    },
+    "fuzzy_layer_over_exact": {
+     "mentions_made_canonical_by_fuzzy_beyond_exact": 9,
+     "mentions_broken_by_fuzzy_after_exact": 0
+    }
+   },
+   "per_entity_test": {
+    "Aadhaar": {
+     "mentions": 110,
+     "recognised_raw": 109,
+     "canonical_raw": 0,
+     "canonical_exact": 109
+    },
+    "Ayushman Bharat": {
+     "mentions": 18,
+     "recognised_raw": 18,
+     "canonical_raw": 0,
+     "canonical_exact": 18
+    },
+    "CoWIN": {
+     "mentions": 23,
+     "recognised_raw": 23,
+     "canonical_raw": 0,
+     "canonical_exact": 23
+    },
+    "DigiLocker": {
+     "mentions": 20,
+     "recognised_raw": 17,
+     "canonical_raw": 0,
+     "canonical_exact": 17
+    },
+    "GST": {
+     "mentions": 1,
+     "recognised_raw": 0,
+     "canonical_raw": 0,
+     "canonical_exact": 0
+    },
+    "PAN card": {
+     "mentions": 53,
+     "recognised_raw": 49,
+     "canonical_raw": 1,
+     "canonical_exact": 49
+    },
+    "Passport Seva": {
+     "mentions": 5,
+     "recognised_raw": 5,
+     "canonical_raw": 0,
+     "canonical_exact": 5
+    },
+    "Ration card": {
+     "mentions": 8,
+     "recognised_raw": 7,
+     "canonical_raw": 0,
+     "canonical_exact": 7
+    },
+    "Voter ID": {
+     "mentions": 4,
+     "recognised_raw": 3,
+     "canonical_raw": 0,
+     "canonical_exact": 3
+    }
+   },
+   "false_rewrites_test_clean_rows": {
+    "n_clean_rows": 115,
+    "fuzzy_at_chosen_threshold": {
+     "n": 0,
+     "rows": []
+    },
+    "exact_lookup": {
+     "n": 0,
+     "rows": []
+    }
+   }
+  }
+ }
+}

@@ -1,3 +1,4 @@
+# ruff: noqa: E501  (the HTML/JS template below has long lines)
 """Build a one-page local labelling tool for the 3B-19 owner labels.
 
     uv run python scripts/make_label_tool.py

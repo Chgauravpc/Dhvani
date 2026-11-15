@@ -169,7 +169,8 @@ def main() -> None:
         f"raw={a['raw_agreement']:.1%}  meets 0.6: {a['meets_threshold']}"
     )
     print(
-        f"judge yes/owner no {a['judge_yes_owner_no']}, judge no/owner yes {a['judge_no_owner_yes']}"
+        f"judge yes/owner no {a['judge_yes_owner_no']}, "
+        f"judge no/owner yes {a['judge_no_owner_yes']}"
     )
     print(f"population: {out['population']}  rescore_complete: {complete}")
 

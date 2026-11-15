@@ -384,9 +384,12 @@ as their own problem.
 
 *Release 2, Q2 — why does the agent fail with perfect transcripts?*
 
-- [ ] 3B-19 — failure breakdown, a meaning-level judge validated against
+- [?] 3B-19 — failure breakdown, a meaning-level judge validated against
       50 owner labels, and the 3B-5 log re-scored under both judges. No
       "lost to ASR" line anywhere until this is `[x]`
+      evidence: `docs/runs/3b-19-meaning-judge.md` · `results/f1_meaning_judge.json` ·
+      kappa 0.682 [0.465, 0.878] vs the owner's 50 labels; gt ceiling 73.3% EN / 64.7% HI
+      under the meaning judge; awaiting owner review
 
 *Release 2, Q3 — what is the real response time?*
 

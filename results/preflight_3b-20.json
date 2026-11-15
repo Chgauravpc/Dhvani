@@ -1,0 +1,44 @@
+{
+ "item": "3B-20",
+ "model_requested": "whisper-large-v3",
+ "datasets": {
+  "svarah": {
+   "rows": 243,
+   "rows_match_committed_saaras_log": true,
+   "audio_seconds_total": 1597.272,
+   "audio_seconds_longest_clip": 29.442,
+   "sanity_rows": 20,
+   "sanity_wer": 0.11386138613861387,
+   "sanity_wer_under_40pct": true,
+   "sanity_output_scripts": {
+    "latin": 20
+   },
+   "response_headers_seen": {
+    "x-groq-region": "bom",
+    "x-ratelimit-limit-requests": "2000",
+    "x-ratelimit-remaining-requests": "1979",
+    "x-ratelimit-reset-requests": "15m7.2s",
+    "x-request-id": "req_01m7frypq1ep9sae4jdjavp0kg"
+   }
+  },
+  "indicvoices-hindi": {
+   "rows": 464,
+   "rows_match_committed_saaras_log": true,
+   "audio_seconds_total": 5607.924,
+   "audio_seconds_longest_clip": 29.546,
+   "sanity_rows": 20,
+   "sanity_wer": 0.42995169082125606,
+   "sanity_wer_under_40pct": false,
+   "sanity_output_scripts": {
+    "devanagari": 20
+   },
+   "response_headers_seen": {
+    "x-groq-region": "bom",
+    "x-ratelimit-limit-requests": "2000",
+    "x-ratelimit-remaining-requests": "1958",
+    "x-ratelimit-reset-requests": "30m14.4s",
+    "x-request-id": "req_01m7fs24bhe6dt9vbe8d2z2t1g"
+   }
+  }
+ }
+}

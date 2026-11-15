@@ -9,6 +9,19 @@ ships with a number.
 Gnani, Bolna, Skit). Optimized for a demo someone can talk to and a README with
 measurements in it.
 
+> **How to read and update this plan — mandatory for every agent and human.**
+> Checkboxes follow the rules in [`docs/specs/phase-3b.md` §0](docs/specs/phase-3b.md):
+> `[ ]` not started · `[~]` in progress / code only · `[?]` agent-done, awaiting
+> owner review · `[x]` done + evidence + reviewed · `[!]` blocked or invalidated.
+> An item is ticked only if **the exact specified thing** was done (no smaller
+> model, fewer examples, one dataset instead of two, or mock instead of real),
+> with an `evidence:` line (commit · command · committed results file · number)
+> added **in the same commit**. Agents never move a results item past `[?]`.
+> Gates block everything below them. Numbers are never edited in place — re-runs
+> add rows and old rows are marked `superseded by:` or `invalidated:`.
+> Items ticked before Sep 23 predate these rules; the ones the Sep 23 audit
+> found wrong are reopened below as `[!]`.
+
 ---
 
 ## The five findings
@@ -19,7 +32,7 @@ one deliverable with one metric.
 | # | Finding | Deliverable | Status |
 |---|---------|-------------|--------|
 | F1 | ASR is the bottleneck, not the LLM — 24%+ swing from transcript quality | ASR-ablation harness | **done**, pending re-run against an Indic ASR baseline |
-| F2 | Named entities are where Indic ASR breaks — 11.2% vs 6.2% WER | `dhvani-entity` post-ASR corrector | **done**, same pending re-run |
+| F2 | Named entities are where Indic ASR breaks — 11.2% vs 6.2% WER | `dhvani-entity` post-ASR corrector | **reopened** — code done; EER numbers invalidated by the Sep 23 audit (substring + script-blind scoring), re-run in Phase 3B |
 | F3 | Code-switching costs 30–50% relative WER | Hinglish-aware decode + script normalization | deferred past Nov 3 |
 | F4 | Safety refusal collapses 51.78% to 2.67% English-to-Indic | pre-LLM language-agnostic intent guard | deferred past Nov 3 |
 | F5 | Zero Indic turn-taking / full-duplex research exists | Indic endpointer (prosody + semantic completion) | deferred past Nov 3 |
@@ -69,7 +82,10 @@ test rather than an observation. This is test hygiene, not a feature.*
 - [x] Silero VAD + **barge-in**: user interrupts mid-sentence, agent yields
 - [x] Voice-safe prompt guards — no markdown, lists, or headers
 - [x] Browser/WebRTC transport
-- [x] **Milestone: first sub-800ms p50 conversation, waterfall published**
+- [!] **Milestone: first sub-800ms p50 conversation, waterfall published**
+      invalidated: measured with mock providers; real STT alone is 1.2–7.5s
+      (`docs/specs/phase-3.md` §3.1). The overlap architecture result stands;
+      the latency claim does not. Replaced by Phase 3B item 3B-9.
 
 **Proves:** you can ship a real-time system, not an API wrapper.
 
@@ -86,13 +102,22 @@ The highest-signal pair. F1 is nearly free once Phase 1 exists; F2 is the flagsh
       phonetic matching across scripts (Devanagari, Latin, Tamil), so
       Aadhaar / aadhar / आधार and "Pradhan Mantri Awas Yojana" resolve correctly.
       Code and unit tests done; wired into the live demo.
-- [x] Evaluate on **Svarah** and **LAHAJA** — entity-density gate passed both
+- [!] Evaluate on **Svarah** and **LAHAJA** — invalidated (Sep 23 audit,
+      `docs/specs/phase-3b.md` §2–3): the gate and scorer match substrings, so
+      "pan" in "company" counted as a PAN-card mention (Svarah ~202 → ~94 real
+      pairs, which moves it to the 30–100 bucket), and the scorer only accepts
+      the Latin canonical form, so a correct Devanagari transcript of आधार is
+      scored as an error (LAHAJA's 100% `eer_before` is true by construction).
+      Re-run as 3B-1..3B-4. Original text kept below for the record:
+      entity-density gate passed both
       (212 and 40 mentions). Real EER: Svarah 59.4%→49.0% (10.4-point
       recovery, 2.9% corruption); LAHAJA 100%→46.4% (53.6-point recovery,
       but 19.4% corruption on test vs 0% on dev — a real dev/test
       discrepancy at this small a scale, not swept under the rug). See
       `docs/specs/phase-2.md` sections 14–15.
-- [x] **Milestone: "the agent loses X% of task success to transcription alone,
+- [!] invalidated for Y only (X stands, pending the 3B-5 noise floor): Y is
+      the EER recovery the Sep 23 audit reopened. Re-closed by 3B-4.
+      **Milestone: "the agent loses X% of task success to transcription alone,
       and `dhvani-entity` recovers Y% of it."** X: F1's numbers above. Y:
       the two EER recoveries above — read both with their caveats, not as
       one clean number. Also ran the task-success-level tie-together
@@ -117,7 +142,8 @@ follow-up question.
       the unchanged Phase 0 `STTProvider` protocol -- built, unit-tested,
       and run for real against the API once `SARVAM_API_KEY` became
       available under Phase 3 §2.1. See `docs/specs/phase-2b.md` §11.
-- [x] Re-run Svarah and LAHAJA EER with it as the inner ASR -- real numbers
+- [!] invalidated by the same scorer bugs (`phase-3b.md` §5); re-run as 3B-4.
+      Re-run Svarah and LAHAJA EER with it as the inner ASR -- real numbers
       in `docs/specs/phase-2.md` §18: Svarah improves (59.4% → 46.9%
       `eer_before`); LAHAJA doesn't (100.0% on both) — a purpose-built
       Indic ASR misses LAHAJA's entities exactly as completely as Whisper.
@@ -200,7 +226,11 @@ ported in.
       `docs/specs/phase-3.md` §7.4
 - [x] **Mock Media Streams server** so the whole path is testable with no
       Twilio account — full loopback over a real localhost WebSocket
-- [x] **Degradation sweep → robustness curve**: WER, plus end-to-end
+- [!] **Degradation sweep → robustness curve** — the no-jitter rows stand;
+      the jitter row is invalidated (`phase-3b.md` §4: the simulator sleeps
+      `uniform(0, jitter)` per frame in series, i.e. cumulative slowdown, not
+      jitter; and rows are not paced at real time). Re-run as 3B-6.
+      Original text: WER, plus end-to-end
       latency, against impairment level, run for real against Svarah
       (n=20, `tiny` Whisper — memory-constrained host, see below). WER is
       noisy at this sample size; the real, robust finding is on latency:
@@ -216,6 +246,55 @@ sample; a swept simulator gives the function.*
 **Proves:** you design for hostile channels, and you work at the layer a
 telephony company actually operates.
 
+## Phase 3B · Measurement audit + standout work — Sep 24 to Oct 10
+
+Full plan, rules and evidence format: [`docs/specs/phase-3b.md`](docs/specs/phase-3b.md).
+Uses the slack Phase 3 finishing early created; does not touch the Oct 26 buffer.
+
+A read-through review on Sep 23 found three headline numbers that do not
+measure what the docs claim (substring entity matching, script-blind EER
+scoring, cumulative "jitter"). Fixing them is Priority 0 and **blocks
+`RESULTS.md`**. Priority 1 is what turns the project from "an STT eval with
+an agent around it" into something an ASR/TTS company (smallest.ai, Sarvam,
+SuperKalam) and a telephony company (Twilio, Exotel, Plivo) each recognise
+as their own problem.
+
+**Priority 0 — make the existing numbers true** (all must be `[x]` before Phase 4's `RESULTS.md` items can start)
+
+- [ ] 3B-1 **GATE** — word-boundary, deduplicated mention counting shared by
+      gate and scorer; re-run the gate; restate the decision from it
+- [ ] 3B-2 — two-rate scorer: **recognition EER** (any curated variant, any
+      script) and **canonicalization rate**, both paired with corruption
+- [ ] 3B-3 — cache every raw transcript to committed JSONL so rescoring never
+      needs re-transcription or API credits
+- [ ] 3B-4 — preregister, then re-run F2 EER, 2 datasets × 2 ASRs; old rows
+      kept as superseded
+- [ ] 3B-5 — F1 noise floor: ground-truth A/A run, k≥3 repeats, paired
+      bootstrap CI + McNemar, full `single_tool` set
+- [ ] 3B-6 — real jitter model (arrival times + jitter buffer, real-time
+      pacing, latency from end of speech); re-run affected rows
+
+**Priority 1 — stand out**
+
+- [ ] 3B-7 — decoder-side contextual biasing vs. `dhvani-entity` vs. both,
+      same test split (the first question an ASR team asks)
+- [ ] 3B-8 — TTS round-trip: lexicon entities + Indic text normalization
+      (₹, dates, digits, Hinglish) → TTS → ASR → recognition EER, plus TTS
+      time-to-first-byte (the project currently says nothing about TTS)
+- [ ] 3B-9 — voice-to-voice latency on real utterances (end of speech →
+      first agent audio byte, per stage), local vs. one hosted streaming STT
+- [ ] 3B-10 — one real Twilio call with barge-in and measured `clear`-to-
+      silence latency; mock server does **not** satisfy this item
+- [ ] 3B-11 — one command regenerates every headline number into
+      `results/*.json`; `RESULTS.md` tables rendered from those files
+
+**Priority 2 — only if P0 and P1 are done:** 3B-12 corrector hardening
+(best-scoring window, short-acronym guard, stoplist), 3B-13 entity-bearing
+slot-filling task on real Svarah/LAHAJA audio to tie F1 to F2.
+
+**Proves:** you audit your own results as hard as anyone else's, and you
+know what speech and telephony teams actually measure.
+
 ## Phase 4 · Ship — Oct 12 to 23
 
 The artifact, not more findings. The work is already strong; almost
@@ -227,6 +306,12 @@ is buried in `docs/specs/phase-2.md` §12–16, where no reader will find it.
 Lifting it into a standalone report is the research artifact, without
 needing F5.
 
+*Blocked on Phase 3B Priority 0. Every number in `RESULTS.md` must come from
+a committed `results/*.json` file (3B-11), never be retyped from a spec.*
+
+- [ ] **A named "Measurement audit" section first**: the three bugs found
+      on Sep 23, the before/after numbers side by side, and what changed in
+      the reading. This is the most distinctive thing in the project.
 - [ ] Methodology: entity-density gate, dev/test protocol, preregistered
       outcomes, why the scorer is independent of the matcher
 - [ ] Results: F1 share-of-achievable, F2 EER with corruption rates
@@ -325,6 +410,8 @@ read as sentence boundaries and agents interrupt mid-thought.
 | Local models too slow for sub-800ms | Report the waterfall honestly and note hosted-provider deltas; correct engineering still shows |
 | Sarvam free credits run out mid-evaluation | Bound the Phase 2B re-run to the same Svarah/LAHAJA test splits already used; fall back to reporting the Whisper numbers with the caveat stated |
 | Phase 3 slips and the Twilio reframe lands half-built | Phases 0–2B alone ship as a credible artifact; the browser transport already works |
+| An agent ticks a box for work it substituted, mocked, or only partly did | Evidence-line rule and `[?]` review state (`phase-3b.md` §0); reviewer diffs `ROADMAP.md` per PR and reverts any tick without evidence in the same diff |
+| Audit re-run shows F2's gains were mostly scoring artifacts | That is a result, not a failure: report it in the audit section; F2 is then reframed (canonicalization for Hindi, decoder biasing comparison from 3B-7) rather than hidden |
 | Scope creep back into F3–F5 | They are dated past Nov 3 and stay there. Pulling one forward means cutting Phase 4, not adding a week. |
 
 ## Non-goals

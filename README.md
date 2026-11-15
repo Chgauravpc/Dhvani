@@ -2,6 +2,17 @@
 
 [![CI](https://github.com/Chgauravpc/Dhvani/actions/workflows/ci.yml/badge.svg)](https://github.com/Chgauravpc/Dhvani/actions/workflows/ci.yml)
 
+> **Measurement audit in progress (Sep 23 2026).** A review found that the F2
+> Entity Error Rate numbers below, and the degradation sweep's jitter latency
+> result, do not measure what they claim: entity mentions were matched as raw
+> substrings ("pan" inside "company" counted as a PAN-card mention), the
+> scorer only accepted the Latin canonical spelling (so a correct Devanagari
+> "आधार" was scored as an ASR error — LAHAJA's 100% is an artifact), and the
+> channel simulator's "jitter" accumulates as a slowdown. Those numbers are
+> kept below for the record but **should not be quoted** until the re-run in
+> [`docs/specs/phase-3b.md`](docs/specs/phase-3b.md) lands. F1's numbers are
+> unaffected by these bugs.
+
 Indic voice-agent research project. See [`ROADMAP.md`](ROADMAP.md) for the
 thesis and phase plan, and [`docs/specs/`](docs/specs/) for per-phase
 implementation specs.

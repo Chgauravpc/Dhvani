@@ -1,0 +1,141 @@
+{
+ "item": "3B-17",
+ "preregistration": "docs/runs/3b-17-preregistration.md",
+ "note": "Digit-string exact match (maximal runs of >= 4 digits, normalised by dhvani.eval.numbers) and WER before/after number normalisation, clean audio, cached transcripts. Hindi/Whisper `small` is a broken baseline (66.5% WER) and is not a comparison arm. Intervals are Wilson 95% and treat units as independent.",
+ "arms": {
+  "svarah/whisper": {
+   "broken_baseline": false,
+   "rows": 243,
+   "digit_string_exact_match_all_rows": {
+    "k": 61,
+    "n": 75,
+    "rate": 0.8133333333333334,
+    "ci95": [
+     0.7107120474561753,
+     0.8854199437768794
+    ]
+   },
+   "digit_string_exact_match_test_rows": {
+    "k": 42,
+    "n": 52,
+    "rate": 0.8076923076923077,
+    "ci95": [
+     0.6810087893080524,
+     0.8920406935147892
+    ]
+   },
+   "wer_all_rows": {
+    "raw": 0.1773612112472963,
+    "number_normalised": 0.16184971098265896,
+    "formatting_inflation_pp": 1.551150026463735
+   },
+   "wer_test_rows": {
+    "raw": 0.1844946025515211,
+    "number_normalised": 0.1706837186424004,
+    "formatting_inflation_pp": 1.381088390912069
+   }
+  },
+  "svarah/sarvam": {
+   "broken_baseline": false,
+   "rows": 243,
+   "digit_string_exact_match_all_rows": {
+    "k": 69,
+    "n": 75,
+    "rate": 0.92,
+    "ci95": [
+     0.8362501593344202,
+     0.9628203821056319
+    ]
+   },
+   "digit_string_exact_match_test_rows": {
+    "k": 49,
+    "n": 52,
+    "rate": 0.9423076923076923,
+    "ci95": [
+     0.8435724442484082,
+     0.9801861873094267
+    ]
+   },
+   "wer_all_rows": {
+    "raw": 0.08615717375630857,
+    "number_normalised": 0.085621387283237,
+    "formatting_inflation_pp": 0.053578647307157834
+   },
+   "wer_test_rows": {
+    "raw": 0.08684985279685967,
+    "number_normalised": 0.08558780127889817,
+    "formatting_inflation_pp": 0.12620515179614933
+   }
+  },
+  "indicvoices-hindi/whisper": {
+   "broken_baseline": true,
+   "rows": 464,
+   "digit_string_exact_match_all_rows": {
+    "k": 31,
+    "n": 236,
+    "rate": 0.13135593220338984,
+    "ci95": [
+     0.09410440222384808,
+     0.18041678175757964
+    ]
+   },
+   "digit_string_exact_match_test_rows": {
+    "k": 18,
+    "n": 171,
+    "rate": 0.10526315789473684,
+    "ci95": [
+     0.06762647375458761,
+     0.16024606916426007
+    ]
+   },
+   "wer_all_rows": {
+    "raw": 0.665470328019364,
+    "number_normalised": 0.728136699625612,
+    "formatting_inflation_pp": -6.2666371606248
+   },
+   "wer_test_rows": {
+    "raw": 0.6659190310642593,
+    "number_normalised": 0.7304682488774855,
+    "formatting_inflation_pp": -6.45492178132262
+   }
+  },
+  "indicvoices-hindi/sarvam": {
+   "broken_baseline": false,
+   "rows": 464,
+   "digit_string_exact_match_all_rows": {
+    "k": 185,
+    "n": 236,
+    "rate": 0.7838983050847458,
+    "ci95": [
+     0.7270631255280569,
+     0.831638951175901
+    ]
+   },
+   "digit_string_exact_match_test_rows": {
+    "k": 132,
+    "n": 171,
+    "rate": 0.7719298245614035,
+    "ci95": [
+     0.7034734890341936,
+     0.8284365369550446
+    ]
+   },
+   "wer_all_rows": {
+    "raw": 0.2635840080126868,
+    "number_normalised": 0.134971680906211,
+    "formatting_inflation_pp": 12.861232710647577
+   },
+   "wer_test_rows": {
+    "raw": 0.2580464281709095,
+    "number_normalised": 0.13598460551635663,
+    "formatting_inflation_pp": 12.206182265455286
+   }
+  }
+ },
+ "paired_svarah_whisper_vs_saaras": {
+  "units": 75,
+  "only_whisper_right": 3,
+  "only_saaras_right": 11,
+  "mcnemar_p": 0.057373046875
+ }
+}

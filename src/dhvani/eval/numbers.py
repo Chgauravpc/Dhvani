@@ -17,7 +17,10 @@ Rules (preregistered in `docs/runs/3b-17-preregistration.md`):
 5. A lone single-digit word becomes its digit ("दो" -> "2"). This makes the
    article "एक"/"one" a digit on both sides; both sides are normalised by the
    same function, so it is symmetric.
-6. Adjacent digit tokens separated only by spaces merge into one string when
+6. (amendment, deviation 1) "डबल"/"double" and "ट्रिपल"/"triple" before a digit word repeat
+   it; a few spelling variants seen in the references ("ऐट", "फाइफ", "सेवेन", ...) are
+   accepted.
+7. Adjacent digit tokens separated only by spaces merge into one string when
    every token has at most four digits ("5149 3773 6246" -> "514937736246";
    "6 3 1 7" -> "6317"). Longer tokens are left alone.
 
@@ -59,7 +62,18 @@ _TEEN_TO_NINETY_NINE = (
 _ALT = {"पन्द्रह": 15, "अठाईस": 28}
 _MULTIPLIER = {"सौ": 100, "हज़ार": 1000, "हजार": 1000, "लाख": 100_000, "करोड़": 10_000_000}
 
+_V2_VARIANTS = {  # deviation 1 of docs/runs/3b-17-preregistration.md (added after the first run)
+    0: ["ज़ेरो", "ज़ीरो", "ज़ीरो"],
+    4: ["फ़ोर"],
+    5: ["फाइफ", "फाईव", "फ़ाइव"],
+    7: ["सेवेन", "सेवन", "सेवान"],
+    8: ["ऐट", "एइट"],
+    9: ["नाईन", "नाइन"],
+}
+_REPEAT = {"डबल": 2, "double": 2, "ट्रिपल": 3, "triple": 3}
+
 _DIGIT_WORD: dict[str, str] = {w: str(d) for d, ws in _SINGLE.items() for w in ws}
+_DIGIT_WORD |= {w: str(d) for d, ws in _V2_VARIANTS.items() for w in ws}
 _TENS_WORD: dict[str, int] = {w: 10 + i for i, w in enumerate(_TEEN_TO_NINETY_NINE)} | _ALT
 _NUMERALS = {chr(0x0966 + i): str(i) for i in range(10)}
 _ASCII_DIGITS = re.compile(r"^[0-9]+$")
@@ -98,6 +112,14 @@ def to_digit_tokens(text: str) -> str:
         "".join(_NUMERALS.get(ch, ch) for ch in token)
         for token in unicodedata.normalize("NFC", normalize(text)).split()
     ]
+    expanded: list[str] = []
+    for index, token in enumerate(tokens):
+        nxt = tokens[index + 1] if index + 1 < len(tokens) else ""
+        if token in _REPEAT and nxt in _DIGIT_WORD:
+            expanded.extend([nxt] * (_REPEAT[token] - 1))  # the word itself follows
+        else:
+            expanded.append(token)
+    tokens = expanded
     out: list[str] = []
     i = 0
     while i < len(tokens):

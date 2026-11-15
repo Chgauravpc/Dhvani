@@ -68,4 +68,15 @@ Whatever the result, 3B-18 (the phone channel) still runs as planned (plan §5.2
 - Merging adjacent digit tokens (rule 6) can join two unrelated numbers; both sides are normalised
   identically, but a hypothesis that groups digits differently from the reference can still be
   mis-scored either way.
-- Deviations: none yet.
+- Deviations:
+  1. **(2026-11-15, after the first scoring run, which is kept as
+     `results/f2_digits_v1_as_registered.json`.)** Reading ten of the 51 Hindi/Saaras misses
+     showed most were the normaliser failing on the *reference*, not the ASR failing: the Hindi
+     references write "डबल ऐट" (double eight) and spellings the tables lacked ("ऐट", "फाइफ",
+     "सेवेन"). The normaliser was amended (rule 6: double/triple, spelling variants; 5 new unit
+     tests) and the scoring re-run: `results/f2_digits.json`. Both results are reported. The
+     amendment was made **after seeing misses on this same data**, so the amended figures are
+     tuned to it and are not an out-of-sample accuracy. Further misses remain that look like
+     normaliser limits too (reference dates such as "दो हजार चौबीस ज़ीरो एक पन्द्रह" read as one
+     number, two consecutive years merged, the variant "छ" for six); they were **not** patched.
+     So the digit-string rates are likely *under*estimates of the ASR's accuracy.

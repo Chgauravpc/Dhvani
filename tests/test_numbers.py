@@ -44,3 +44,20 @@ def test_both_spellings_give_the_same_digit_string() -> None:
 def test_digit_strings_are_maximal_runs_not_substrings() -> None:
     assert digit_strings("id 51939935667", min_digits=4) == ["51939935667"]
     assert digit_strings("call 12 now") == []
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("डबल ऐट सेवन", "887"),
+        ("triple one", "111"),
+        ("नाइन ज़ीरो ज़ीरो फाइव डबल ऐट", "900588"),
+        ("फोर सिक्स वन सिक्स डबल टू थ्री वन सेवेन नाइन फाइफ नाइन", "461622317959"),
+    ],
+)
+def test_double_triple_and_spelling_variants(text: str, expected: str) -> None:
+    assert to_digit_tokens(text) == expected
+
+
+def test_double_before_a_non_digit_word_is_untouched() -> None:
+    assert to_digit_tokens("डबल रोटी") == "डबल रोटी"

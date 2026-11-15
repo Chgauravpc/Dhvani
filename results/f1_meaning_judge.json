@@ -1,0 +1,131 @@
+{
+ "item": "3B-19 (b), (d)",
+ "preregistration": "docs/runs/3b-19-preregistration.md",
+ "judge_model": "openai/gpt-oss-120b",
+ "population": {
+  "unique_items": 624,
+  "judged": 50,
+  "unparsed": 0,
+  "incomplete": 0
+ },
+ "agreement": {
+  "n": 50,
+  "kappa": 0.6815286624203821,
+  "kappa_ci95": [
+   0.4645799011532125,
+   0.8776508972267536
+  ],
+  "raw_agreement": 0.84,
+  "raw_agreement_ci95": [
+   0.74,
+   0.94
+  ],
+  "judge_equivalent": 22,
+  "owner_equivalent": 26,
+  "both_equivalent": 20,
+  "both_not_equivalent": 22,
+  "judge_yes_owner_no": 2,
+  "judge_no_owner_yes": 6,
+  "bootstrap": {
+   "resamples": 10000,
+   "seed": 0
+  },
+  "labelled_items": 50,
+  "unscored_labelled_items": 0,
+  "threshold_kappa": 0.6,
+  "meets_threshold": true,
+  "by_language": {
+   "english": {
+    "n": 25,
+    "agree": 20
+   },
+   "hindi": {
+    "n": 25,
+    "agree": 22
+   }
+  },
+  "disagreements": [
+   {
+    "item": 6,
+    "language": "english",
+    "query": "What's the population density of India in 2024, roughly? Population is 142.86 crore, land area is 32.87 lakh square kilometers.",
+    "accepted": "3287000",
+    "returned": "328700",
+    "owner": "equivalent",
+    "judge": "not_equivalent",
+    "owner_note": ""
+   },
+   {
+    "item": 15,
+    "language": "hindi",
+    "query": "दिल्ली में आज सुबह 9 बजे air quality कैसी है?",
+    "accepted": "9:00 AM",
+    "returned": "\"2024-11-14T09:00:00Z\"",
+    "owner": "equivalent",
+    "judge": "not_equivalent",
+    "owner_note": ""
+   },
+   {
+    "item": 17,
+    "language": "hindi",
+    "query": "वाराणसी में अच्छे ५ vegetarian रेस्टोरेंट दिखाओ",
+    "accepted": "Varanasi, Uttar Pradesh",
+    "returned": "\"वाराणसी, वाराणसी\"",
+    "owner": "not_equivalent",
+    "judge": "equivalent",
+    "owner_note": ""
+   },
+   {
+    "item": 21,
+    "language": "english",
+    "query": "My desi cow has good milk yield, disease resistance, and heat tolerance. What's its overall fitness score?",
+    "accepted": "0.4 | 0.3 | 0.3",
+    "returned": "[0.4, 0.35, 0.25]",
+    "owner": "equivalent",
+    "judge": "not_equivalent",
+    "owner_note": ""
+   },
+   {
+    "item": 36,
+    "language": "english",
+    "query": "What's the INR to Riyal rate with a 1.5% service charge?",
+    "accepted": "SAR",
+    "returned": "\"Riyal\"",
+    "owner": "not_equivalent",
+    "judge": "equivalent",
+    "owner_note": ""
+   },
+   {
+    "item": 40,
+    "language": "hindi",
+    "query": "मुंबई में एक rental agreement बनाने के लिए, मालिक और किरायेदार के बीच, क्या कर सकते हैं?",
+    "accepted": "Landlord | Tenant",
+    "returned": "[\"Owner\", \"Tenant\"]",
+    "owner": "equivalent",
+    "judge": "not_equivalent",
+    "owner_note": ""
+   },
+   {
+    "item": 41,
+    "language": "english",
+    "query": "Need a quick veg recipe, under 30 minutes, for a Diwali snack?",
+    "accepted": "vegetarian",
+    "returned": "\"vegan\"",
+    "owner": "equivalent",
+    "judge": "not_equivalent",
+    "owner_note": ""
+   },
+   {
+    "item": 46,
+    "language": "english",
+    "query": "My desi cow has good milk yield, disease resistance, and heat tolerance. What's its overall fitness score?",
+    "accepted": "0.8 | 0.75 | 0.9",
+    "returned": "[0.8, 0.9, 0.85]",
+    "owner": "equivalent",
+    "judge": "not_equivalent",
+    "owner_note": ""
+   }
+  ]
+ },
+ "rescore_complete": false
+}
